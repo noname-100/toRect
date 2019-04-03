@@ -70,12 +70,6 @@ public class EventController : MonoBehaviour {
         StartTime();
     }
 
-    public void StartTime() // 시간 초기화 및 Timer()함수 실행
-    {
-        current_Time = SolveTime;
-        StartCoroutine("Timer");
-    }
-
     // Update function for every timeframe
     public void Update()
     {
@@ -109,11 +103,28 @@ public class EventController : MonoBehaviour {
 
     }
 
+
+
+
+    /*
+     * 
+     * 
+     *  UTIL FUNCTIONS
+     * 
+     * 
+     */
+
     IEnumerator Timer() // 0.01초 단위로 시간을 측정
     {
         yield return new WaitForSeconds(0.01f);
         current_Time -= 0.01f;
         TimeText.text = current_Time.ToString("##0.00") + " sec";
+        StartCoroutine("Timer");
+    }
+
+    public void StartTime() // 시간 초기화 및 Timer()함수 실행
+    {
+        current_Time = SolveTime;
         StartCoroutine("Timer");
     }
 

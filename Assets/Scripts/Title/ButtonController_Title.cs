@@ -47,31 +47,31 @@ public class ButtonController_Title : MonoBehaviour {
 
     public void MomStoryModeStart()
     {
-        PlayerPrefs.SetInt("Mode", 0);
+        PlayerPrefs.SetInt("Mode", 1);
         SceneManager.LoadScene("Play");
     }
 
     public void DadStoryModeStart()
     {
-        PlayerPrefs.SetInt("Mode", 1);
+        PlayerPrefs.SetInt("Mode", 2);
         SceneManager.LoadScene("Play");
     }
 
     public void FriendStoryModeStart()
     {
-        PlayerPrefs.SetInt("Mode", 2);
+        PlayerPrefs.SetInt("Mode", 3);
         SceneManager.LoadScene("Play");
     }
 
     public void TeacherStoryModeStart()
     {
-        PlayerPrefs.SetInt("Mode", 3);
+        PlayerPrefs.SetInt("Mode", 4);
         SceneManager.LoadScene("Play");
     }
 
     public void ChallengeModeStart()
     {
-        PlayerPrefs.SetInt("Mode", 4);
+        PlayerPrefs.SetInt("Mode", 0);
         SceneManager.LoadScene("Play");
     }
 

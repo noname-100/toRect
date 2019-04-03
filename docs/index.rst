@@ -11,6 +11,7 @@ Welcome to toRect's documentation!
    :caption: Contents:
 
    test
+   sam/kevin
 
 Indices and tables
 ==================
