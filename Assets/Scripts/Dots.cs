@@ -11,7 +11,7 @@ public class Dots : MonoBehaviour
     Vector3 center;
     Transform tf;
     Renderer rend;
-
+    float pushTime;
     private LineRenderer lineRenderer;
     public bool isSelected=false;
     public bool selectable = false;
@@ -67,43 +67,49 @@ public class Dots : MonoBehaviour
             this.GetComponent<Renderer>().material.color = Color.blue;
         }
     }
-
+    /*
     private void OnMouseUp()
     {
         //center = rend.bounds.center;
-    }
-
+    }*/
     void OnMouseDown()
     {
-        if (this.isSelected)
-        {
-            this.isSelected = false;
-            this.transform.parent.GetComponent<Polygon>().dotSelected = false;
-            Destroy(this.GetComponent<LineRenderer>());
-        }
-        else
-        {
-            center = tf.position;
-            if (this.transform.parent.GetComponent<Polygon>().dotSelected == false)
+        pushTime = Time.time;
+    }
+    void OnMouseUp()
+    {
+        if( Time.time - pushTime < 0.5f) { 
+            if (this.isSelected)
+            {
+                this.isSelected = false;
+                this.transform.parent.GetComponent<Polygon>().dotSelected = false;
+                Destroy(this.GetComponent<LineRenderer>());
+            }
+            else
+            {
+                center = tf.position;
+                if (this.transform.parent.GetComponent<Polygon>().dotSelected == false)
+                {
+                    this.isSelected = true;
+                    this.transform.parent.GetComponent<Polygon>().dotSelected = true;
+                    this.transform.parent.GetComponent<Polygon>().selectableDots();
+                    LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
+                    lineRenderer.positionCount = 2;
+                    lineRenderer.alignment = LineAlignment.Local;
+                    lineRenderer.SetWidth(0.2f, 0.2f);
+                }
+            }
+            if (this.selectable)
             {
                 this.isSelected = true;
-                this.transform.parent.GetComponent<Polygon>().dotSelected = true;
-                this.transform.parent.GetComponent<Polygon>().selectableDots();
-                LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-                lineRenderer.positionCount = 2;
-                lineRenderer.alignment = LineAlignment.Local;
-                lineRenderer.SetWidth(0.2f, 0.2f);
+                this.transform.parent.GetComponent<Polygon>().cutMyself();
             }
-        }
-        if (this.selectable)
-        {
-            this.isSelected = true;
-            this.transform.parent.GetComponent<Polygon>().cutMyself();
         }
     }
 
     private void OnMouseDrag()
     {
+        /*
         
         GameObject go = GameObject.Find("EC");
         EventController sc = go.GetComponent<EventController>();
@@ -128,16 +134,26 @@ public class Dots : MonoBehaviour
         if (degree > 360) degree -= 360;
         Debug.Log(degree);
         tf.rotation = Quaternion.Euler(0, 0, degree);
-        
-        /*Vector3 sum = Vector3.zero;
-        foreach(Vector3 vertice in this.transform.parent.GetComponent<Polygon>().vertices3D)
+        */
+
+        Vector3 sum = Vector3.zero;
+        foreach (Vector3 vertice in this.transform.parent.GetComponent<Polygon>().vertices3D)
         {
             sum += vertice;
         }
-        Vector3 center = sum / this.transform.parent.GetComponent<Polygon>().vertices3D.Length;
+        Vector3 center = transform.parent.transform.TransformPoint(sum / this.transform.parent.GetComponent<Polygon>().vertices3D.Length);
         Vector3 mouse = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, center.z));
-        float angle = Vector3.Angle(mouse-center, transform.position-center);
-        this.transform.parent.transform.eulerAngles += new Vector3(0, 0, angle);*/
+        float angle = Vector3.SignedAngle(new Vector3((mouse - center).x, (mouse - center).y, 0), new Vector3((transform.position - center).x, (transform.position - center).y, 0), Vector3.forward);
+        if (angle > 3)
+        {
+            transform.parent.transform.RotateAround(center, Vector3.forward, -angle);
+        }
+        else if (angle < -3)
+        {
+            transform.parent.transform.RotateAround(center, Vector3.forward, -angle);
+        }
+        //transform.parent.transform.eulerAngles += new Vector3(0, 0, angle);
+
     }
 
     public void render()

@@ -324,7 +324,7 @@ public class Polygon : MonoBehaviour
                         if (distX - distY < 0.1 || distX -distY > - 0.1)
                         {
                             //Debug.Log(Vector3.Angle(x1 - x2, y1 - y2));
-                            if (Vector3.Distance(x1, y2) < 1 && Vector3.Distance(x2, y1) < 1)
+                            if (Vector3.Distance(x1, y2) < 0.5 && Vector3.Distance(x2, y1) < 0.5)
                             {
                                 if (Mathf.Abs(transform.eulerAngles.z - pol.transform.eulerAngles.z) < 10 || Mathf.Abs(transform.eulerAngles.z - pol.transform.eulerAngles.z) > 175)
                                 {
