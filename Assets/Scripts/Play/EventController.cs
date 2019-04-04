@@ -37,18 +37,11 @@ public class EventController : MonoBehaviour {
     public GameObject[] HintOff = new GameObject[3];
     public int Hints;
 
-
-
-   
-
     // TODO : 게임 로직 부분
 
-
-    // Problem auto generating function
-    public void Generate()
-    {
-
-    }
+    
+    
+    // gamemode를 랜덤하게 생성하자.
 
     // Revert one state back
     public void Revert()
@@ -64,10 +57,12 @@ public class EventController : MonoBehaviour {
     // 초기화
     private void Awake()
     {
+
         Lifes = 3;
         Hints = 3;
         Score = 0;
         MovementStatus = 0;
+        SolveTime = 60;
 
         if (PlayerPrefs.GetInt("Mode") == 0) isPlay = 1;
         else isPlay = 0;

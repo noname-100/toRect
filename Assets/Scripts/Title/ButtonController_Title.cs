@@ -45,27 +45,21 @@ public class ButtonController_Title : MonoBehaviour {
 
     }
 
-    public void MomStoryModeStart()
+    public void toRectStoryModeStart()
     {
         PlayerPrefs.SetInt("Mode", 1);
         SceneManager.LoadScene("Play");
     }
 
-    public void DadStoryModeStart()
+    public void jiktojungStoryModeStart()
     {
         PlayerPrefs.SetInt("Mode", 2);
         SceneManager.LoadScene("Play");
     }
 
-    public void FriendStoryModeStart()
+    public void pieStoryModeStart()
     {
         PlayerPrefs.SetInt("Mode", 3);
-        SceneManager.LoadScene("Play");
-    }
-
-    public void TeacherStoryModeStart()
-    {
-        PlayerPrefs.SetInt("Mode", 4);
         SceneManager.LoadScene("Play");
     }
 

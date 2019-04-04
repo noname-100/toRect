@@ -10,22 +10,23 @@ public class GameController : MonoBehaviour
     public bool polygonSelected;
     private Vector2[] problemTriangle;
     public EventController EC;
+    public GameObject SS;
+    private StoryScript ss;
+
+    private void Awake()
+    {
+        ss = SS.GetComponent<StoryScript>();
+
+        // makenew를 어떻게 설계할 것인가?
+        // 현재 게임 난이도를 어디서 설정할 것인가?
+        // 챌린지모드의 모든 모듈 랜덤하게 등장도 구현해야 한다.
+
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-
-        Debug.Log(UnityEngine.Random.Range(1f,3f));
-
-        /* Vector2[] firstTriangleVector = new Vector2[] {
-
-             new Vector2(0,0),
-             new Vector2(0,3),
-             new Vector2(3,0)
-         };
-
-     */
-        makeNew();
+        //makeNew();
     }
 
     public void makeNew()
