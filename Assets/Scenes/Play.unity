@@ -1033,7 +1033,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &382054542
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2609,7 +2609,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &804625886
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3906,6 +3906,7 @@ MonoBehaviour:
   SolveTime: 60
   MovementStatus: 0
   GC: {fileID: 271237296}
+  isPlay: 0
   GameOverWindow: {fileID: 1753825162}
   HintWindow: {fileID: 1677263897}
   TotitleButton: {fileID: 368370865}
@@ -3954,6 +3955,7 @@ MonoBehaviour:
   TextBox_text: {fileID: 893930890}
   SpeechBubble: {fileID: 893306218}
   SpeechBubble_text: {fileID: 802178784}
+  SpeechBubble_name: {fileID: 1114315151}
 --- !u!1 &1086691408
 GameObject:
   m_ObjectHideFlags: 0

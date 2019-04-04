@@ -12,6 +12,7 @@ public class EventController : MonoBehaviour {
     // 게임 요소
     public int MovementStatus; // 이동모드 상태(전체모드 0, 회전모드 1, 이동모드 2)
     public GameController GC;
+    public int isPlay;
 
     // UI요소
     public GameObject GameOverWindow, HintWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, NextStageButton, GameOverBack, ClearBack;
@@ -67,7 +68,10 @@ public class EventController : MonoBehaviour {
         Hints = 3;
         Score = 0;
         MovementStatus = 0;
-        StartTime();
+
+        if (PlayerPrefs.GetInt("Mode") == 0) isPlay = 1;
+        else isPlay = 0;
+        
     }
 
     // Update function for every timeframe
@@ -79,6 +83,13 @@ public class EventController : MonoBehaviour {
             LostLife();
             Renew();
         }
+
+        if (isPlay == 1)
+        {
+            isPlay = 2;
+            StartTime();
+        }
+
     }
 
     public void Renew()
