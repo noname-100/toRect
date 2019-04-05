@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using System.Linq;
 
+// 문제 생성, 문제 해결 확인은 여기에 있음
+
 public class GameController : MonoBehaviour
 {
     public List<GameObject> polygonList;
@@ -29,8 +31,48 @@ public class GameController : MonoBehaviour
         //makeNew();
     }
 
-    public void makeNew()
+
+    // Mode : 
+    public void makeNew(int gametype)
     {
+        if(gametype == 0)
+        {   
+            // 정삼각형
+
+
+
+        }else if(gametype == 1)
+        {
+            // 예각삼각형
+
+
+        }else if(gametype == 2)
+        {
+            // 직각삼각형
+
+
+        }else if(gametype == 3)
+        {
+            // 둔각삼각형
+
+
+        }else if(gametype == 4)
+        {
+            // 사다리꼴
+
+
+        }else if(gametype == 5)
+        {
+            // 직투정
+
+
+        }
+        else
+        {
+            // 합동삼각형
+
+
+        }
         //Debug.Log("new");
 
         problemTriangle = new Vector2[6];
@@ -40,7 +82,7 @@ public class GameController : MonoBehaviour
             problemTriangle[i].y = UnityEngine.Random.Range(-3f, 2.5f);
         }*/
 
-        problemTriangle[0].x = 0;
+        /*problemTriangle[0].x = 0;
         problemTriangle[0].y = 0;
         problemTriangle[1].x = 3;
         problemTriangle[1].y = 0;
@@ -58,6 +100,7 @@ public class GameController : MonoBehaviour
             Destroy(p);
         }
         polygonList.Clear();
+        */
 
         var firstTriangle = new GameObject("Polygon");
         firstTriangle.AddComponent(System.Type.GetType("Polygon"));

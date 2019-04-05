@@ -1,13 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using UnityEngine.UI;
+
+
+// 게임 시작, 끝, 난이도, 시간설정, 점수설정 등은 여기에 있음.
 
 public class EventController : MonoBehaviour {
 
     // 난이도요소
     public int Difficulty;
     public float SolveTime;
+    private int currentGame;
+    private int currentMode;
 
     // 게임 요소
     public int MovementStatus; // 이동모드 상태(전체모드 0, 회전모드 1, 이동모드 2)
@@ -37,67 +43,90 @@ public class EventController : MonoBehaviour {
     public GameObject[] HintOff = new GameObject[3];
     public int Hints;
 
-    // TODO : 게임 로직 부분
 
-    
-    
-    // gamemode를 랜덤하게 생성하자.
-
-    // Revert one state back
-    public void Revert()
-    {
-        // "스테이트 버퍼 스택" 필요!!
-
-        // 버퍼 스택의 top 스테이트를 pop한다
-
-        // top의 스테이트를 load한다
-
-    }
-
-    // 초기화
-    private void Awake()
+private void Awake()
     {
 
+        // 초기화
+        currentMode = PlayerPrefs.GetInt("Mode");
+        
         Lifes = 3;
         Hints = 3;
         Score = 0;
         MovementStatus = 0;
-        SolveTime = 60;
+        SolveTime = 14231512; // 그냥 변수초기화 값이고 추후에 난이도에 맞게 설정한다.
 
-        if (PlayerPrefs.GetInt("Mode") == 0) isPlay = 1;
-        else isPlay = 0;
+        GameManager();
         
     }
 
     // Update function for every timeframe
     public void Update()
     {
-        // check for game end
+        // check for game end ( different for different levels/modes ) comes here.
+
+
+
+        // check for time end
         if (current_Time <= 0)
         {
             LostLife();
             Renew();
         }
 
+        // TODO : 이부분 gamemanager에 구현
         if (isPlay == 1)
         {
             isPlay = 2;
-            StartTime();
+            //StartTime();
         }
 
     }
+
+
+    private void GameManager()
+    {
+        // TODO : 어느 게임인지 모드 및 난이도를 확인하고 생성까지 여기서 한다. private 변수 활용
+        if (currentMode == 0)
+        {
+            // challenge mode
+            // generate random game
+            currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, 7f));
+
+            // 점수에 따라서 제한시간을 여기에서 바꿀 수 있다.
+            TimeManager();
+            StartCoroutine("Timer");
+
+            GC.makeNew(currentGame);
+
+
+        }
+        else
+        {
+            // TODO : story mode
+            isPlay = 0;
+        }
+    }
+
+    private void TimeManager()
+    {
+        // TODO : any logic regarding difficulty and time, bonuses come here
+        SolveTime = 60;
+    }
+
 
     public void Renew()
     {
         Debug.Log("Renew");
         current_Time = SolveTime;
         //Generate();
-        GC.makeNew();
+        GC.makeNew(0);
     }
 
     // 문제를 해결한 경우 점수를 얻는다
     public void AddScore()
     {
+
         Score += 14;
         ScoreText.text = Score.ToString() + " 점";
 
@@ -125,12 +154,6 @@ public class EventController : MonoBehaviour {
         yield return new WaitForSeconds(0.01f);
         current_Time -= 0.01f;
         TimeText.text = current_Time.ToString("##0.00") + " sec";
-        StartCoroutine("Timer");
-    }
-
-    public void StartTime() // 시간 초기화 및 Timer()함수 실행
-    {
-        current_Time = SolveTime;
         StartCoroutine("Timer");
     }
 

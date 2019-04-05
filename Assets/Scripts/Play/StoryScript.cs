@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+// StoryScript는 스토리부분 진행까지만 맡고 게임 시작과 난이도 설정은 EventController에 있음
+
 public class StoryScript : MonoBehaviour {
 
     // 텍스트박스는 텍스트만, 스피치버블은 이름 + 텍스트로 이중 작업.
