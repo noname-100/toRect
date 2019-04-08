@@ -1,24 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using UnityEngine.UI;
+
+
+// 게임 시작, 끝, 난이도, 시간설정, 점수설정 등은 여기에 있음.
 
 public class EventController : MonoBehaviour {
 
     // 난이도요소
-    public int Difficulty;
-    public float SolveTime;
+    public int difficulty;
+    public float solveTime;
+    public float burningTimeLimit;
+    private int currentGame;
+    private int currentMode;
 
     // 게임 요소
-    public int MovementStatus; // 이동모드 상태(전체모드 0, 회전모드 1, 이동모드 2)
+    public int movementStatus; // 이동모드 상태(전체모드 0, 회전모드 1, 이동모드 2)
     public GameController GC;
+    public int isPlay;
 
     // UI요소
     public GameObject GameOverWindow, HintWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, NextStageButton, GameOverBack, ClearBack;
     public Text GameResultText;
 
     // 점수
-    public int Score;
+    public int score;
     public Text ScoreText;
 
     // 현재 시각
@@ -29,88 +37,130 @@ public class EventController : MonoBehaviour {
     // 목숨
     public GameObject[] LifeOn = new GameObject[3];
     public GameObject[] LifeOff = new GameObject[3];
-    public int Lifes;
+    public int lifes;
 
     // 주의 : 힌트가 아니라 재시작 횟수이다!
     public GameObject[] HintOn = new GameObject[3];
     public GameObject[] HintOff = new GameObject[3];
-    public int Hints;
+    public int hints;
 
 
-
-   
-
-    // TODO : 게임 로직 부분
-
-
-    // Problem auto generating function
-    public void Generate()
+private void Awake()
     {
 
-    }
+        // 초기화
+        currentMode = PlayerPrefs.GetInt("Mode");
+        
+        lifes = 3;
+        hints = 3;
+        score = 0;
+        movementStatus = 0;
+        solveTime = 14231512; // 그냥 변수초기화 값이고 추후에 난이도에 맞게 설정한다.
 
-    // Revert one state back
-    public void Revert()
-    {
-        // "스테이트 버퍼 스택" 필요!!
+        // TODO : 어느 게임인지 모드 및 난이도를 확인하고 생성까지 여기서 한다. private 변수 활용
+        if (currentMode == 0)
+        {
+            // challenge mode
+            MakeNewGame();
 
-        // 버퍼 스택의 top 스테이트를 pop한다
+            // 점수에 따라서 제한시간을 여기에서 바꿀 수 있다.
+            ResetTimeManager();
+            StartCoroutine("Timer");
 
-        // top의 스테이트를 load한다
+            GC.makeNew(currentGame);
 
-    }
 
-    // 초기화
-    private void Awake()
-    {
-        Lifes = 3;
-        Hints = 3;
-        Score = 0;
-        MovementStatus = 0;
-        StartTime();
-    }
+        }
+        else
+        {
+            // TODO : story mode
+            isPlay = 0;
+        }
 
-    public void StartTime() // 시간 초기화 및 Timer()함수 실행
-    {
-        current_Time = SolveTime;
-        StartCoroutine("Timer");
     }
 
     // Update function for every timeframe
     public void Update()
     {
-        // check for game end
+        // check for game end ( different for different levels/modes ) comes here.
+        GameManager(0);
+
+    }
+
+    private void GameManager(int isHelp)
+    {
+        if (lifes == 0) {
+
+            StopCoroutine("Timer");
+            GameOver(false);
+
+        }
+
+        if(isHelp == 1)
+        {
+            LostHelp();
+            ResetTimeManager();
+            MakeNewGame();
+        }
+
+        // check for time end
         if (current_Time <= 0)
         {
             LostLife();
-            Renew();
+            MakeNewGame();
         }
+
+        // TODO : 이부분 gamemanager에 구현
+        if (isPlay == 1)
+        {
+            isPlay = 2;
+            //StartTime();
+        }
+
+
     }
 
-    public void Renew()
+    private void AddPointManager()
     {
-        Debug.Log("Renew");
-        current_Time = SolveTime;
-        //Generate();
-        GC.makeNew();
+        score += 14;
+        ScoreText.text = score.ToString() + " 점";
     }
 
-    // 문제를 해결한 경우 점수를 얻는다
-    public void AddScore()
+    private void ResetTimeManager()
     {
-        Score += 14;
-        ScoreText.text = Score.ToString() + " 점";
-
-        // 난이도 증가
-        Difficulty++;
-        // SolveTime = SolveTime - 10;
-
-        Renew();
-
+        // TODO : any logic regarding difficulty and time, bonuses come here
+        if(currentMode == 0)
+        {
+            burningTimeLimit = 30;
+            solveTime = 45;
+        }
+        else
+        {
+            burningTimeLimit = 45;
+            solveTime = 60;
+        }
+        
     }
+
+    private void MakeNewGame()
+    {
+        // generate random game, difficulty - game generation logic comes here
+        currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, 7f));
+        ResetTimeManager();
+        GC.makeNew(currentGame);
+    }
+
+    /*
+     * 
+     * 
+     *  UTIL FUNCTIONS
+     * 
+     * 
+     */
 
     IEnumerator Timer() // 0.01초 단위로 시간을 측정
     {
+        if (isPlay == 0) yield return null;
         yield return new WaitForSeconds(0.01f);
         current_Time -= 0.01f;
         TimeText.text = current_Time.ToString("##0.00") + " sec";
@@ -122,73 +172,62 @@ public class EventController : MonoBehaviour {
         //foreach (Transform Enemy in EnemyPar.transform) Enemy.GetComponent<EnemyBehaviour>().PushBack();
         //combo = 0;
         //GetComponent<AudioManager>().DamagedSound();
-        switch (Lifes)
+        switch (lifes)
         {
             case 3:  // 3개면 2개로
                 LifeOn[2].SetActive(false);
                 LifeOff[2].SetActive(true);
-                Lifes--;
+                lifes--;
                 break;
             case 2: // 2개면 1개로
                 LifeOn[1].SetActive(false);
                 LifeOff[1].SetActive(true);
-                Lifes--;
+                lifes--;
                 break;
             case 1: // 1개면 게임오버
                 LifeOn[0].SetActive(false);
                 LifeOff[0].SetActive(true);
-                Lifes--;
-                GameOver(false);
+                lifes--;
+                //GameOver(false);
                 //GetComponent<AudioManager>().GameOverSound();
                 break;
         }
+        GameManager(0);
     }
 
-    public void LostHelp() // Help를 잃는 것을 처리해주는 함수
+    public void LostHelp() // 교체하기 버튼 누르면 반응하는 함수
     {
-        //foreach (Transform Enemy in EnemyPar.transform) Enemy.GetComponent<EnemyBehaviour>().PushBack();
-        //combo = 0;
-        //GetComponent<AudioManager>().DamagedSound();
-        if (Hints == 0) return;
-        //Debug.Log(Hints);
-        Renew();
-        //Debug.Log("Hints after");
-        switch (Hints)
+        if (hints == 0) return;
+        GameManager(1);
+        switch (hints)
         {
             case 3:  // 3개면 2개로
                 HintOn[2].SetActive(false);
                 HintOff[2].SetActive(true);
                 
-                Hints--;
+                hints--;
                 break;
             case 2: // 2개면 1개로
                 HintOn[1].SetActive(false);
                 HintOff[1].SetActive(true);
-                Hints--;
+                hints--;
                 break;
             case 1: // 1개면 게임오버
                 HintOn[0].SetActive(false);
                 HintOff[0].SetActive(true);
-                Hints--;
+                hints--;
                 //GameOver(false);
                 //GetComponent<AudioManager>().GameOverSound();
                 break;
         }
-        //Debug.Log("HH " + Hints);
     }
 
     
-    public void GameOver(bool isCleared) // GameOver 시 해야될 일을 해주는 함수
+    public void GameOver(bool isCleared) // GameOver 시 모달 레이아웃 함수
     {                                    // isCleared면 Clear, 아니면 GameOver
-        StopCoroutine("Timer");
+        //StopCoroutine("Timer");
         GameOverWindow.SetActive(true);
-        //ClearBack.SetActive(true);
-        //GameOverBack.SetActive(true);
-        /*
-        if(PlayerPrefs.GetInt("Mode") != 4){
-            isCleared = 0;
-         }
-         */
+
         if (isCleared)
             ClearBack.SetActive(true);
         else
@@ -212,9 +251,27 @@ public class EventController : MonoBehaviour {
 
     public void Movemode()
     {
-        MovementStatus++;
-        if (MovementStatus == 3) MovementStatus = 0;
+        movementStatus++;
+        if (movementStatus == 3) movementStatus = 0;
     }
 
+    // legacy code(will delete)
+
+    public void Renew()
+    {
+        Debug.Log("Renew");
+        current_Time = solveTime;
+        //Generate();
+        GC.makeNew(0);
+    }
+
+    // 문제를 해결한 경우 점수를 얻는다
+    public void AddScore()
+    {
+
+        Renew();
+
+    }
 
 }
+

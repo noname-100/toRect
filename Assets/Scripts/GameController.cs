@@ -4,32 +4,75 @@ using UnityEngine;
 using System;
 using System.Linq;
 
+// 문제 생성, 문제 해결 확인은 여기에 있음
+
 public class GameController : MonoBehaviour
 {
     public List<GameObject> polygonList;
     public bool polygonSelected;
     private Vector2[] problemTriangle;
     public EventController EC;
+    public GameObject SS;
+    private StoryScript ss;
+
+    private void Awake()
+    {
+        ss = SS.GetComponent<StoryScript>();
+
+        // makenew를 어떻게 설계할 것인가?
+        // 현재 게임 난이도를 어디서 설정할 것인가?
+        // 챌린지모드의 모든 모듈 랜덤하게 등장도 구현해야 한다.
+
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-
-        Debug.Log(UnityEngine.Random.Range(1f,3f));
-
-        /* Vector2[] firstTriangleVector = new Vector2[] {
-
-             new Vector2(0,0),
-             new Vector2(0,3),
-             new Vector2(3,0)
-         };
-
-     */
-        makeNew();
+        //makeNew();
     }
 
-    public void makeNew()
+
+    // Mode : 
+    public void makeNew(int gametype)
     {
+        if(gametype == 0)
+        {   
+            // 정삼각형
+
+
+
+        }else if(gametype == 1)
+        {
+            // 예각삼각형
+
+
+        }else if(gametype == 2)
+        {
+            // 직각삼각형
+
+
+        }else if(gametype == 3)
+        {
+            // 둔각삼각형
+
+
+        }else if(gametype == 4)
+        {
+            // 사다리꼴
+
+
+        }else if(gametype == 5)
+        {
+            // 직투정
+
+
+        }
+        else
+        {
+            // 합동삼각형
+
+
+        }
         //Debug.Log("new");
 
         problemTriangle = new Vector2[6];
@@ -39,7 +82,7 @@ public class GameController : MonoBehaviour
             problemTriangle[i].y = UnityEngine.Random.Range(-3f, 2.5f);
         }*/
 
-        problemTriangle[0].x = 0;
+        /*problemTriangle[0].x = 0;
         problemTriangle[0].y = 0;
         problemTriangle[1].x = 3;
         problemTriangle[1].y = 0;
@@ -57,6 +100,7 @@ public class GameController : MonoBehaviour
             Destroy(p);
         }
         polygonList.Clear();
+        */
 
         var firstTriangle = new GameObject("Polygon");
         firstTriangle.AddComponent(System.Type.GetType("Polygon"));
