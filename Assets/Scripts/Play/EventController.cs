@@ -10,16 +10,16 @@ using UnityEngine.UI;
 public class EventController : MonoBehaviour {
 
     // 난이도요소
-    public int difficulty;
+    public int combo;
     public float solveTime;
-    public float burningTimeLimit;
+    public float bonusTimeLimit;
     private int currentGame;
     private int currentMode;
 
     // 게임 요소
     public int movementStatus; // 이동모드 상태(전체모드 0, 회전모드 1, 이동모드 2)
     public GameController GC;
-    public int isPlay;
+    public int isPlay; // 0 : 게임 정지 1 : 게임 시작 시그널 2 : 게임 실행중
 
     // UI요소
     public GameObject GameOverWindow, HintWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, NextStageButton, GameOverBack, ClearBack;
@@ -30,9 +30,8 @@ public class EventController : MonoBehaviour {
     public Text ScoreText;
 
     // 현재 시각
-    public float current_Time;
+    private float current_Time;
     public Text TimeText;
-
 
     // 목숨
     public GameObject[] LifeOn = new GameObject[3];
@@ -50,26 +49,21 @@ private void Awake()
 
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
-        
+        Debug.Log("curr " + currentMode);
         lifes = 3;
         hints = 3;
         score = 0;
         movementStatus = 0;
-        solveTime = 14231512; // 그냥 변수초기화 값이고 추후에 난이도에 맞게 설정한다.
+        solveTime = 45; // 임의 변수초기화 값
 
         // TODO : 어느 게임인지 모드 및 난이도를 확인하고 생성까지 여기서 한다. private 변수 활용
         if (currentMode == 0)
         {
             // challenge mode
             MakeNewGame();
-
-            // 점수에 따라서 제한시간을 여기에서 바꿀 수 있다.
             ResetTimeManager();
             StartCoroutine("Timer");
-
             GC.makeNew(currentGame);
-
-
         }
         else
         {
@@ -83,17 +77,17 @@ private void Awake()
     public void Update()
     {
         // check for game end ( different for different levels/modes ) comes here.
-        GameManager(0);
+        if(isPlay != 0) GameManager(0);
 
     }
 
-    private void GameManager(int isHelp)
+    public void GameManager(int isHelp)
     {
-        if (lifes == 0) {
+        //Debug.Log("GameManager");
 
+        if (lifes == 0) {
             StopCoroutine("Timer");
             GameOver(false);
-
         }
 
         if(isHelp == 1)
@@ -107,21 +101,30 @@ private void Awake()
         if (current_Time <= 0)
         {
             LostLife();
+            ResetTimeManager();
             MakeNewGame();
         }
 
-        // TODO : 이부분 gamemanager에 구현
+        // set to game play state
         if (isPlay == 1)
         {
             isPlay = 2;
-            //StartTime();
+            ResetTimeManager();
+            MakeNewGame();
+            StartCoroutine("Timer");
         }
 
-
+        // check for game win
+        if (GC.isSolved() == 1 || isHelp == 2)
+        {
+            AddPointManager();
+            ResetTimeManager();
+            MakeNewGame();
+        }
     }
 
     private void AddPointManager()
-    {
+    {        
         score += 14;
         ScoreText.text = score.ToString() + " 점";
     }
@@ -129,15 +132,17 @@ private void Awake()
     private void ResetTimeManager()
     {
         // TODO : any logic regarding difficulty and time, bonuses come here
+        float timeBonus = UnityEngine.Random.Range(0f, 2f);
+
         if(currentMode == 0)
         {
-            burningTimeLimit = 30;
-            solveTime = 45;
+            bonusTimeLimit = 30;
+            solveTime = 5;
         }
         else
         {
-            burningTimeLimit = 45;
-            solveTime = 60;
+            bonusTimeLimit = 45;
+            solveTime = 5;
         }
         
     }
@@ -146,7 +151,6 @@ private void Awake()
     {
         // generate random game, difficulty - game generation logic comes here
         currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, 7f));
-        ResetTimeManager();
         GC.makeNew(currentGame);
     }
 
@@ -203,8 +207,7 @@ private void Awake()
         {
             case 3:  // 3개면 2개로
                 HintOn[2].SetActive(false);
-                HintOff[2].SetActive(true);
-                
+                HintOff[2].SetActive(true);                
                 hints--;
                 break;
             case 2: // 2개면 1개로

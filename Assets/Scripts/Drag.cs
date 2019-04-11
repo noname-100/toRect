@@ -24,7 +24,7 @@ public class Drag : MonoBehaviour
     {
         GameObject go = GameObject.Find("EC");
         EventController sc = go.GetComponent<EventController>();
-        if (sc.MovementStatus == 1) return;
+        if (sc.movementStatus == 1) return;
 
         Vector3 mousePosition3D = new Vector3(Input.mousePosition.x, Input.mousePosition.y, distance);
         transform.position = Camera.main.ScreenToWorldPoint(mousePosition3D) - posDiff3D;
