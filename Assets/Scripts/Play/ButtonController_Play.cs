@@ -12,7 +12,10 @@ public class ButtonController_Play : MonoBehaviour
     public GameObject RotateChangeModeButton;
     public GameObject SlideChangeModeButton;
     public GameObject RankingButton;
-    public GameObject RankPage; 
+    public GameObject RankPage;
+    public GameObject EC;
+    public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground;
+    private EventController ec;
 
     public void Awake()
     {
@@ -22,6 +25,22 @@ public class ButtonController_Play : MonoBehaviour
         RotateChangeModeButton.SetActive(false);
         SlideChangeModeButton.SetActive(false);
         RankPage.SetActive(false);
+        ec = EC.GetComponent<EventController>();
+
+        int currentMode = PlayerPrefs.GetInt("Mode");
+
+        if(currentMode == 0 || currentMode == 1)
+        {
+            RectangleBiscuitBackground.SetActive(true);
+        }
+        else if(currentMode == 2)
+        {
+            Rec2SquareBackground.SetActive(true);
+        }
+        else
+        {
+            SimilarityBackground.SetActive(true);
+        }
     }
 
     public void Totitle()
@@ -29,7 +48,7 @@ public class ButtonController_Play : MonoBehaviour
         SceneManager.LoadScene("Title");
     }
 
-    public void Restart()
+    public void RestartChallenge()
     {
         SceneManager.LoadScene("Play");
     }
@@ -55,5 +74,12 @@ public class ButtonController_Play : MonoBehaviour
     {
         RankPage.SetActive(true);
     }
+
+    public void ImmediateWin()
+    {
+        ec.GameManager(2);
+    }
+
+
 
 }
