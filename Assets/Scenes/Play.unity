@@ -1196,7 +1196,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: -218.35}
+  m_AnchoredPosition: {x: 0, y: -218.35}
   m_SizeDelta: {x: 763.1, y: 138.89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &496514225
@@ -2727,7 +2727,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: -218.35}
+  m_AnchoredPosition: {x: 0, y: -218.35}
   m_SizeDelta: {x: 763.1, y: 138.89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &893930890
@@ -2948,7 +2948,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: -218.35}
+  m_AnchoredPosition: {x: 0, y: -218.35}
   m_SizeDelta: {x: 763.1, y: 138.89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &902193224
@@ -3509,7 +3509,6 @@ MonoBehaviour:
   - {fileID: 1213100206}
   - {fileID: 2064737663}
   - {fileID: 1564920871}
-  lifes: 0
   HintOn:
   - {fileID: 1100893781}
   - {fileID: 1688754995}
@@ -3518,7 +3517,6 @@ MonoBehaviour:
   - {fileID: 1926643399}
   - {fileID: 50643705}
   - {fileID: 769040456}
-  hints: 0
 --- !u!114 &1008905282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3531,17 +3529,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EC: {fileID: 1008905277}
-  BiscuitText: {fileID: 0}
-  text_b: {fileID: 0}
-  Rec2SquareText: {fileID: 0}
-  text_r: {fileID: 0}
-  SimilarText: {fileID: 0}
-  text_s: {fileID: 0}
+  BiscuitText: {fileID: 804625885}
+  text_b: {fileID: 893930890}
+  Rec2SquareText: {fileID: 660215157}
+  text_r: {fileID: 902193224}
+  SimilarText: {fileID: 1226352966}
+  text_s: {fileID: 496514225}
   TextBox: {fileID: 804625885}
   TextBox_text: {fileID: 893930890}
-  SpeechBubble: {fileID: 0}
-  SpeechBubble_text: {fileID: 0}
-  SpeechBubble_name: {fileID: 0}
 --- !u!1 &1086691408
 GameObject:
   m_ObjectHideFlags: 0
