@@ -112,16 +112,58 @@ private void Awake()
         if (GC.isSolved() == 1 || isHelp == 2)
         {
             combo++;
+            if (current_Time >= bonusTimeLimit) BonusGift();
             AddPointManager();
             ResetTimeManager();
             MakeNewGame();
         }
     }
 
+    private void BonusGift()
+    {
+        combo += 2;
+        score += 5;
+    }
+
     private void AddPointManager()
-    {        
-        score += 14;
+    {
+        if (currentMode == 0) return;
+
+        // 게임종류
+        if(currentGame == 0)
+        {
+            score += 10;
+        }
+        else if(currentGame == 1)
+        {
+            score += 13;
+        }
+        else if(currentGame == 2)
+        {
+            score += 16;
+        }
+        else if(currentGame == 3)
+        {
+            score += 20;
+        }
+        else if(currentGame == 4)
+        {
+            score += 24;
+
+        }
+        else if(currentGame == 5)
+        {
+            score += 16;
+        }
+        else
+        {
+            score += 10;
+        }
+
+        // 총시간, 콤보로 추가점수
+        score += (int) Math.Floor(0.3 * (60 - solveTime) + combo * 3.5d);
         ScoreText.text = score.ToString() + " 점";
+
     }
 
     private void ResetTimeManager()
@@ -132,7 +174,9 @@ private void Awake()
         if(currentMode == 0)
         {
             // 이부분이랑 콤보 풀리는 부분 조절하는게 게임성 핵심이다
-            solveTime = (float) Math.Floor(60 - 2 * combo - 0.05 * score + timeBonus);
+            // 콤보 잃어서 제한시간이 너무 늘어지면 안된다
+            // 점수나 콤보때문에 0초가 되면 안된다. 초반에 선형적이되 0으로 수렴하는 함수로
+            solveTime = (float) Math.Floor(30 - 2 * combo - 0.05 * score + timeBonus);
             bonusTimeLimit = (float) Math.Floor(solveTime * 0.85 - timeBonus);
         }
         else if(currentMode == 1)
