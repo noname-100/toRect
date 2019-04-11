@@ -83,13 +83,13 @@ private void Awake()
 
     public void GameManager(int isHelp)
     {
-        //Debug.Log("GameManager");
-
+        // 목숨이 없는 경우
         if (lifes == 0) {
             StopCoroutine("Timer");
             GameOver(false);
         }
 
+        // 교체하기
         if(isHelp == 1)
         {
             LostHelp();
@@ -97,7 +97,7 @@ private void Awake()
             MakeNewGame();
         }
 
-        // check for time end
+        // 시간종료
         if (current_Time <= 0)
         {
             LostLife();
@@ -105,7 +105,7 @@ private void Awake()
             MakeNewGame();
         }
 
-        // set to game play state
+        // 게임시작
         if (isPlay == 1)
         {
             isPlay = 2;
@@ -114,7 +114,7 @@ private void Awake()
             StartCoroutine("Timer");
         }
 
-        // check for game win
+        // 게임승리
         if (GC.isSolved() == 1 || isHelp == 2)
         {
             AddPointManager();
