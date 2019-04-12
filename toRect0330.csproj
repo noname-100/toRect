@@ -245,6 +245,7 @@
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\Logic\Rendering.cs" />
     <Compile Include="Assets\Scripts\MakeNewTriangle.cs" />
+    <Compile Include="Assets\Scripts\MakePolygon.cs" />
     <Compile Include="Assets\Scripts\Play\ButtonController_Play.cs" />
     <Compile Include="Assets\Scripts\Play\EventController.cs" />
     <Compile Include="Assets\Scripts\Play\StoryScript.cs" />
