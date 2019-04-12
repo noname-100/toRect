@@ -10,9 +10,9 @@ using UnityEngine.UI;
 public class EventController : MonoBehaviour {
 
     // 난이도요소
-    public int combo;
-    public float solveTime;
-    public float bonusTimeLimit;
+    private int combo;
+    private float solveTime;
+    private float bonusTimeLimit;
     private int currentGame;
     private int currentMode;
 
@@ -26,7 +26,7 @@ public class EventController : MonoBehaviour {
     public Text GameResultText;
 
     // 점수
-    public int score;
+    private int score;
     public Text ScoreText;
 
     // 현재 시각
@@ -36,12 +36,12 @@ public class EventController : MonoBehaviour {
     // 목숨
     public GameObject[] LifeOn = new GameObject[3];
     public GameObject[] LifeOff = new GameObject[3];
-    public int lifes;
+    private int lifes;
 
     // 주의 : 힌트가 아니라 재시작 횟수이다!
     public GameObject[] HintOn = new GameObject[3];
     public GameObject[] HintOff = new GameObject[3];
-    public int hints;
+    private int hints;
 
 
 private void Awake()
@@ -53,6 +53,7 @@ private void Awake()
         lifes = 3;
         hints = 3;
         score = 0;
+        combo = 0;
         movementStatus = 0;
         solveTime = 45; // 임의 변수초기화 값
 
@@ -85,21 +86,14 @@ private void Awake()
     {
         // 목숨이 없는 경우
         if (lifes == 0) {
+            current_Time = 0;
             StopCoroutine("Timer");
             GameOver(false);
         }
 
-        // 교체하기
-        if(isHelp == 1)
-        {
-            LostHelp();
-            ResetTimeManager();
-            MakeNewGame();
-        }
-
         // 시간종료
         if (current_Time <= 0)
-        {
+        {            
             LostLife();
             ResetTimeManager();
             MakeNewGame();
@@ -117,33 +111,91 @@ private void Awake()
         // 게임승리
         if (GC.isSolved() == 1 || isHelp == 2)
         {
+            combo++;
+            if (current_Time >= bonusTimeLimit) BonusGift();
             AddPointManager();
             ResetTimeManager();
             MakeNewGame();
         }
     }
 
+    private void BonusGift()
+    {
+        combo += 2;
+        score += 5;
+    }
+
     private void AddPointManager()
-    {        
-        score += 14;
+    {
+        if (currentMode == 0) return;
+
+        // 게임종류
+        if(currentGame == 0)
+        {
+            score += 10;
+        }
+        else if(currentGame == 1)
+        {
+            score += 13;
+        }
+        else if(currentGame == 2)
+        {
+            score += 16;
+        }
+        else if(currentGame == 3)
+        {
+            score += 20;
+        }
+        else if(currentGame == 4)
+        {
+            score += 24;
+
+        }
+        else if(currentGame == 5)
+        {
+            score += 16;
+        }
+        else
+        {
+            score += 10;
+        }
+
+        // 총시간, 콤보로 추가점수
+        score += (int) Math.Floor(0.3 * (60 - solveTime) + combo * 3.5d);
         ScoreText.text = score.ToString() + " 점";
+
     }
 
     private void ResetTimeManager()
     {
-        // TODO : any logic regarding difficulty and time, bonuses come here
+
         float timeBonus = UnityEngine.Random.Range(0f, 2f);
 
         if(currentMode == 0)
         {
-            bonusTimeLimit = 30;
-            solveTime = 5;
+            // 이부분이랑 콤보 풀리는 부분 조절하는게 게임성 핵심이다
+            // 콤보 잃어서 제한시간이 너무 늘어지면 안된다
+            // 점수나 콤보때문에 0초가 되면 안된다. 초반에 선형적이되 0으로 수렴하는 함수로
+            solveTime = (float) Math.Floor(30 - 2 * combo - 0.05 * score + timeBonus);
+            bonusTimeLimit = (float) Math.Floor(solveTime * 0.85 - timeBonus);
         }
-        else
-        {
-            bonusTimeLimit = 45;
-            solveTime = 5;
+        else if(currentMode == 1)
+        {   // Biscuit Story Mode
+            bonusTimeLimit = 45; // not used
+            if (currentGame == 0) solveTime = 60;
+            else if (currentGame == 1) solveTime = 50;
+            else if (currentGame == 2) solveTime = 40;
+            else if (currentGame == 3) solveTime = 45;
+            else solveTime = 45;
+        }else if(currentMode == 2)
+        {   // Rec2Square Story Mode
+            solveTime = 60;
+        }else if(currentMode == 3)
+        {   // Similarity Story Mode
+            solveTime = 60;
         }
+
+        current_Time = solveTime;
         
     }
 
@@ -164,7 +216,7 @@ private void Awake()
 
     IEnumerator Timer() // 0.01초 단위로 시간을 측정
     {
-        if (isPlay == 0) yield return null;
+        //if (isPlay == 0) yield return null;
         yield return new WaitForSeconds(0.01f);
         current_Time -= 0.01f;
         TimeText.text = current_Time.ToString("##0.00") + " sec";
@@ -174,8 +226,9 @@ private void Awake()
     public void LostLife() // Life를 잃는 것을 처리해주는 함수, 적이 몸에 닿을 시 실행
     {
         //foreach (Transform Enemy in EnemyPar.transform) Enemy.GetComponent<EnemyBehaviour>().PushBack();
-        //combo = 0;
+        combo = 0;
         //GetComponent<AudioManager>().DamagedSound();
+        // 교체하기
         switch (lifes)
         {
             case 3:  // 3개면 2개로
@@ -196,13 +249,15 @@ private void Awake()
                 //GetComponent<AudioManager>().GameOverSound();
                 break;
         }
-        GameManager(0);
     }
 
     public void LostHelp() // 교체하기 버튼 누르면 반응하는 함수
     {
         if (hints == 0) return;
-        GameManager(1);
+
+        ResetTimeManager();
+        MakeNewGame();
+
         switch (hints)
         {
             case 3:  // 3개면 2개로
@@ -215,11 +270,10 @@ private void Awake()
                 HintOff[1].SetActive(true);
                 hints--;
                 break;
-            case 1: // 1개면 게임오버
+            case 1: 
                 HintOn[0].SetActive(false);
                 HintOff[0].SetActive(true);
                 hints--;
-                //GameOver(false);
                 //GetComponent<AudioManager>().GameOverSound();
                 break;
         }
@@ -236,13 +290,11 @@ private void Awake()
         else
             GameOverBack.SetActive(true);
 
-        if (PlayerPrefs.GetInt("Mode") == 4)
+        if (currentMode == 4)
         {
             // 순위전 화면구성
             RestartButton.SetActive(true);
-            RankingButton.SetActive(true);
-
-            
+            RankingButton.SetActive(true);            
         }
         else
         {
@@ -271,9 +323,7 @@ private void Awake()
     // 문제를 해결한 경우 점수를 얻는다
     public void AddScore()
     {
-
         Renew();
-
     }
 
 }

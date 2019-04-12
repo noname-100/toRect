@@ -29,11 +29,6 @@ public class StoryScript : MonoBehaviour {
     public GameObject TextBox;
     public Text TextBox_text;
 
-    // StoryMode Bubble
-    public GameObject SpeechBubble;
-    public Text SpeechBubble_text;
-    public Text SpeechBubble_name;
-
     // Story mode internal variables
     private int currentmode;
     private int storyprogress;
@@ -111,7 +106,7 @@ public class StoryScript : MonoBehaviour {
     public void StoryManager()
     {
         if(currentmode == 0)
-        { // mom story
+        { // Biscuit Story
 
             switch (storyprogress)
             {
@@ -124,80 +119,40 @@ public class StoryScript : MonoBehaviour {
                 case 2:
                     Stop_TextBox_B();
                     ec.isPlay = 1;
-                    break;
-                case 3:
-                    Stop_TextBox();
-                    Start_SpeechBubble(0);
-                    break;
-                case 4:
-                    Start_SpeechBubble(1);
-                    break;
-                case 5:
-                    Start_SpeechBubble(2);
-                    break;
-                case 6:
-                    Stop_SpeechBubble();
-                    ec.isPlay = 1;
-                    break;
+                    break;                
             }
 
         }else if(currentmode == 1)
-        { // dad story
+        { // Rec2Square Story
 
             switch (storyprogress)
             {
                 case 0:
-                    Start_TextBox(0);
+                    Start_TextBox_R(0);
                     break;
                 case 1:
-                    Start_TextBox(1);
+                    Start_TextBox_R(1);
                     break;
                 case 2:
-                    Start_TextBox(2);
-                    break;
-                case 3:
-                    Stop_TextBox();
-                    Start_SpeechBubble(0);
-                    break;
-                case 4:
-                    Start_SpeechBubble(1);
-                    break;
-                case 5:
-                    Start_SpeechBubble(2);
-                    break;
-                case 6:
-                    Stop_SpeechBubble();
+                    Stop_TextBox_R();
                     ec.isPlay = 1;
                     break;
             }
 
         }
         else if(currentmode == 2)
-        { // friend story
+        { // Similarity Story
 
             switch (storyprogress)
             {
                 case 0:
-                    Start_TextBox(0);
+                    Start_TextBox_S(0);
                     break;
                 case 1:
-                    Start_TextBox(1);
+                    Start_TextBox_S(1);
                     break;
                 case 2:
-                    Start_TextBox(2);
-                    break;
-                case 3:
-                    Stop_TextBox();
-                    Start_SpeechBubble(0);
-                    break;
-                case 4:
-                    Start_SpeechBubble(1);
-                    break;
-                case 5:
-                    Start_SpeechBubble(2);
-                    break;
-                case 6:
-                    Stop_SpeechBubble();
+                    Stop_TextBox_S();
                     ec.isPlay = 1;
                     break;
             }
@@ -230,12 +185,12 @@ public class StoryScript : MonoBehaviour {
 
     void Stop_TextBox_R()
     {
-        BiscuitText.SetActive(false);
+        Rec2SquareText.SetActive(false);
     }
 
     void Stop_TextBox_S()
     {
-        BiscuitText.SetActive(false);
+        SimilarText.SetActive(false);
     }
 
 }
