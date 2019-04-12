@@ -18,11 +18,12 @@ public class EventController : MonoBehaviour {
 
     // 게임 요소
     public int movementStatus; // 이동모드 상태(전체모드 0, 회전모드 1, 이동모드 2)
-    public GameController GC;
+    public GameObject GC;
+    private GameController gc;
     public int isPlay; // 0 : 게임 정지 1 : 게임 시작 시그널 2 : 게임 실행중
 
     // UI요소
-    public GameObject GameOverWindow, HintWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, NextStageButton, GameOverBack, ClearBack;
+    public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, NextStageButton, GameOverBack, ClearBack;
     public Text GameResultText;
 
     // 점수
@@ -49,6 +50,7 @@ private void Awake()
 
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
+        gc = GC.GetComponent<GameController>();
         Debug.Log("curr " + currentMode);
         lifes = 3;
         hints = 3;
@@ -64,7 +66,7 @@ private void Awake()
             MakeNewGame();
             ResetTimeManager();
             StartCoroutine("Timer");
-            GC.makeNew(currentGame);
+            gc.makeNew(currentGame);
         }
         else
         {
@@ -92,7 +94,7 @@ private void Awake()
         }
 
         // 시간종료
-        if (current_Time <= 0)
+        if (current_Time < 0)
         {            
             LostLife();
             ResetTimeManager();
@@ -109,7 +111,7 @@ private void Awake()
         }
 
         // 게임승리
-        if (GC.isSolved() == 1 || isHelp == 2)
+        if (gc.isSolved() == 1 || isHelp == 2)
         {
             combo++;
             if (current_Time >= bonusTimeLimit) BonusGift();
@@ -162,6 +164,9 @@ private void Awake()
 
         // 총시간, 콤보로 추가점수
         score += (int) Math.Floor(0.3 * (60 - solveTime) + combo * 3.5d);
+        float norm = 0.4f;
+        score = (int) Math.Floor(norm * score);
+
         ScoreText.text = score.ToString() + " 점";
 
     }
@@ -203,7 +208,7 @@ private void Awake()
     {
         // generate random game, difficulty - game generation logic comes here
         currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, 7f));
-        GC.makeNew(currentGame);
+        gc.makeNew(currentGame);
     }
 
     /*
@@ -317,7 +322,7 @@ private void Awake()
         Debug.Log("Renew");
         current_Time = solveTime;
         //Generate();
-        GC.makeNew(0);
+        gc.makeNew(0);
     }
 
     // 문제를 해결한 경우 점수를 얻는다

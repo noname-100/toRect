@@ -19,66 +19,48 @@ public class GameController : MonoBehaviour
         ss = EC.GetComponent<StoryScript>();
     }
 
-    public void makeNew(int gametype)
+    public void makeNew(int gameType)
     {
-
-        foreach(GameObject p in polygonList)
+        foreach (GameObject p in polygonList)
         {
             Destroy(p);
         }
         polygonList.Clear();
 
-        problemTriangle = new Vector2[6];
-
-        for (int i = 0; i < 3; i++)
-        {
-            problemTriangle[i].x = UnityEngine.Random.Range(-3.5f, 2f);
-            problemTriangle[i].y = UnityEngine.Random.Range(-3f, 2.5f);
-        }
-        
-
-        if (gametype == 0)
-        {   
-            // 정삼각형
-
-
-
-        }else if(gametype == 1)
-        {
-            // 예각삼각형
-
-
-        }else if(gametype == 2)
-        {
-            // 직각삼각형
-
-
-        }else if(gametype == 3)
-        {
-            // 둔각삼각형
-
-
-        }else if(gametype == 4)
-        {
-            // 사다리꼴
-
-
-        }else if(gametype == 5)
-        {
-            // 직투정
-
-
-        }
-        else
-        {
-            // 합동삼각형
-
-
-        }
-
         var firstTriangle = new GameObject("Polygon");
         firstTriangle.AddComponent(System.Type.GetType("Polygon"));
-        firstTriangle.GetComponent<Polygon>().render(problemTriangle);
+
+        if (gameType == 0)
+        {
+            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
+        }
+        else if(gameType == 1)
+        {
+            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
+        }
+        else if(gameType == 2)
+        {
+            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(0));
+        }
+        else if(gameType == 3)
+        {
+            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(2));
+        }
+        else if(gameType == 4)
+        {   // TODO : need fix
+            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
+        }
+        else if(gameType == 5)
+        {   // TODO : need fix
+            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
+        }
+        
+        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(0));
+        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
+        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(2));
+        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeParallelogram());
+        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTrapezoid());
+        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeJig());
         polygonList.Add(firstTriangle);
     }
 
@@ -87,6 +69,7 @@ public class GameController : MonoBehaviour
         if (polygonList.Count != 1) return 0;
 
         Vector2[] reference = polygonList[0].GetComponent<Polygon>().VerticesPublic2D;
+        if (reference == null) return 0;
 
         if (reference.Length != 4) return 0;
 

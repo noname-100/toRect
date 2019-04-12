@@ -11,6 +11,7 @@ public class Polygon : MonoBehaviour
     private bool isSelected = false;
     public bool dotSelected = false;
     public bool mergeable = false;
+    public static bool jiktojung = false;
     public int merger;
     private List<GameObject> dots = new List<GameObject>();
     // Start is called before the first frame update
@@ -22,20 +23,28 @@ public class Polygon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (dotSelected) {
-            
+        if (isSelected)
+        {
+            if (Input.GetKeyDown("space"))
+            {
+                flip();
+            }
+        }
+        if (dotSelected)
+        {
+
         }
         else
         {
-            foreach(GameObject dot in dots)
+            foreach (GameObject dot in dots)
             {
                 dot.GetComponent<Dots>().selectable = false;
             }
         }
-    }   
+    }
     void OnDestroy()
     {
-        foreach(GameObject dot in dots)
+        foreach (GameObject dot in dots)
         {
             Destroy(dot);
         }
@@ -45,13 +54,14 @@ public class Polygon : MonoBehaviour
     {
         List<Vector2> verticeList = new List<Vector2>();
         VerticesPublic2D = initVertices;
+
         for (int i = 0; i < initVertices.Length; i++)
         {
-            double incline1z = initVertices[(i + 1) % initVertices.Length][0]- initVertices[i][0];
+            double incline1z = initVertices[(i + 1) % initVertices.Length][0] - initVertices[i][0];
             double incline1m = initVertices[(i + 1) % initVertices.Length][1] - initVertices[i][1];
             double incline2z = initVertices[i][0] - initVertices[(i + initVertices.Length - 1) % initVertices.Length][0];
             double incline2m = initVertices[i][1] - initVertices[(i + initVertices.Length - 1) % initVertices.Length][1];
-            if( incline1z * incline2m - incline1m * incline2z < -0.01 || incline1z * incline2m - incline1m * incline2z > 0.01)
+            if (incline1z * incline2m - incline1m * incline2z < -0.01 || incline1z * incline2m - incline1m * incline2z > 0.01 || jiktojung)
             {
                 verticeList.Add(initVertices[i]);
                 //Debug.Log(((i + initVertices.Length-1) % initVertices.Length )+ "th vector: " + "X1 is:" + initVertices[(i + initVertices.Length - 1) % initVertices.Length][0] + "Y1 is:" + initVertices[(i + initVertices.Length - 1) % initVertices.Length][1]);
@@ -61,8 +71,9 @@ public class Polygon : MonoBehaviour
             }
 
         }
+
         var vertices2D = verticeList.ToArray();
-        
+
         gameObject.AddComponent(System.Type.GetType("Drag"));
         _polygonCollider2D = gameObject.AddComponent<PolygonCollider2D>();
         vertices3D = System.Array.ConvertAll<Vector2, Vector3>(vertices2D, v => v);
@@ -103,11 +114,11 @@ public class Polygon : MonoBehaviour
         {
             this.GetComponent<Renderer>().material.color = Color.yellow;
         }
-        
+
     }
     public void OnMouseExit()
     {
-        if(!this.isSelected)
+        if (!this.isSelected)
             unActivate();
     }
     public void unActivate()
@@ -118,6 +129,7 @@ public class Polygon : MonoBehaviour
         }
         dotSelected = false;
         dots.Clear();
+        this.isSelected = false;
         this.GetComponent<Renderer>().material.color = Color.green;
     }
     public void createDots()
@@ -127,10 +139,10 @@ public class Polygon : MonoBehaviour
         mesh.RecalculateBounds();
         vertices3D = mesh.vertices;
         var c = vertices3D.Count();
-        for(int i = 0; i < c; i++)
+        for (int i = 0; i < c; i++)
         {
-            GameObject dot = Instantiate(Resources.Load("Prefabs/Circle"), transform.TransformPoint(vertices3D[i])+new Vector3(0,0,-1), transform.rotation) as GameObject;
-            dot.name = "dot"+i;
+            GameObject dot = Instantiate(Resources.Load("Prefabs/Circle"), transform.TransformPoint(vertices3D[i]) + new Vector3(0, 0, -1), transform.rotation) as GameObject;
+            dot.name = "dot" + i;
             dot.transform.parent = gameObject.transform;
             dot.AddComponent(System.Type.GetType("Dots"));
             dots.Add(dot);
@@ -148,14 +160,17 @@ public class Polygon : MonoBehaviour
                 }
             }
             midDots = midDots.OrderBy(o => (Mathf.Abs(o.x - transform.TransformPoint(vertices3D[i]).x))).ToList();
-            foreach(Vector3 dotVector in midDots)
+            foreach (Vector3 dotVector in midDots)
             {
-                GameObject midDot = Instantiate(Resources.Load("Prefabs/Circle"), dotVector, transform.rotation) as GameObject;
-                midDot.name = "dotmid" + i;
-                midDot.transform.parent = gameObject.transform;
-                midDot.AddComponent(System.Type.GetType("Dots"));
-                midDot.GetComponent<Dots>().isVertice = false;
-                dots.Add(midDot);
+                if (Vector3.Distance(transform.TransformPoint(vertices3D[i]), dotVector) > 1.001 && Vector3.Distance(transform.TransformPoint(vertices3D[(i + 1) % c]), dotVector) > 1.001 && Vector3.Distance(dots[dots.Count - 1].transform.position, dotVector) > 0.001)
+                {
+                    GameObject midDot = Instantiate(Resources.Load("Prefabs/Circle"), dotVector, transform.rotation) as GameObject;
+                    midDot.name = "dotmid" + i;
+                    midDot.transform.parent = gameObject.transform;
+                    midDot.AddComponent(System.Type.GetType("Dots"));
+                    midDot.GetComponent<Dots>().isVertice = false;
+                    dots.Add(midDot);
+                }
             }
 
             /*
@@ -189,9 +204,10 @@ public class Polygon : MonoBehaviour
         if (!this.isSelected)
         {
             GameObject controller = GameObject.Find("GameControllerObject");
-            foreach(GameObject pol in controller.GetComponent<GameController>().polygonList)
+            foreach (GameObject pol in controller.GetComponent<GameController>().polygonList)
             {
-                if (pol != gameObject && pol!=null) {
+                if (pol != gameObject && pol != null)
+                {
                     pol.GetComponent<Polygon>().unActivate();
                 }
             }
@@ -210,11 +226,11 @@ public class Polygon : MonoBehaviour
     }
     public void selectableDots()
     {
-        int index=0;
+        int index = 0;
         int c = dots.Count();
-        int lowerVertex=1;
-        int higherVertex=1;
-        for(int i = 0; i < c; i++)
+        int lowerVertex = 1;
+        int higherVertex = 1;
+        for (int i = 0; i < c; i++)
         {
             if (dots[i].GetComponent<Dots>().isSelected)
             {
@@ -230,20 +246,17 @@ public class Polygon : MonoBehaviour
         {
             higherVertex++;
         }
-        float incline1z = (dots[index].transform.position.y - dots[(index + c - lowerVertex)%c].transform.position.y);
+        float incline1z = (dots[index].transform.position.y - dots[(index + c - lowerVertex) % c].transform.position.y);
         float incline1m = (dots[index].transform.position.x - dots[(index + c - lowerVertex) % c].transform.position.x);
         float incline2z = (dots[index].transform.position.y - dots[(index + higherVertex) % c].transform.position.y);
         float incline2m = (dots[index].transform.position.x - dots[(index + higherVertex) % c].transform.position.x);
 
-        for (int i = 0; i < dots.Count; i++)
+        for (int i = 0; i < c - (lowerVertex + higherVertex + 1); i++)
         {
-            float inclinez = (dots[i].transform.position.y - dots[index].transform.position.y);
-            float inclinem = (dots[i].transform.position.x - dots[index].transform.position.x);
-            if ( Mathf.Abs(incline1z * inclinem - incline1m * inclinez)>0.1 && Mathf.Abs(incline2z * inclinem - incline2m * inclinez)>0.1 && i!=index )
-            {
-                dots[i].GetComponent<Dots>().selectable = true;
-                dots[i].GetComponent<Renderer>().material.color = Color.blue;
-            }
+
+            dots[(i + index + higherVertex + 1) % c].GetComponent<Dots>().selectable = true;
+            dots[(i + index + higherVertex + 1) % c].GetComponent<Renderer>().material.color = Color.blue;
+
         }
     }
     public void cutMyself()
@@ -258,7 +271,7 @@ public class Polygon : MonoBehaviour
                 break;
             }
         }
-        for (int i = index1+1; i < dots.Count(); i++)
+        for (int i = index1 + 1; i < dots.Count(); i++)
         {
             if (dots[i].GetComponent<Dots>().isSelected)
             {
@@ -267,9 +280,9 @@ public class Polygon : MonoBehaviour
             }
         }
         List<Vector2> firstHalf = new List<Vector2>();
-        for(int i = index1; i < index2+1; i++)
+        for (int i = index1; i < index2 + 1; i++)
         {
-            if(i==index1 || i ==index2 || dots[i].GetComponent<Dots>().isVertice)
+            if (i == index1 || i == index2 || dots[i].GetComponent<Dots>().isVertice)
             {
                 firstHalf.Add(new Vector2(dots[i].transform.position.x, dots[i].transform.position.y));
             }
@@ -282,7 +295,7 @@ public class Polygon : MonoBehaviour
                 secondHalf.Add(new Vector2(dots[i].transform.position.x, dots[i].transform.position.y));
             }
         }
-        for (int i = 0; i < index1+1; i++)
+        for (int i = 0; i < index1 + 1; i++)
         {
             if (i == index1 || i == index2 || dots[i].GetComponent<Dots>().isVertice)
             {
@@ -305,33 +318,38 @@ public class Polygon : MonoBehaviour
     }
     public void findMerge()
     {
-        for(int i = 0; i < vertices3D.Count(); i++)
+        for (int i = 0; i < vertices3D.Count(); i++)
         {
             Vector3 x1 = transform.TransformPoint(vertices3D[i]);
-            Vector3 x2 = transform.TransformPoint(vertices3D[(i+1)%vertices3D.Count()]);
+            Vector3 x2 = transform.TransformPoint(vertices3D[(i + 1) % vertices3D.Count()]);
             float distX = Vector3.Distance(x1, x2);
             GameObject controller = GameObject.Find("GameControllerObject");
             foreach (GameObject pol in controller.GetComponent<GameController>().polygonList)
             {
                 if (pol != gameObject)
                 {
-                    for(int j = 0; j < pol.GetComponent<Polygon>().vertices3D.Count(); j++)
+                    for (int j = 0; j < pol.GetComponent<Polygon>().vertices3D.Count(); j++)
                     {
                         Vector3 y1 = pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[j]);
                         Vector3 y2 = pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(j + 1) % pol.GetComponent<Polygon>().vertices3D.Count()]);
                         float distY = Vector3.Distance(y1, y2);
-                        //Debug.Log("distX: "+distX+"distY: "+distY);
-                        if (distX - distY < 0.1 || distX -distY > - 0.1)
+                        if (distX - distY < 0.001 && distX - distY > -0.001)
                         {
                             //Debug.Log(Vector3.Angle(x1 - x2, y1 - y2));
-                            if (Vector3.Distance(x1, y2) < 0.5 && Vector3.Distance(x2, y1) < 0.5)
+                            //Debug.Log("distX: "+distX+"distY: "+distY);
+                            if (Vector3.Distance(x1, y2) < 0.2 && Vector3.Distance(x2, y1) < 0.2 && Vector3.Distance(x1, y2) + Vector3.Distance(x2, y1) > 0)
                             {
-                                if (Mathf.Abs(transform.eulerAngles.z - pol.transform.eulerAngles.z) < 10 || Mathf.Abs(transform.eulerAngles.z - pol.transform.eulerAngles.z) > 175)
+                                if (Mathf.Abs(Vector3.SignedAngle(x1 - x2, y1 - y2, Vector3.forward)) > 170)
                                 {
-                                    if(Mathf.Abs(transform.eulerAngles.z - pol.transform.eulerAngles.z) < 10)
-                                    transform.eulerAngles = pol.transform.eulerAngles;
-                                    if(Mathf.Abs(transform.eulerAngles.z - pol.transform.eulerAngles.z) > 175)
-                                    transform.eulerAngles = pol.transform.eulerAngles+new Vector3(0,0,180);
+                                    Vector3 diffX = new Vector3(x1.x - x2.x, x1.y - x2.y, 0);
+                                    Vector3 diffY = new Vector3(y2.x - y1.x, y2.y - y1.y, 0);
+                                    //Debug.Log("The signed angle between v" + i + "-v" + (i+1) + "and t" + (j+1) + "-t"+j);
+                                    //Debug.Log(Mathf.Abs(Vector3.SignedAngle(transform.TransformPoint(vertices3D[i]) - transform.TransformPoint(vertices3D[(i+1)%vertices3D.Count()]), pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[j]) - pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(j + 1) % pol.GetComponent<Polygon>().vertices3D.Count()]), Vector3.forward)));
+                                    transform.eulerAngles += new Vector3(0, 0, Vector3.Angle(x1 - x2, y1 - y2) + 180);
+                                    if (Mathf.Abs(Vector3.SignedAngle(transform.TransformPoint(vertices3D[i]) - transform.TransformPoint(vertices3D[(i + 1) % vertices3D.Count()]), pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[j]) - pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(j + 1) % pol.GetComponent<Polygon>().vertices3D.Count()]), Vector3.forward)) != 180)
+                                    {
+                                        transform.eulerAngles -= 2 * (new Vector3(0, 0, Vector3.Angle(x1 - x2, y1 - y2) + 180));
+                                    }
                                     transform.position += (pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[j]) - transform.TransformPoint(vertices3D[(i + 1) % vertices3D.Count()]));
                                     foreach (GameObject pols in controller.GetComponent<GameController>().polygonList)
                                     {
@@ -356,7 +374,7 @@ public class Polygon : MonoBehaviour
         if (mergeable)
         {
             GameObject controller = GameObject.Find("GameControllerObject");
-            for(int x = 0; x < controller.GetComponent<GameController>().polygonList.Count(); x++)
+            for (int x = 0; x < controller.GetComponent<GameController>().polygonList.Count(); x++)
             {
                 GameObject pol = controller.GetComponent<GameController>().polygonList[x];
                 if (pol != gameObject)
@@ -365,11 +383,11 @@ public class Polygon : MonoBehaviour
                     {
                         //Debug.Log(merger + "," + pol.GetComponent<Polygon>().merger);
                         List<Vector2> newPol = new List<Vector2>();
-                        for(int i = 0; i<vertices3D.Count(); i++)
+                        for (int i = 0; i < vertices3D.Count(); i++)
                         {
-                            newPol.Add(new Vector2(transform.TransformPoint(vertices3D[(i+merger+1)% vertices3D.Count()]).x, transform.TransformPoint(vertices3D[(i + merger + 1) % vertices3D.Count()]).y));
+                            newPol.Add(new Vector2(transform.TransformPoint(vertices3D[(i + merger + 1) % vertices3D.Count()]).x, transform.TransformPoint(vertices3D[(i + merger + 1) % vertices3D.Count()]).y));
                         }
-                        for (int i = 0; i < pol.GetComponent<Polygon>().vertices3D.Count()-2; i++)
+                        for (int i = 0; i < pol.GetComponent<Polygon>().vertices3D.Count() - 2; i++)
                         {
                             newPol.Add(new Vector2(pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(i + pol.GetComponent<Polygon>().merger + 2) % pol.GetComponent<Polygon>().vertices3D.Count()]).x, pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(i + pol.GetComponent<Polygon>().merger + 2) % pol.GetComponent<Polygon>().vertices3D.Count()]).y));
                         }
@@ -387,4 +405,23 @@ public class Polygon : MonoBehaviour
             }
         }
     }
+    public void flip()
+    {
+        Vector2[] newVertices = new Vector2[vertices3D.Count()];
+        for (int i = 0; i < vertices3D.Count(); i++)
+        {
+            newVertices[i].x = -vertices3D[vertices3D.Count() - 1 - i].x;
+            newVertices[i].y = vertices3D[vertices3D.Count() - 1 - i].y;
+        }
+        GameObject controller = GameObject.Find("GameControllerObject");
+        controller.GetComponent<GameController>().polygonList.Remove(gameObject);
+
+        var newPol = new GameObject("Polygon");
+        newPol.AddComponent(System.Type.GetType("Polygon"));
+        newPol.GetComponent<Polygon>().render(newVertices);
+        controller.GetComponent<GameController>().polygonList.Add(newPol);
+        Destroy(gameObject);
+
+    }
+
 }

@@ -3482,14 +3482,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334d5389288cc7a45be6afe5649329b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combo: 0
-  solveTime: 0
-  bonusTimeLimit: 0
   movementStatus: 0
-  GC: {fileID: 271237296}
+  GC: {fileID: 271237295}
   isPlay: 0
   GameOverWindow: {fileID: 1753825162}
-  HintWindow: {fileID: 0}
   TotitleButton: {fileID: 368370865}
   RankingButton: {fileID: 1175452553}
   RestartButton: {fileID: 808526028}
@@ -3498,7 +3494,6 @@ MonoBehaviour:
   GameOverBack: {fileID: 464988073}
   ClearBack: {fileID: 576541925}
   GameResultText: {fileID: 453341148}
-  score: 0
   ScoreText: {fileID: 1468376404}
   TimeText: {fileID: 1370555243}
   LifeOn:
