@@ -50,8 +50,7 @@ private void Awake()
 
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
-        gc = GC.GetComponent<GameController>();
-        Debug.Log("curr " + currentMode);
+        gc = GC.GetComponent<GameController>();        
         lifes = 3;
         hints = 3;
         score = 0;
@@ -110,6 +109,7 @@ private void Awake()
             StartCoroutine("Timer");
         }
 
+        Debug.Log("isSolved : " + gc.isSolved());
         // 게임승리
         if (gc.isSolved() == 1 || isHelp == 2)
         {

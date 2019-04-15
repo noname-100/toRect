@@ -99,5 +99,18 @@ public class MakePolygon : MonoBehaviour
         return vertices;
     }
 
-
+    public static Vector2[] MakeRectangle()
+    {
+        vertices = new Vector2[4];
+        Polygon.jiktojung = false;
+        vertices[0].x = 0;
+        vertices[0].y = 0;
+        vertices[1].x = 2;
+        vertices[1].y = 0;
+        vertices[2].x = 2;
+        vertices[2].y = 3;
+        vertices[3].x = 0;
+        vertices[3].y = 3;
+        return vertices;
+    }
 }

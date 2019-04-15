@@ -29,6 +29,10 @@ public class GameController : MonoBehaviour
 
         var firstTriangle = new GameObject("Polygon");
         firstTriangle.AddComponent(System.Type.GetType("Polygon"));
+        
+        // rectangle test code
+        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeRectangle());
+        //goto End;
 
         if (gameType == 0)
         {
@@ -54,7 +58,9 @@ public class GameController : MonoBehaviour
         {   // TODO : need fix
             firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
         }
-        
+
+        //End:
+        //    Debug.Log("end");
         //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(0));
         //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
         //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(2));
@@ -66,6 +72,7 @@ public class GameController : MonoBehaviour
 
     public int isSolved()
     {
+        Debug.Log(polygonList.Count);
         if (polygonList.Count != 1) return 0;
 
         Vector2[] reference = polygonList[0].GetComponent<Polygon>().VerticesPublic2D;
@@ -89,7 +96,7 @@ public class GameController : MonoBehaviour
             distance[i] = (centerX - reference[i].x) * (centerX - reference[i].x) + (centerY - reference[i].y) * (centerY - reference[i].y);
         }
 
-        if (Math.Abs(distance[0] - distance[1]) <= 0.01 && Math.Abs(distance[0] - distance[2]) <= 0.01 && Math.Abs(distance[0] - distance[3]) <= 0.01)
+        if (Math.Abs(distance[0] - distance[1]) <= 100 && Math.Abs(distance[0] - distance[2]) <= 100 && Math.Abs(distance[0] - distance[3]) <= 100)
             return 1;
         else
             return 0;
