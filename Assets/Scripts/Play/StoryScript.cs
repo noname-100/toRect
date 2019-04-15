@@ -86,8 +86,7 @@ public class StoryScript : MonoBehaviour {
 
         currentmode = PlayerPrefs.GetInt("Mode") - 1; // for Script indexing and standardization
         storyprogress = 0;
-        StoryManager();
-        Debug.Log("currentmode : " + currentmode);
+        StoryManager();        
 
     }
 
