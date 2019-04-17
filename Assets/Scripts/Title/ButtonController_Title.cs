@@ -5,23 +5,31 @@ using UnityEngine.SceneManagement;
 
 public class ButtonController_Title : MonoBehaviour {
 
-    public GameObject[] HelpContents = new GameObject[5];
+    public GameObject[] HelpContentsBiscuit = new GameObject[1];
+    public GameObject[] HelpContentsRec2Square = new GameObject[2];
+    public GameObject[] HelpContentsSimilarity = new GameObject[1];
+    private List<GameObject[]> HelpContents;
+    public GameObject HelpWindow;
     public GameObject ModeSelect;
-    public GameObject StoryModeSelect;
+    public GameObject StoryModeSelect, StoryModeHelp;
     public GameObject RankPage;
     public GameObject LeftButton;
     public GameObject RightButton;
     public GameObject SoundOnButton;
     public GameObject SoundOffButton;
-    private int Page;
+    private int page;
+    private int helpGameModeIndex;
     private int helpLength;
 
     // Used to auto upload from PlayerPrefs
     public void Awake()
     {
-        helpLength = HelpContents.Length;
-        // INFO : game menu is at bottom the bottom layer
-        for (int i = 0; i < helpLength; i++) HelpContents[i].SetActive(false);
+        HelpContents = new List<GameObject[]>();
+        HelpContents.Add(HelpContentsBiscuit);
+        HelpContents.Add(HelpContentsRec2Square);
+        HelpContents.Add(HelpContentsSimilarity);
+        helpGameModeIndex = 0;
+
         ModeSelect.SetActive(false);
         RankPage.SetActive(false);
         StoryModeSelect.SetActive(false);
@@ -81,34 +89,51 @@ public class ButtonController_Title : MonoBehaviour {
         AudioListener.volume = 0f;
     }
 
-    public void SetFirstPage()
+    private void clearAll()
     {
-        Page = 0;
-        HelpContents[Page].SetActive(true);
-        for (int i = 1; i < helpLength; i++) HelpContents[i].SetActive(false);
+        StoryModeHelp.SetActive(false);
+        for(int i = 0; i < HelpContents.Count; i++)
+        {
+            for(int j = 0; j < HelpContents[i].Length; j++)
+            {
+                HelpContents[i][j].SetActive(false);
+            }
+        }
         LeftButton.SetActive(false);
+        RightButton.SetActive(false);
+    }
+
+    public void OpenPage(int gamemode)
+    {
+        helpGameModeIndex = gamemode;
+        page = 0;
+        clearAll();
+        HelpWindow.SetActive(true);
+        HelpContents[helpGameModeIndex][page].SetActive(true);
+        if (HelpContents[helpGameModeIndex].Length != 1) RightButton.SetActive(true);
+        else RightButton.SetActive(false);
+        LeftButton.SetActive(false);
+    }
+
+    public void MoveRightPage()
+    {
+        clearAll();
+        LeftButton.SetActive(true);
+        if (page == HelpContents[helpGameModeIndex].Length - 2) RightButton.SetActive(false);
+        else RightButton.SetActive(true);
+        HelpContents[helpGameModeIndex][page].SetActive(false);
+        page++;
+        HelpContents[helpGameModeIndex][page].SetActive(true);
+    }
+
+    public void MoveLeftPage()
+    {
+        clearAll();
         RightButton.SetActive(true);
+        if (page == 1) LeftButton.SetActive(false);
+        else LeftButton.SetActive(true);
+        HelpContents[helpGameModeIndex][page].SetActive(false);
+        page--;
+        HelpContents[helpGameModeIndex][page].SetActive(true);
     }
-
-    public void RightPage()
-    {
-        // At page 0, left button is desabled as default
-        if (Page == 0) LeftButton.SetActive(true);
-        HelpContents[Page].SetActive(false);
-        Page++;
-        HelpContents[Page].SetActive(true);
-        if (Page == helpLength-1) RightButton.SetActive(false);
-    }
-
-    public void LeftPage()
-    {
-        if (Page == helpLength) RightButton.SetActive(true);
-        HelpContents[Page].SetActive(false);
-        Page--;
-        HelpContents[Page].SetActive(true);
-        if (Page == 0) LeftButton.SetActive(false);
-    }
-
-
-
 }
