@@ -26,6 +26,9 @@ public class EventController : MonoBehaviour {
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, NextStageButton, GameOverBack, ClearBack;
     public Text GameResultText;
 
+    // Clear 화면 게임요소
+    public GameObject RankingMain, RankingSub1, RankingSub2, GameOverBackground, Chapter1ClearBackground, Chapter2ClearBackground, Chapter3ClearBackground;
+
     // 점수
     private int score;
     public Text ScoreText;
@@ -118,7 +121,10 @@ private void Awake()
             StartCoroutine("Timer");
         }
 
+        // 스토리모드 게임해결시 시간 멈추고 다음 단계로 넘어가는 부분
+
         // 게임승리
+        Debug.Log("issolved " + gc.isSolved());
         if (gc.isSolved() == 1 || isHelp == 2)
         {
             combo++;
@@ -299,20 +305,42 @@ private void Awake()
         //StopCoroutine("Timer");
         GameOverWindow.SetActive(true);
 
-        if (isCleared)
-            ClearBack.SetActive(true);
-        else
-            GameOverBack.SetActive(true);
+        GameOverBackground.SetActive(false);
+        Chapter1ClearBackground.SetActive(false);
+        Chapter2ClearBackground.SetActive(false);
+        Chapter3ClearBackground.SetActive(false);
 
-        if (currentMode == 4)
+        switch (currentMode)
         {
-            // 순위전 화면구성
+            case 0:
+                GameOverBackground.SetActive(true);
+                GameOverBack.SetActive(true);
+                break;
+            case 1:
+                Chapter1ClearBackground.SetActive(true);
+                break;
+            case 2:
+                Chapter2ClearBackground.SetActive(true);
+                break;
+            case 3:
+                Chapter3ClearBackground.SetActive(true);
+                break;
+        }
+
+
+
+        if (currentMode == 0)
+        {
+            // 순위전 버튼구성
+            RankingMain.SetActive(true);
+            RankingSub1.SetActive(true);
+            RankingSub2.SetActive(true);
             RestartButton.SetActive(true);
             RankingButton.SetActive(true);            
         }
         else
         {
-            // 스토리모드 화면구성
+            // 스토리모드 버튼구성
             NextStageButton.SetActive(true);
             ChallengeButton.SetActive(true);
         }

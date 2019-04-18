@@ -72,7 +72,6 @@ public class GameController : MonoBehaviour
 
     public int isSolved()
     {
-        Debug.Log(polygonList.Count);
         if (polygonList.Count != 1) return 0;
 
         Vector2[] reference = polygonList[0].GetComponent<Polygon>().VerticesPublic2D;
