@@ -63,6 +63,7 @@ public class ButtonController_Play : MonoBehaviour
         RankPage.SetActive(true);
     }
 
+    // TODO : 각 스테이지에 맞게 즉시클리어 가능한 버튼 만들것.
     public void ImmediateWin()
     {
         ec.GameManager(2);

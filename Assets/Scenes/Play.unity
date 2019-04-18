@@ -1777,7 +1777,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1008905278}
-        m_MethodName: Restart
+        m_MethodName: NextChapter
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3049,9 +3049,6 @@ MonoBehaviour:
   RankingButton: {fileID: 1175452553}
   RankPage: {fileID: 1398796203}
   EC: {fileID: 1008905277}
-  RectangleBiscuitBackground: {fileID: 1752224399}
-  Rec2SquareBackground: {fileID: 512297777}
-  SimilarityBackground: {fileID: 1006986675}
 --- !u!4 &1008905279
 Transform:
   m_ObjectHideFlags: 0
@@ -3159,6 +3156,8 @@ MonoBehaviour:
   movementStatus: 0
   GC: {fileID: 271237295}
   isPlay: 0
+  SS: {fileID: 0}
+  ss: {fileID: 0}
   GameOverWindow: {fileID: 1753825162}
   TotitleButton: {fileID: 368370865}
   RankingButton: {fileID: 1175452553}
@@ -3168,6 +3167,9 @@ MonoBehaviour:
   GameOverBack: {fileID: 464988073}
   ClearBack: {fileID: 576541925}
   GameResultText: {fileID: 274817838}
+  RectangleBiscuitBackground: {fileID: 0}
+  Rec2SquareBackground: {fileID: 0}
+  SimilarityBackground: {fileID: 0}
   RankingMain: {fileID: 1913306961}
   RankingSub1: {fileID: 798795888}
   RankingSub2: {fileID: 1697707830}
@@ -3213,6 +3215,7 @@ MonoBehaviour:
   text_s: {fileID: 496514225}
   TextBox: {fileID: 804625885}
   TextBox_text: {fileID: 893930890}
+  storyprogress: 0
 --- !u!1 &1086691408
 GameObject:
   m_ObjectHideFlags: 0

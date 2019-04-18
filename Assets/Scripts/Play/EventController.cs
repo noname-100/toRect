@@ -119,6 +119,12 @@ private void Awake()
     {
         int winflag = 0;
 
+        // 무조건 이기는 함수 설정
+        if (isHelp == 2)
+        {
+            winflag = 1;
+        }
+
         // 목숨이 없는 경우
         if (lifes == 0) {
             current_Time = 0;
