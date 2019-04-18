@@ -73,19 +73,29 @@ public class GameController : MonoBehaviour
         polygonList.Add(firstTriangle);
     }
 
-    public int isSolved()
+    public bool isSolvedSimilarity()
+    {
+        return false;
+    }
+
+    public bool isSolvedRec2Square()
+    {
+        return false;
+    }
+
+    public bool isSolvedRect()
     {
         if (polygonList.Count != 1)
         {
             Debug.Log("polyon size is not 1" + polygonList.Count);
-            return 0;
+            return false;
         }
 
         Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
         if (reference == null)
         {
             Debug.Log("reference not read properly. returns null");
-            return 0;
+            return false;
         }
 
         if (reference.Length != 4)
@@ -95,7 +105,7 @@ public class GameController : MonoBehaviour
             {
                 Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
             }
-            return 0;
+            return false;
         }
 
         float centerX = 0;
@@ -116,12 +126,12 @@ public class GameController : MonoBehaviour
 
         if (Math.Abs(distance[0] - distance[1]) <= 100 && Math.Abs(distance[0] - distance[2]) <= 100 && Math.Abs(distance[0] - distance[3]) <= 100)
         {
-            return 1;
+            return true;
         }
         else
         {
             Debug.Log("calculated, but not rectangle");
-            return 0;
+            return false;
         }          
     }
 }

@@ -31,7 +31,7 @@ public class StoryScript : MonoBehaviour {
 
     // Story mode internal variables
     private int currentmode;
-    private int storyprogress;
+    public int storyprogress;
 
     // 1st stage
     string[] textscript1 = {
@@ -119,7 +119,40 @@ public class StoryScript : MonoBehaviour {
                     Stop_TextBox_B();
                     PlayerPrefs.SetInt("Game", 0); // set gamemode from here
                     ec.isPlay = 1;
-                    break;                
+                    break;
+                case 3:
+                    Start_TextBox_B(2);
+                    break;
+                case 4:
+                    Start_TextBox_B(3);
+                    break;
+                case 5:
+                    Stop_TextBox_B();
+                    PlayerPrefs.SetInt("Game", 1);
+                    ec.isPlay = 1;
+                    break;
+                case 6:
+                    Start_TextBox_B(2);
+                    break;
+                case 7:
+                    Start_TextBox_B(3);
+                    break;
+                case 8:
+                    Stop_TextBox_B();
+                    PlayerPrefs.SetInt("Game", 1);
+                    ec.isPlay = 1;
+                    break;
+                case 9:
+                    Start_TextBox_B(2);
+                    break;
+                case 10:
+                    Start_TextBox_B(3);
+                    break;
+                case 11:
+                    Stop_TextBox_B();
+                    PlayerPrefs.SetInt("Game", 1);
+                    ec.isPlay = 1;
+                    break;
             }
 
         }else if(currentmode == 1)

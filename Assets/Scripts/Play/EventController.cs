@@ -21,6 +21,8 @@ public class EventController : MonoBehaviour {
     public GameObject GC;
     private GameController gc;
     public int isPlay; // 0 : 게임 정지 1 : 게임 시작 시그널 2 : 게임 실행중
+    public GameObject SS;
+    public StoryScript ss;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, NextStageButton, GameOverBack, ClearBack;
@@ -54,7 +56,8 @@ private void Awake()
 
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
-        gc = GC.GetComponent<GameController>();       
+        gc = GC.GetComponent<GameController>();
+        ss = SS.GetComponent<StoryScript>();
         
         hints = 3;
         score = 0;
@@ -114,6 +117,8 @@ private void Awake()
 
     public void GameManager(int isHelp)
     {
+        int winflag = 0;
+
         // 목숨이 없는 경우
         if (lifes == 0) {
             current_Time = 0;
@@ -138,22 +143,65 @@ private void Awake()
             StartCoroutine("Timer");
         }
 
-        // 게임승리
-        if (gc.isSolved() == 1 || isHelp == 2)
+        // 필요한 모든 검증장치를 여기에 추가한다.
+        if (gc.isSolvedRect())
         {
-            if (currentMode == 0)
+            if(currentMode == 0)
             {
-                combo++;
-                if (current_Time >= bonusTimeLimit) BonusGift();
-                AddPointManager();
-                ResetTimeManager();
-                MakeNewGame();
+                winflag = 1;
             }
             else
             {
-                // 스토리모드 게임해결시 시간 멈추고 다음 단계로 넘어가는 부분
+                isPlay = 0;
+                // move to storyscript state machine
+                if (ss.storyprogress == 11)
+                {
+                    GameOver(true);
+                }
             }
         }
+
+        if (gc.isSolvedRec2Square())
+        {
+            if(currentMode == 0)
+            {
+                winflag = 1;
+            }
+            else
+            {
+                isPlay = 0;
+                if (ss.storyprogress == 2)
+                {
+                    GameOver(true);
+                }
+            }
+        }
+
+        if (gc.isSolvedSimilarity())
+        {
+            if(currentMode == 0)
+            {
+                winflag = 1;
+            }
+            else
+            {
+                isPlay = 0;
+                if (ss.storyprogress == 2)
+                {
+                    GameOver(true);
+                }
+            }
+        }
+
+        if(winflag == 1)
+        {
+            combo++;
+            if (current_Time >= bonusTimeLimit) BonusGift();
+            AddPointManager();
+            ResetTimeManager();
+            MakeNewGame();
+        }
+
     }
 
     private void BonusGift()
@@ -255,6 +303,7 @@ private void Awake()
         }
 
         // 배경화면 및 게임아이템 설정
+        // TODO : 프라이팬 등의 도구 세트 변경 작업도 여기서 수행한다.
         // *** (주의) GAMEMODE 설정 변경시 currentGame 숫자 범위 변경 필요함 ***
         ClearBackground();
 
@@ -350,7 +399,7 @@ private void Awake()
     }
 
     
-    public void GameOver(bool isCleared) // GameOver 시 모달 레이아웃 함수
+    public void GameOver(bool isCleared) // life==0일때 gamemanager에서 호출하는 모달 팝업 매니징 함수
     {                                    // isCleared면 Clear, 아니면 GameOver
         //StopCoroutine("Timer");
         GameOverWindow.SetActive(true);

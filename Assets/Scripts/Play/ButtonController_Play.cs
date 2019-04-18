@@ -68,6 +68,23 @@ public class ButtonController_Play : MonoBehaviour
         ec.GameManager(2);
     }
 
-
+    public void NextChapter()
+    {
+        int currentMode = PlayerPrefs.GetInt("Mode");
+        int currentGame = PlayerPrefs.GetInt("Game");
+        if(currentMode == 0)
+        {
+            // TODO : 만약 단계별 클리어화면 추가되면 여기에서 작업한다.
+            PlayerPrefs.SetInt("Mode", 1);
+        }
+        else if(currentMode == 1)
+        {
+            PlayerPrefs.SetInt("Mode", 2);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Mode", 2);
+        }
+    }
 
 }
