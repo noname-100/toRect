@@ -25,6 +25,7 @@ public class EventController : MonoBehaviour {
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, NextStageButton, GameOverBack, ClearBack;
     public Text GameResultText;
+    public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground;
 
     // Clear 화면 게임요소
     public GameObject RankingMain, RankingSub1, RankingSub2, GameOverBackground, Chapter1ClearBackground, Chapter2ClearBackground, Chapter3ClearBackground;
@@ -60,6 +61,22 @@ private void Awake()
         combo = 0;
         movementStatus = 0;
         solveTime = 45; // 임의 변수초기화 값
+
+        // 배경화면 초기화
+        ClearBackground();
+
+        if (currentMode == 0 && currentMode ==1)
+        {
+            RectangleBiscuitBackground.SetActive(true);
+        }
+        else if(currentMode == 2)
+        {
+            Rec2SquareBackground.SetActive(true);
+        }
+        else
+        {
+            SimilarityBackground.SetActive(true);
+        }
 
         // TODO : 어느 게임인지 모드 및 난이도를 확인하고 생성까지 여기서 한다. private 변수 활용
         if (currentMode == 0)
@@ -121,17 +138,21 @@ private void Awake()
             StartCoroutine("Timer");
         }
 
-        // 스토리모드 게임해결시 시간 멈추고 다음 단계로 넘어가는 부분
-
         // 게임승리
-        Debug.Log("issolved " + gc.isSolved());
         if (gc.isSolved() == 1 || isHelp == 2)
         {
-            combo++;
-            if (current_Time >= bonusTimeLimit) BonusGift();
-            AddPointManager();
-            ResetTimeManager();
-            MakeNewGame();
+            if (currentMode == 0)
+            {
+                combo++;
+                if (current_Time >= bonusTimeLimit) BonusGift();
+                AddPointManager();
+                ResetTimeManager();
+                MakeNewGame();
+            }
+            else
+            {
+                // 스토리모드 게임해결시 시간 멈추고 다음 단계로 넘어가는 부분
+            }
         }
     }
 
@@ -145,7 +166,7 @@ private void Awake()
     {
         //if (currentMode == 0) return;
 
-        // 게임종류
+        // 게임종류, 여기는 중간로직이 많아질수도 있으니까 if문으로썼다!!
         if(currentGame == 0)
         {
             score += 10;
@@ -195,7 +216,7 @@ private void Awake()
             // 이부분이랑 콤보 풀리는 부분 조절하는게 게임성 핵심이다
             // 콤보 잃어서 제한시간이 너무 늘어지면 안된다
             // 점수나 콤보때문에 0초가 되면 안된다. 초반에 선형적이되 0으로 수렴하는 함수로
-            solveTime = 5; // (float) Math.Floor(30 - 2 * combo - 0.05 * score);
+            solveTime = 45; // (float) Math.Floor(30 - 2 * combo - 0.05 * score);
             // 보너스 타임에만 랜덤요소를 넣는다.
             bonusTimeLimit = (float) Math.Floor(solveTime * 0.85 - timeBonus);
         }
@@ -221,8 +242,37 @@ private void Awake()
 
     private void MakeNewGame()
     {
-        // generate random game, difficulty - game generation logic comes here
-        currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, 7f));
+        
+        if (currentMode == 0)
+        {
+            // 문제랜덤생성, TODO : 점수 및 콤보증가에 따라 난이도 높은 문제 증가할 확률 증가
+            currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, 10f));
+            PlayerPrefs.SetInt("Game", currentGame);
+        }
+        else
+        {
+            currentGame = PlayerPrefs.GetInt("Game");
+        }
+
+        // 배경화면 및 게임아이템 설정
+        // *** (주의) GAMEMODE 설정 변경시 currentGame 숫자 범위 변경 필요함 ***
+        ClearBackground();
+
+        if(currentGame >= 0 && currentGame <= 7)
+        {
+            // 투렉트
+            RectangleBiscuitBackground.SetActive(true);
+        }else if(currentGame >= 8 && currentGame <= 9)
+        {
+            // 직투정
+            Rec2SquareBackground.SetActive(true);
+        }
+        else
+        {
+            // 합동삼각형
+            SimilarityBackground.SetActive(true);
+        }
+
         gc.makeNew(currentGame);
     }
 
@@ -366,6 +416,13 @@ private void Awake()
     public void AddScore()
     {
         Renew();
+    }
+
+    public void ClearBackground()
+    {
+        RectangleBiscuitBackground.SetActive(false);
+        Rec2SquareBackground.SetActive(false);
+        SimilarityBackground.SetActive(false);
     }
 
 }

@@ -117,6 +117,7 @@ public class StoryScript : MonoBehaviour {
                     break;
                 case 2:
                     Stop_TextBox_B();
+                    PlayerPrefs.SetInt("Game", 0); // set gamemode from here
                     ec.isPlay = 1;
                     break;                
             }

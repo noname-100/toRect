@@ -14,7 +14,7 @@ public class ButtonController_Play : MonoBehaviour
     public GameObject RankingButton;
     public GameObject RankPage;
     public GameObject EC;
-    public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground;
+//    public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground;
     private EventController ec;
 
     public void Awake()
@@ -29,18 +29,6 @@ public class ButtonController_Play : MonoBehaviour
 
         int currentMode = PlayerPrefs.GetInt("Mode");
 
-        if(currentMode == 0 || currentMode == 1)
-        {
-            RectangleBiscuitBackground.SetActive(true);
-        }
-        else if(currentMode == 2)
-        {
-            Rec2SquareBackground.SetActive(true);
-        }
-        else
-        {
-            SimilarityBackground.SetActive(true);
-        }
     }
 
     public void Totitle()

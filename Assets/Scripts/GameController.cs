@@ -21,6 +21,7 @@ public class GameController : MonoBehaviour
 
     public void makeNew(int gameType)
     {
+
         foreach (GameObject p in polygonList)
         {
             Destroy(p);
@@ -29,44 +30,46 @@ public class GameController : MonoBehaviour
 
         var firstTriangle = new GameObject("Polygon");
         firstTriangle.AddComponent(System.Type.GetType("Polygon"));
-        
-        // rectangle test code
-        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeRectangle());
-        //goto End;
 
-        if (gameType == 0)
+        switch (gameType)
         {
-            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
+            case 0: // 예각1
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
+                break;
+            case 1: // 예각2
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
+                break;
+            case 2: // 직각
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(0));
+                break;
+            case 3: // 둔각
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(2));
+                break;
+            case 4: // 다각형1(사다리꼴)
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTrapezoid());
+                break;
+            case 5: // 다각형2(사각형) TODO : 생성함수
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(2));
+                break;
+            case 6: // 다각형2(오각형) TODO : 생성함수
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(2));
+                break;
+            case 7: // 다각형3(팔각형) TODO : 생성함수
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(2));
+                break;
+            case 8: // 직투정
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeJig());
+                break;
+            case 9: // 직투정2 TODO : 생성함수
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeJig());
+                break;
+            case 10: // 합동삼각형 TODO : 생성함수
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
+                break;
+            case 11: // 합동삼각형2 TODO : 생성함수
+                firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
+                break;
         }
-        else if(gameType == 1)
-        {
-            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
-        }
-        else if(gameType == 2)
-        {
-            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(0));
-        }
-        else if(gameType == 3)
-        {
-            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(2));
-        }
-        else if(gameType == 4)
-        {   // TODO : need fix
-            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
-        }
-        else if(gameType == 5)
-        {   // TODO : need fix
-            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
-        }
-
-        //End:
-        //    Debug.Log("end");
-        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(0));
-        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(1));
-        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(2));
-        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeParallelogram());
-        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTrapezoid());
-        //firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeJig());
         polygonList.Add(firstTriangle);
     }
 
@@ -78,7 +81,7 @@ public class GameController : MonoBehaviour
             return 0;
         }
 
-        Vector2[] reference = polygonList[0].GetComponent<Polygon>().VerticesPublic2D;
+        Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
         if (reference == null)
         {
             Debug.Log("reference not read properly. returns null");
@@ -88,6 +91,10 @@ public class GameController : MonoBehaviour
         if (reference.Length != 4)
         {
             Debug.Log("edge not four" + reference.Length);
+            for(int i = 0; i < reference.Length; i++)
+            {
+                Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
+            }
             return 0;
         }
 

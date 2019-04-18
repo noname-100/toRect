@@ -49,6 +49,7 @@ public class MakePolygon : MonoBehaviour
         return vertices;
     }
 
+    // 평행사변형
     public static Vector2[] MakeParallelogram()
     {
         vertices = new Vector2[4];
@@ -64,6 +65,8 @@ public class MakePolygon : MonoBehaviour
         vertices[3].y = 0;
         return vertices;
     }
+
+    // 직투정
     public static Vector2[] MakeJig()
     {
         vertices = new Vector2[6];
@@ -83,6 +86,8 @@ public class MakePolygon : MonoBehaviour
         vertices[5].y = 0;
         return vertices;
     }
+
+    // 사다리꼴
     public static Vector2[] MakeTrapezoid()
     {
         vertices = new Vector2[4];

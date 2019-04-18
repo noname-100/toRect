@@ -56,24 +56,28 @@ public class ButtonController_Title : MonoBehaviour {
     public void toRectStoryModeStart()
     {
         PlayerPrefs.SetInt("Mode", 1);
+        PlayerPrefs.SetInt("Game", 0);
         SceneManager.LoadScene("Play");
     }
 
     public void jiktojungStoryModeStart()
     {
         PlayerPrefs.SetInt("Mode", 2);
+        PlayerPrefs.SetInt("Game", 8);
         SceneManager.LoadScene("Play");
     }
 
     public void pieStoryModeStart()
     {
         PlayerPrefs.SetInt("Mode", 3);
+        PlayerPrefs.SetInt("Game", 10);
         SceneManager.LoadScene("Play");
     }
 
     public void ChallengeModeStart()
     {
         PlayerPrefs.SetInt("Mode", 0);
+        PlayerPrefs.SetInt("Game", 0);
         SceneManager.LoadScene("Play");
     }
 

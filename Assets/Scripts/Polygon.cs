@@ -41,6 +41,12 @@ public class Polygon : MonoBehaviour
                 dot.GetComponent<Dots>().selectable = false;
             }
         }
+
+        /*Mesh mesh = gameObject.GetComponent<MeshFilter>().mesh;
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        vertices3D = mesh.vertices;*/
+        //Debug.Log("vert3dlength : " + vertices3D.Length);
     }
     void OnDestroy()
     {
@@ -390,6 +396,11 @@ public class Polygon : MonoBehaviour
                         for (int i = 0; i < pol.GetComponent<Polygon>().vertices3D.Count() - 2; i++)
                         {
                             newPol.Add(new Vector2(pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(i + pol.GetComponent<Polygon>().merger + 2) % pol.GetComponent<Polygon>().vertices3D.Count()]).x, pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(i + pol.GetComponent<Polygon>().merger + 2) % pol.GetComponent<Polygon>().vertices3D.Count()]).y));
+                        }
+                        //Debug.Log("merging.. " + vertices3D.Length);
+                        for (int i = 0; i < newPol.Count; i++)
+                        {
+                            Debug.Log("new vertex x : " + newPol[i].x + " y : " + newPol[i].y);
                         }
                         var newPolygon = new GameObject("Polygon");
                         newPolygon.AddComponent(System.Type.GetType("Polygon"));
