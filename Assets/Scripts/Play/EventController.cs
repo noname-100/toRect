@@ -63,6 +63,7 @@ private void Awake()
         {
             // challenge mode
             lifes = 3;
+            isPlay = 2;
             MakeNewGame();
             ResetTimeManager();
             StartCoroutine("Timer");
@@ -102,7 +103,7 @@ private void Awake()
 
         // 시간종료
         if (current_Time < 0)
-        {            
+        {
             LostLife();
             ResetTimeManager();
             MakeNewGame();
@@ -117,7 +118,6 @@ private void Awake()
             StartCoroutine("Timer");
         }
 
-        Debug.Log("isSolved : " + gc.isSolved());
         // 게임승리
         if (gc.isSolved() == 1 || isHelp == 2)
         {
@@ -137,7 +137,7 @@ private void Awake()
 
     private void AddPointManager()
     {
-        if (currentMode == 0) return;
+        //if (currentMode == 0) return;
 
         // 게임종류
         if(currentGame == 0)
@@ -189,7 +189,8 @@ private void Awake()
             // 이부분이랑 콤보 풀리는 부분 조절하는게 게임성 핵심이다
             // 콤보 잃어서 제한시간이 너무 늘어지면 안된다
             // 점수나 콤보때문에 0초가 되면 안된다. 초반에 선형적이되 0으로 수렴하는 함수로
-            solveTime = (float) Math.Floor(30 - 2 * combo - 0.05 * score + timeBonus);
+            solveTime = 5; // (float) Math.Floor(30 - 2 * combo - 0.05 * score);
+            // 보너스 타임에만 랜덤요소를 넣는다.
             bonusTimeLimit = (float) Math.Floor(solveTime * 0.85 - timeBonus);
         }
         else if(currentMode == 1)
