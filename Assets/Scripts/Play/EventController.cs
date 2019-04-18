@@ -50,8 +50,8 @@ private void Awake()
 
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
-        gc = GC.GetComponent<GameController>();        
-        lifes = 3;
+        gc = GC.GetComponent<GameController>();       
+        
         hints = 3;
         score = 0;
         combo = 0;
@@ -62,6 +62,7 @@ private void Awake()
         if (currentMode == 0)
         {
             // challenge mode
+            lifes = 3;
             MakeNewGame();
             ResetTimeManager();
             StartCoroutine("Timer");
@@ -70,6 +71,13 @@ private void Awake()
         else
         {
             // TODO : story mode
+            lifes = 1;
+            LifeOn[0].SetActive(false);
+            LifeOn[1].SetActive(false);
+            LifeOn[2].SetActive(false);
+            LifeOff[0].SetActive(false);
+            LifeOff[1].SetActive(false);
+            LifeOff[2].SetActive(false);
             isPlay = 0;
         }
 
