@@ -50,7 +50,6 @@ public class ButtonController_Title : MonoBehaviour {
             SoundOnButton.SetActive(false);
             SoundOffButton.SetActive(true);
         }
-
     }
 
     public void toRectStoryModeStart()
@@ -58,6 +57,7 @@ public class ButtonController_Title : MonoBehaviour {
         PlayerPrefs.SetInt("Mode", 1);
         PlayerPrefs.SetInt("Game", 0);
         SceneManager.LoadScene("Play");
+        return;
     }
 
     public void jiktojungStoryModeStart()
@@ -65,6 +65,7 @@ public class ButtonController_Title : MonoBehaviour {
         PlayerPrefs.SetInt("Mode", 2);
         PlayerPrefs.SetInt("Game", 8);
         SceneManager.LoadScene("Play");
+        return;
     }
 
     public void pieStoryModeStart()
@@ -72,6 +73,7 @@ public class ButtonController_Title : MonoBehaviour {
         PlayerPrefs.SetInt("Mode", 3);
         PlayerPrefs.SetInt("Game", 10);
         SceneManager.LoadScene("Play");
+        return;
     }
 
     public void ChallengeModeStart()
@@ -79,18 +81,21 @@ public class ButtonController_Title : MonoBehaviour {
         PlayerPrefs.SetInt("Mode", 0);
         PlayerPrefs.SetInt("Game", 0);
         SceneManager.LoadScene("Play");
+        return;
     }
 
     public void SoundOn()
     {
         PlayerPrefs.SetFloat("isSoundOn", 1f);
         AudioListener.volume = 1f;
+        return;
     }
 
     public void SoundOff()
     {
         PlayerPrefs.SetFloat("isSoundOn", 0f);
         AudioListener.volume = 0f;
+        return;
     }
 
     private void clearAll()
@@ -105,6 +110,7 @@ public class ButtonController_Title : MonoBehaviour {
         }
         LeftButton.SetActive(false);
         RightButton.SetActive(false);
+        return;
     }
 
     public void OpenPage(int gamemode)
@@ -117,6 +123,7 @@ public class ButtonController_Title : MonoBehaviour {
         if (HelpContents[helpGameModeIndex].Length != 1) RightButton.SetActive(true);
         else RightButton.SetActive(false);
         LeftButton.SetActive(false);
+        return;
     }
 
     public void MoveRightPage()
@@ -128,6 +135,7 @@ public class ButtonController_Title : MonoBehaviour {
         HelpContents[helpGameModeIndex][page].SetActive(false);
         page++;
         HelpContents[helpGameModeIndex][page].SetActive(true);
+        return;
     }
 
     public void MoveLeftPage()
@@ -139,5 +147,6 @@ public class ButtonController_Title : MonoBehaviour {
         HelpContents[helpGameModeIndex][page].SetActive(false);
         page--;
         HelpContents[helpGameModeIndex][page].SetActive(true);
+        return;
     }
 }

@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         ss = EC.GetComponent<StoryScript>();
+        return;
     }
 
     public void makeNew(int gameType)
@@ -71,6 +72,7 @@ public class GameController : MonoBehaviour
                 break;
         }
         polygonList.Add(firstTriangle);
+        return;
     }
 
     public bool isSolvedSimilarity()

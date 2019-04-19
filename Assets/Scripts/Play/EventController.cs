@@ -25,7 +25,7 @@ public class EventController : MonoBehaviour {
     private StoryScript ss;
 
     // UI요소
-    public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, NextStageButton, GameOverBack, ClearBack;
+    public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
     public Text GameResultText;
     public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground, ScoreBackground;
 
@@ -111,7 +111,7 @@ private void Awake()
     // Update function for every timeframe
     public void Update()
     {
-        Debug.Log("Storyprogress " + ss.storyprogress);
+        //Debug.Log("Storyprogress " + ss.storyprogress);
         // check for game end ( different for different levels/modes ) comes here.
         if(isPlay != 0) GameManager(0);
 
@@ -120,6 +120,8 @@ private void Awake()
     public void GameManager(int isHelp)
     {
         int winflag = 0;
+
+        if (isHelp == 2) winflag = 1;
 
         // 목숨이 없는 경우
         if (lifes == 0) {
@@ -154,14 +156,15 @@ private void Awake()
             else
             {
                 // move to storyscript state machine
-                if (ss.storyprogress == 11)
+                if (ss.GetstoryProgress() == 11)
                 {
                     Debug.Log("here");
                     GameOver(true);
                 }
                 isPlay = 0;
-                ss.storyprogress++;
+                ss.SetstoryProgress(ss.GetstoryProgress()+1);
                 ss.StoryManager();
+                return;
             }
         }
 
@@ -173,14 +176,15 @@ private void Awake()
             }
             else
             {
-                if (ss.storyprogress == 2)
+                if (ss.GetstoryProgress() == 2)
                 {
                     Debug.Log("here2");
                     GameOver(true);
                 }
                 isPlay = 0;
-                ss.storyprogress++;
+                ss.SetstoryProgress(ss.GetstoryProgress()+1);
                 ss.StoryManager();
+                return;
             }
         }
 
@@ -192,14 +196,15 @@ private void Awake()
             }
             else
             {
-                if (ss.storyprogress == 2)
+                if (ss.GetstoryProgress() == 2)
                 {
                     Debug.Log("here3");
                     GameOver(true);
                 }
                 isPlay = 0;
-                ss.storyprogress++;
+                ss.SetstoryProgress(ss.GetstoryProgress()+1);
                 ss.StoryManager();
+                return;
             }
         }
 
@@ -211,7 +216,7 @@ private void Awake()
             ResetTimeManager();
             MakeNewGame();
         }
-
+        return;
     }
 
     private void BonusGift()
@@ -261,7 +266,7 @@ private void Awake()
         score = (int) Math.Floor(norm * score);
 
         ScoreText.text = score.ToString() + " 점";
-
+        return;
     }
 
     private void ResetTimeManager()
@@ -295,7 +300,7 @@ private void Awake()
         }
 
         current_Time = solveTime;
-        
+        return;
     }
 
     private void MakeNewGame()
@@ -333,6 +338,7 @@ private void Awake()
         }
 
         gc.makeNew(currentGame);
+        return;
     }
 
     /*
@@ -378,6 +384,7 @@ private void Awake()
                 //GetComponent<AudioManager>().GameOverSound();
                 break;
         }
+        return;
     }
 
     public void LostHelp() // 교체하기 버튼 누르면 반응하는 함수
@@ -406,6 +413,7 @@ private void Awake()
                 //GetComponent<AudioManager>().GameOverSound();
                 break;
         }
+        return;
     }
 
     
@@ -439,13 +447,21 @@ private void Awake()
 
 
 
-        if (currentMode == 0)
+        if (currentMode == 0 || currentMode == 3)
         {
             // 순위전 버튼구성
-            RankingMain.SetActive(true);
-            RankingSub1.SetActive(true);
-            RankingSub2.SetActive(true);
-            RestartButton.SetActive(true);
+            if (currentMode == 0)
+            {
+                RankingMain.SetActive(true);
+                RankingSub1.SetActive(true);
+                RankingSub2.SetActive(true);
+                RestartButton.SetActive(true);
+            }
+            else
+            {
+                ChallengeButtonforSimilarity.SetActive(true);
+            }
+            
             RankingButton.SetActive(true);            
         }
         else
@@ -454,28 +470,14 @@ private void Awake()
             NextStageButton.SetActive(true);
             ChallengeButton.SetActive(true);
         }
+        return;
     }
 
     public void Movemode()
     {
         movementStatus++;
         if (movementStatus == 3) movementStatus = 0;
-    }
-
-    // legacy code(will delete)
-
-    public void Renew()
-    {
-        Debug.Log("Renew");
-        current_Time = solveTime;
-        //Generate();
-        gc.makeNew(0);
-    }
-
-    // 문제를 해결한 경우 점수를 얻는다
-    public void AddScore()
-    {
-        Renew();
+        return;
     }
 
     public void ClearBackground()
@@ -483,6 +485,17 @@ private void Awake()
         RectangleBiscuitBackground.SetActive(false);
         Rec2SquareBackground.SetActive(false);
         SimilarityBackground.SetActive(false);
+        return;
+    }
+
+    public int GetisPlay()
+    {
+        return isPlay;
+    }
+
+    public void SetisPlay(int x)
+    {
+        isPlay = x;
     }
 
 }
