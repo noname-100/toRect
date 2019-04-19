@@ -228,7 +228,7 @@ public class Polygon : MonoBehaviour
             GameObject vertex1 = null;
             GameObject vertex2 = null;
 
-            foreach (GameObject dotz in dots)
+           /* foreach (GameObject dotz in dots)
             {
                 if(vertex1==null && vertex2 == null)
                 {
@@ -240,7 +240,7 @@ public class Polygon : MonoBehaviour
                     vertex1 = dotz;
                 }
                 break;
-            }
+            }*/
 
             // TODO : null bug on first index
             // TODO : color fix on dots.cs
@@ -252,12 +252,15 @@ public class Polygon : MonoBehaviour
                     vertex2 = vertex1;
                     vertex1 = dotz;
                     // check
-                    foreach(GameObject middotz in midpoints)
+                    if (vertex1 != null && vertex2 != null)
                     {
-                        if (Vector3.Distance(middotz.transform.position, midpoint.transform.position) / Vector3.Distance(vertex1.transform.position, vertex2.transform.position) < 0.01)
+                        foreach (GameObject middotz in midpoints)
                         {
-                            midpoint.GetComponent<Dots>().isperp = true;
-                            Destroy(middotz);
+                            if (Vector3.Distance(middotz.transform.position, midpoint.transform.position) / Vector3.Distance(vertex1.transform.position, vertex2.transform.position) < 0.01)
+                            {
+                                midpoint.GetComponent<Dots>().isperp = true;
+                                Destroy(middotz);
+                            }
                         }
                     }
                     midpoints.Clear();
