@@ -41,6 +41,12 @@ public class Polygon : MonoBehaviour
                 dot.GetComponent<Dots>().selectable = false;
             }
         }
+
+        /*Mesh mesh = gameObject.GetComponent<MeshFilter>().mesh;
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        vertices3D = mesh.vertices;*/
+        //Debug.Log("vert3dlength : " + vertices3D.Length);
     }
     void OnDestroy()
     {
@@ -106,6 +112,7 @@ public class Polygon : MonoBehaviour
 
         var filter = gameObject.AddComponent<MeshFilter>();
         filter.mesh = mesh;
+        return;
     }
     public void OnMouseEnter()
     {
@@ -131,6 +138,7 @@ public class Polygon : MonoBehaviour
         dots.Clear();
         this.isSelected = false;
         this.GetComponent<Renderer>().material.color = Color.green;
+        return;
     }
     public void createDots()
     {
@@ -198,6 +206,7 @@ public class Polygon : MonoBehaviour
 
 
         }
+        return;
     }
     void OnMouseUp()
     {
@@ -258,6 +267,7 @@ public class Polygon : MonoBehaviour
             dots[(i + index + higherVertex + 1) % c].GetComponent<Renderer>().material.color = Color.blue;
 
         }
+        return;
     }
     public void cutMyself()
     {
@@ -315,7 +325,9 @@ public class Polygon : MonoBehaviour
         controller.GetComponent<GameController>().polygonList.Add(secondPolygon);
         controller.GetComponent<GameController>().polygonList.Remove(gameObject);
         Destroy(gameObject);
+        return;
     }
+
     public void findMerge()
     {
         for (int i = 0; i < vertices3D.Count(); i++)
@@ -368,6 +380,7 @@ public class Polygon : MonoBehaviour
                 }
             }
         }
+        return;
     }
     public void merge()
     {
@@ -391,6 +404,11 @@ public class Polygon : MonoBehaviour
                         {
                             newPol.Add(new Vector2(pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(i + pol.GetComponent<Polygon>().merger + 2) % pol.GetComponent<Polygon>().vertices3D.Count()]).x, pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(i + pol.GetComponent<Polygon>().merger + 2) % pol.GetComponent<Polygon>().vertices3D.Count()]).y));
                         }
+                        //Debug.Log("merging.. " + vertices3D.Length);
+                        for (int i = 0; i < newPol.Count; i++)
+                        {
+                            Debug.Log("new vertex x : " + newPol[i].x + " y : " + newPol[i].y);
+                        }
                         var newPolygon = new GameObject("Polygon");
                         newPolygon.AddComponent(System.Type.GetType("Polygon"));
                         newPolygon.GetComponent<Polygon>().render(newPol.ToArray());
@@ -404,7 +422,9 @@ public class Polygon : MonoBehaviour
                 }
             }
         }
+        return;
     }
+
     public void flip()
     {
         Vector2[] newVertices = new Vector2[vertices3D.Count()];
@@ -421,7 +441,7 @@ public class Polygon : MonoBehaviour
         newPol.GetComponent<Polygon>().render(newVertices);
         controller.GetComponent<GameController>().polygonList.Add(newPol);
         Destroy(gameObject);
-
+        return;
     }
 
 }

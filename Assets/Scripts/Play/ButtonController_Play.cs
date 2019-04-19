@@ -14,7 +14,7 @@ public class ButtonController_Play : MonoBehaviour
     public GameObject RankingButton;
     public GameObject RankPage;
     public GameObject EC;
-    public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground;
+//    public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground;
     private EventController ec;
 
     public void Awake()
@@ -29,28 +29,19 @@ public class ButtonController_Play : MonoBehaviour
 
         int currentMode = PlayerPrefs.GetInt("Mode");
 
-        if(currentMode == 0 || currentMode == 1)
-        {
-            RectangleBiscuitBackground.SetActive(true);
-        }
-        else if(currentMode == 2)
-        {
-            Rec2SquareBackground.SetActive(true);
-        }
-        else
-        {
-            SimilarityBackground.SetActive(true);
-        }
     }
 
     public void Totitle()
     {
         SceneManager.LoadScene("Title");
+        return;
     }
 
     public void RestartChallenge()
     {
+        PlayerPrefs.SetInt("Mode", 0);
         SceneManager.LoadScene("Play");
+        return;
     }
 
     public void GameClose()
@@ -62,24 +53,52 @@ public class ButtonController_Play : MonoBehaviour
     {
         PlayerPrefs.SetFloat("isSoundOn", 1f);
         AudioListener.volume = 1f;
+        return;
     }
 
     public void SoundOff()
     {
         PlayerPrefs.SetFloat("isSoundOn", 0f);
         AudioListener.volume = 0f;
+        return;
     }
 
     public void ToRank()
     {
         RankPage.SetActive(true);
+        return;
     }
 
+    // TODO : 각 스테이지에 맞게 즉시클리어 가능한 버튼 만들것.
     public void ImmediateWin()
     {
         ec.GameManager(2);
+        return;
     }
 
-
+    public void NextChapter()
+    {
+        int currentMode = PlayerPrefs.GetInt("Mode");
+        int currentGame = PlayerPrefs.GetInt("Game");
+        if(currentMode == 0)
+        {
+            // TODO : 만약 단계별 클리어화면 추가되면 여기에서 작업한다.
+            PlayerPrefs.SetInt("Mode", 1);
+        }
+        else if(currentMode == 1)
+        {
+            PlayerPrefs.SetInt("Mode", 2);
+        }
+        else if(currentMode == 2)
+        {
+            PlayerPrefs.SetInt("Mode", 3);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Mode", 0);
+        }
+        SceneManager.LoadScene("Play");
+        return;
+    }
 
 }

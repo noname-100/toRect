@@ -21,10 +21,16 @@ public class EventController : MonoBehaviour {
     public GameObject GC;
     private GameController gc;
     public int isPlay; // 0 : 게임 정지 1 : 게임 시작 시그널 2 : 게임 실행중
+    public GameObject EC;
+    private StoryScript ss;
 
     // UI요소
-    public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, NextStageButton, GameOverBack, ClearBack;
+    public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
     public Text GameResultText;
+    public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground, ScoreBackground;
+
+    // Clear 화면 게임요소
+    public GameObject RankingMain, RankingSub1, RankingSub2, GameOverBackground, Chapter1ClearBackground, Chapter2ClearBackground, Chapter3ClearBackground;
 
     // 점수
     private int score;
@@ -50,18 +56,37 @@ private void Awake()
 
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
-        gc = GC.GetComponent<GameController>();        
-        lifes = 3;
+        gc = GC.GetComponent<GameController>();
+        ss = EC.GetComponent<StoryScript>();
+        
         hints = 3;
         score = 0;
         combo = 0;
         movementStatus = 0;
         solveTime = 45; // 임의 변수초기화 값
 
+        // 배경화면 초기화
+        ClearBackground();
+
+        if (currentMode == 0 && currentMode ==1)
+        {
+            RectangleBiscuitBackground.SetActive(true);
+        }
+        else if(currentMode == 2)
+        {
+            Rec2SquareBackground.SetActive(true);
+        }
+        else
+        {
+            SimilarityBackground.SetActive(true);
+        }
+
         // TODO : 어느 게임인지 모드 및 난이도를 확인하고 생성까지 여기서 한다. private 변수 활용
         if (currentMode == 0)
         {
             // challenge mode
+            lifes = 3;
+            isPlay = 2;
             MakeNewGame();
             ResetTimeManager();
             StartCoroutine("Timer");
@@ -70,6 +95,14 @@ private void Awake()
         else
         {
             // TODO : story mode
+            lifes = 1;
+            LifeOn[0].SetActive(false);
+            LifeOn[1].SetActive(false);
+            LifeOn[2].SetActive(false);
+            LifeOff[0].SetActive(false);
+            LifeOff[1].SetActive(false);
+            LifeOff[2].SetActive(false);
+            ScoreBackground.SetActive(false);
             isPlay = 0;
         }
 
@@ -78,6 +111,7 @@ private void Awake()
     // Update function for every timeframe
     public void Update()
     {
+        //Debug.Log("Storyprogress " + ss.storyprogress);
         // check for game end ( different for different levels/modes ) comes here.
         if(isPlay != 0) GameManager(0);
 
@@ -85,16 +119,19 @@ private void Awake()
 
     public void GameManager(int isHelp)
     {
+        int winflag = 0;
+
+        if (isHelp == 2) winflag = 1;
+
         // 목숨이 없는 경우
         if (lifes == 0) {
-            current_Time = 0;
-            StopCoroutine("Timer");
+            Debug.Log("here4");
             GameOver(false);
         }
 
         // 시간종료
         if (current_Time < 0)
-        {            
+        {
             LostLife();
             ResetTimeManager();
             MakeNewGame();
@@ -109,9 +146,69 @@ private void Awake()
             StartCoroutine("Timer");
         }
 
-        Debug.Log("isSolved : " + gc.isSolved());
-        // 게임승리
-        if (gc.isSolved() == 1 || isHelp == 2)
+        // 필요한 모든 검증장치를 여기에 추가한다.
+        if (gc.isSolvedRect() || (isHelp==2 && currentMode==1))
+        {
+            if(currentMode == 0)
+            {
+                winflag = 1;
+            }
+            else
+            {
+                // move to storyscript state machine
+                if (ss.GetstoryProgress() == 11)
+                {
+                    Debug.Log("here");
+                    GameOver(true);
+                }
+                isPlay = 0;
+                ss.SetstoryProgress(ss.GetstoryProgress()+1);
+                ss.StoryManager();
+                return;
+            }
+        }
+
+        if (gc.isSolvedRec2Square() || (isHelp==2 && currentMode == 2))
+        {
+            if(currentMode == 0)
+            {
+                winflag = 1;
+            }
+            else
+            {
+                if (ss.GetstoryProgress() == 2)
+                {
+                    Debug.Log("here2");
+                    GameOver(true);
+                }
+                isPlay = 0;
+                ss.SetstoryProgress(ss.GetstoryProgress()+1);
+                ss.StoryManager();
+                return;
+            }
+        }
+
+        if (gc.isSolvedSimilarity() || (isHelp==2 && currentMode ==3))
+        {
+            if(currentMode == 0)
+            {
+                winflag = 1;
+            }
+            else
+            {
+                if (ss.GetstoryProgress() == 2)
+                {
+                    Debug.Log("here3");
+                    GameOver(true);
+                }
+                isPlay = 0;
+                ss.SetstoryProgress(ss.GetstoryProgress()+1);
+                ss.StoryManager();
+                return;
+            }
+        }
+
+        if(winflag == 1)
         {
             combo++;
             if (current_Time >= bonusTimeLimit) BonusGift();
@@ -119,6 +216,7 @@ private void Awake()
             ResetTimeManager();
             MakeNewGame();
         }
+        return;
     }
 
     private void BonusGift()
@@ -129,9 +227,9 @@ private void Awake()
 
     private void AddPointManager()
     {
-        if (currentMode == 0) return;
+        //if (currentMode == 0) return;
 
-        // 게임종류
+        // 게임종류, 여기는 중간로직이 많아질수도 있으니까 if문으로썼다!!
         if(currentGame == 0)
         {
             score += 10;
@@ -168,7 +266,7 @@ private void Awake()
         score = (int) Math.Floor(norm * score);
 
         ScoreText.text = score.ToString() + " 점";
-
+        return;
     }
 
     private void ResetTimeManager()
@@ -181,7 +279,8 @@ private void Awake()
             // 이부분이랑 콤보 풀리는 부분 조절하는게 게임성 핵심이다
             // 콤보 잃어서 제한시간이 너무 늘어지면 안된다
             // 점수나 콤보때문에 0초가 되면 안된다. 초반에 선형적이되 0으로 수렴하는 함수로
-            solveTime = (float) Math.Floor(30 - 2 * combo - 0.05 * score + timeBonus);
+            solveTime = 45; // (float) Math.Floor(30 - 2 * combo - 0.05 * score);
+            // 보너스 타임에만 랜덤요소를 넣는다.
             bonusTimeLimit = (float) Math.Floor(solveTime * 0.85 - timeBonus);
         }
         else if(currentMode == 1)
@@ -201,14 +300,45 @@ private void Awake()
         }
 
         current_Time = solveTime;
-        
+        return;
     }
 
     private void MakeNewGame()
     {
-        // generate random game, difficulty - game generation logic comes here
-        currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, 7f));
+        
+        if (currentMode == 0)
+        {
+            // 문제랜덤생성, TODO : 점수 및 콤보증가에 따라 난이도 높은 문제 증가할 확률 증가
+            currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, 10f));
+            PlayerPrefs.SetInt("Game", currentGame);
+        }
+        else
+        {
+            currentGame = PlayerPrefs.GetInt("Game");
+        }
+
+        // 배경화면 및 게임아이템 설정
+        // TODO : 프라이팬 등의 도구 세트 변경 작업도 여기서 수행한다.
+        // *** (주의) GAMEMODE 설정 변경시 currentGame 숫자 범위 변경 필요함 ***
+        ClearBackground();
+
+        if(currentGame >= 0 && currentGame <= 7)
+        {
+            // 투렉트
+            RectangleBiscuitBackground.SetActive(true);
+        }else if(currentGame >= 8 && currentGame <= 9)
+        {
+            // 직투정
+            Rec2SquareBackground.SetActive(true);
+        }
+        else
+        {
+            // 합동삼각형
+            SimilarityBackground.SetActive(true);
+        }
+
         gc.makeNew(currentGame);
+        return;
     }
 
     /*
@@ -254,6 +384,7 @@ private void Awake()
                 //GetComponent<AudioManager>().GameOverSound();
                 break;
         }
+        return;
     }
 
     public void LostHelp() // 교체하기 버튼 누르면 반응하는 함수
@@ -282,53 +413,89 @@ private void Awake()
                 //GetComponent<AudioManager>().GameOverSound();
                 break;
         }
+        return;
     }
 
     
-    public void GameOver(bool isCleared) // GameOver 시 모달 레이아웃 함수
+    public void GameOver(bool isCleared) // life==0일때 gamemanager에서 호출하는 모달 팝업 매니징 함수
     {                                    // isCleared면 Clear, 아니면 GameOver
-        //StopCoroutine("Timer");
+        current_Time = 0;
+        StopCoroutine("Timer");
         GameOverWindow.SetActive(true);
 
-        if (isCleared)
-            ClearBack.SetActive(true);
-        else
-            GameOverBack.SetActive(true);
+        GameOverBackground.SetActive(false);
+        Chapter1ClearBackground.SetActive(false);
+        Chapter2ClearBackground.SetActive(false);
+        Chapter3ClearBackground.SetActive(false);
 
-        if (currentMode == 4)
+        switch (currentMode)
         {
-            // 순위전 화면구성
-            RestartButton.SetActive(true);
+            case 0:
+                GameOverBackground.SetActive(true);
+                GameOverBack.SetActive(true);
+                break;
+            case 1:
+                Chapter1ClearBackground.SetActive(true);
+                break;
+            case 2:
+                Chapter2ClearBackground.SetActive(true);
+                break;
+            case 3:
+                Chapter3ClearBackground.SetActive(true);
+                break;
+        }
+
+
+
+        if (currentMode == 0 || currentMode == 3)
+        {
+            // 순위전 버튼구성
+            if (currentMode == 0)
+            {
+                RankingMain.SetActive(true);
+                RankingSub1.SetActive(true);
+                RankingSub2.SetActive(true);
+                RestartButton.SetActive(true);
+            }
+            else
+            {
+                ChallengeButtonforSimilarity.SetActive(true);
+            }
+            
             RankingButton.SetActive(true);            
         }
         else
         {
-            // 스토리모드 화면구성
+            // 스토리모드 버튼구성
             NextStageButton.SetActive(true);
             ChallengeButton.SetActive(true);
         }
+        return;
     }
 
     public void Movemode()
     {
         movementStatus++;
         if (movementStatus == 3) movementStatus = 0;
+        return;
     }
 
-    // legacy code(will delete)
-
-    public void Renew()
+    public void ClearBackground()
     {
-        Debug.Log("Renew");
-        current_Time = solveTime;
-        //Generate();
-        gc.makeNew(0);
+        RectangleBiscuitBackground.SetActive(false);
+        Rec2SquareBackground.SetActive(false);
+        SimilarityBackground.SetActive(false);
+        return;
     }
 
-    // 문제를 해결한 경우 점수를 얻는다
-    public void AddScore()
+    public int GetisPlay()
     {
-        Renew();
+        return isPlay;
+    }
+
+    public void SetisPlay(int x)
+    {
+        isPlay = x;
     }
 
 }
