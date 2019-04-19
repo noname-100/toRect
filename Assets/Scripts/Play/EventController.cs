@@ -21,13 +21,13 @@ public class EventController : MonoBehaviour {
     public GameObject GC;
     private GameController gc;
     public int isPlay; // 0 : 게임 정지 1 : 게임 시작 시그널 2 : 게임 실행중
-    public GameObject SS;
-    public StoryScript ss;
+    public GameObject EC;
+    private StoryScript ss;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, NextStageButton, GameOverBack, ClearBack;
     public Text GameResultText;
-    public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground;
+    public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground, ScoreBackground;
 
     // Clear 화면 게임요소
     public GameObject RankingMain, RankingSub1, RankingSub2, GameOverBackground, Chapter1ClearBackground, Chapter2ClearBackground, Chapter3ClearBackground;
@@ -57,7 +57,7 @@ private void Awake()
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
         gc = GC.GetComponent<GameController>();
-        ss = SS.GetComponent<StoryScript>();
+        ss = EC.GetComponent<StoryScript>();
         
         hints = 3;
         score = 0;
@@ -102,6 +102,7 @@ private void Awake()
             LifeOff[0].SetActive(false);
             LifeOff[1].SetActive(false);
             LifeOff[2].SetActive(false);
+            ScoreBackground.SetActive(false);
             isPlay = 0;
         }
 
@@ -110,6 +111,7 @@ private void Awake()
     // Update function for every timeframe
     public void Update()
     {
+        Debug.Log("Storyprogress " + ss.storyprogress);
         // check for game end ( different for different levels/modes ) comes here.
         if(isPlay != 0) GameManager(0);
 
@@ -119,16 +121,9 @@ private void Awake()
     {
         int winflag = 0;
 
-        // 무조건 이기는 함수 설정
-        if (isHelp == 2)
-        {
-            winflag = 1;
-        }
-
         // 목숨이 없는 경우
         if (lifes == 0) {
-            current_Time = 0;
-            StopCoroutine("Timer");
+            Debug.Log("here4");
             GameOver(false);
         }
 
@@ -150,7 +145,7 @@ private void Awake()
         }
 
         // 필요한 모든 검증장치를 여기에 추가한다.
-        if (gc.isSolvedRect())
+        if (gc.isSolvedRect() || (isHelp==2 && currentMode==1))
         {
             if(currentMode == 0)
             {
@@ -158,16 +153,19 @@ private void Awake()
             }
             else
             {
-                isPlay = 0;
                 // move to storyscript state machine
                 if (ss.storyprogress == 11)
                 {
+                    Debug.Log("here");
                     GameOver(true);
                 }
+                isPlay = 0;
+                ss.storyprogress++;
+                ss.StoryManager();
             }
         }
 
-        if (gc.isSolvedRec2Square())
+        if (gc.isSolvedRec2Square() || (isHelp==2 && currentMode == 2))
         {
             if(currentMode == 0)
             {
@@ -175,15 +173,18 @@ private void Awake()
             }
             else
             {
-                isPlay = 0;
                 if (ss.storyprogress == 2)
                 {
+                    Debug.Log("here2");
                     GameOver(true);
                 }
+                isPlay = 0;
+                ss.storyprogress++;
+                ss.StoryManager();
             }
         }
 
-        if (gc.isSolvedSimilarity())
+        if (gc.isSolvedSimilarity() || (isHelp==2 && currentMode ==3))
         {
             if(currentMode == 0)
             {
@@ -191,11 +192,14 @@ private void Awake()
             }
             else
             {
-                isPlay = 0;
                 if (ss.storyprogress == 2)
                 {
+                    Debug.Log("here3");
                     GameOver(true);
                 }
+                isPlay = 0;
+                ss.storyprogress++;
+                ss.StoryManager();
             }
         }
 
@@ -407,7 +411,8 @@ private void Awake()
     
     public void GameOver(bool isCleared) // life==0일때 gamemanager에서 호출하는 모달 팝업 매니징 함수
     {                                    // isCleared면 Clear, 아니면 GameOver
-        //StopCoroutine("Timer");
+        current_Time = 0;
+        StopCoroutine("Timer");
         GameOverWindow.SetActive(true);
 
         GameOverBackground.SetActive(false);

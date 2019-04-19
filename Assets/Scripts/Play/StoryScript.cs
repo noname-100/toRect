@@ -99,7 +99,7 @@ public class StoryScript : MonoBehaviour {
     void Update()
     {
         // stage continues with mouse click
-        if(currentmode!=-1 && Input.GetKeyDown(KeyCode.Mouse0) /*&& !ec.isPlay*/)
+        if(currentmode!=-1 && Input.GetKeyDown(KeyCode.Mouse0) && ec.isPlay==0)
         {
             storyprogress++;
             StoryManager();

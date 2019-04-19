@@ -38,6 +38,7 @@ public class ButtonController_Play : MonoBehaviour
 
     public void RestartChallenge()
     {
+        PlayerPrefs.SetInt("Mode", 0);
         SceneManager.LoadScene("Play");
     }
 
@@ -86,6 +87,7 @@ public class ButtonController_Play : MonoBehaviour
         {
             PlayerPrefs.SetInt("Mode", 2);
         }
+        SceneManager.LoadScene("Play");
     }
 
 }
