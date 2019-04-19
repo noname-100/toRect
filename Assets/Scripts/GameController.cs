@@ -89,23 +89,23 @@ public class GameController : MonoBehaviour
     {
         if (polygonList.Count != 1)
         {
-            Debug.Log("polyon size is not 1" + polygonList.Count);
+            //Debug.Log("polyon size is not 1" + polygonList.Count);
             return false;
         }
 
         Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
         if (reference == null)
         {
-            Debug.Log("reference not read properly. returns null");
+            //Debug.Log("reference not read properly. returns null");
             return false;
         }
 
         if (reference.Length != 4)
         {
-            Debug.Log("edge not four" + reference.Length);
+            //Debug.Log("edge not four" + reference.Length);
             for(int i = 0; i < reference.Length; i++)
             {
-                Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
+                //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
             }
             return false;
         }
@@ -132,7 +132,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            Debug.Log("calculated, but not rectangle");
+            //Debug.Log("calculated, but not rectangle");
             return false;
         }          
     }

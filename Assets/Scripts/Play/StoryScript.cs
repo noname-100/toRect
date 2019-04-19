@@ -73,7 +73,6 @@ public class StoryScript : MonoBehaviour {
     // Use this for initialization
     private void Awake()
     {
-        Debug.Log("only for debugging");
         // adding scripts
 
         textscripts = new List<string[]>();

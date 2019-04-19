@@ -15,7 +15,9 @@ public class Dots : MonoBehaviour
     private LineRenderer lineRenderer;
     public bool isSelected=false;
     public bool selectable = false;
-    public bool isVertice = true;
+    public bool isVertice = false;
+    public bool ismid = false;
+    public bool isperp = false;
     private CircleCollider2D _circleCollider2D;
     // Start is called before the first frame update
     void Start()
@@ -45,14 +47,17 @@ public class Dots : MonoBehaviour
             }
         }
     }
+
     void OnMouseEnter()
     {
         if (!this.isSelected && !this.selectable)
         {
+            // 안 고른 상태에서 하나를 hover
             this.GetComponent<Renderer>().material.color = Color.red;
         }
         if (this.selectable)
         {
+            // 하나를 고른 상태에서 나머지 하나 hover
             this.GetComponent<Renderer>().material.color = Color.cyan;
         }
     }
@@ -109,32 +114,6 @@ public class Dots : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        /*
-        
-        GameObject go = GameObject.Find("EC");
-        EventController sc = go.GetComponent<EventController>();
-        
-        if (sc.MovementStatus == 2) return;
-
-        //center = rend.bounds.center;
-
-        Vector3 mouse = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-
-        float degree;
-        if ((360f * (float)Math.Atan2((mouse.y - center.y), (mouse.x - center.x))) / (2 * (float)Math.PI) >= 0)
-        {
-            degree = (360f * (float)Math.Atan2((mouse.y - center.y), (mouse.x - center.x))) / (2 * (float)Math.PI);
-        }
-        else
-        {
-            degree = 360 + (360f * (float)Math.Atan2((mouse.y - center.y), (mouse.x - center.x))) / (2 * (float)Math.PI);
-        }
-
-        degree += 180;
-        if (degree > 360) degree -= 360;
-        Debug.Log(degree);
-        tf.rotation = Quaternion.Euler(0, 0, degree);
-        */
 
         Vector3 sum = Vector3.zero;
         foreach (Vector3 vertice in this.transform.parent.GetComponent<Polygon>().vertices3D)

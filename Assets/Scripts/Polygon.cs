@@ -148,14 +148,19 @@ public class Polygon : MonoBehaviour
         var c = vertices3D.Count();
         for (int i = 0; i < c; i++)
         {
+            // vertex
             GameObject dot = Instantiate(Resources.Load("Prefabs/Circle"), transform.TransformPoint(vertices3D[i]) + new Vector3(0, 0, -1), transform.rotation) as GameObject;
             dot.name = "dot" + i;
+            dot.GetComponent<Dots>().isVertice = true;
             dot.transform.parent = gameObject.transform;
             dot.AddComponent(System.Type.GetType("Dots"));
             dots.Add(dot);
-            List<Vector3> midDots = new List<Vector3>();
-            midDots.Add(transform.TransformPoint((vertices3D[i] + vertices3D[(i + 1) % c]) / 2) + new Vector3(0, 0, -1));
-            //Find perpendicular dot
+
+            // Find mid dot
+            List<Vector3> midDots = new List<Vector3>();       
+            midDots.Add(transform.TransformPoint((vertices3D[i] + vertices3D[(i + 1) % c]) / 2) + new Vector3(0, 0, -3));
+            
+            // Find perpendicular dot
             for (int j = 0; j < c - 2; j++)
             {
                 Vector3 vector = vertices3D[(i + j + 2) % c] - vertices3D[i];
@@ -163,10 +168,12 @@ public class Polygon : MonoBehaviour
                 Vector3 perpDot = transform.TransformPoint(Vector3.Project(vector, onNormal) + vertices3D[i]);
                 if ((perpDot.x - transform.TransformPoint(vertices3D[i]).x) * (perpDot.x - transform.TransformPoint(vertices3D[(i + 1) % c]).x) < 0)
                 {
-                    midDots.Add(perpDot + new Vector3(0, 0, -1));
+                        midDots.Add(perpDot + new Vector3(0, 0, -1));                              
                 }
             }
+
             midDots = midDots.OrderBy(o => (Mathf.Abs(o.x - transform.TransformPoint(vertices3D[i]).x))).ToList();
+            
             foreach (Vector3 dotVector in midDots)
             {
                 if (Vector3.Distance(transform.TransformPoint(vertices3D[i]), dotVector) > 1.001 && Vector3.Distance(transform.TransformPoint(vertices3D[(i + 1) % c]), dotVector) > 1.001 && Vector3.Distance(dots[dots.Count - 1].transform.position, dotVector) > 0.001)
@@ -175,7 +182,20 @@ public class Polygon : MonoBehaviour
                     midDot.name = "dotmid" + i;
                     midDot.transform.parent = gameObject.transform;
                     midDot.AddComponent(System.Type.GetType("Dots"));
-                    midDot.GetComponent<Dots>().isVertice = false;
+
+                    // sort if mid or perp point
+                    if (midDot.transform.position.z == -3)
+                    {
+                        midDot.GetComponent<Dots>().ismid = true;
+                        Vector3 tmp = midDot.transform.position;
+                        tmp.z = -1;
+                        midDot.transform.position = tmp;
+                    }
+                    else
+                    {
+                        midDot.GetComponent<Dots>().isperp = true;
+                    }
+                    
                     dots.Add(midDot);
                 }
             }
@@ -203,8 +223,109 @@ public class Polygon : MonoBehaviour
             }*/
 
 
+            // 변 단위로 중점과 수직점들을 확인하자.
+            List<GameObject> midpoints = new List<GameObject>();
+            GameObject vertex1 = null;
+            GameObject vertex2 = null;
+
+            foreach (GameObject dotz in dots)
+            {
+                if(vertex1==null && vertex2 == null)
+                {
+                    vertex1 = dotz;
+                }
+                if(vertex2 == null)
+                {
+                    vertex2 = vertex1;
+                    vertex1 = dotz;
+                }
+                break;
+            }
+
+            // TODO : null bug on first index
+            // TODO : color fix on dots.cs
+            GameObject midpoint = null;
+            foreach(GameObject dotz in dots)
+            {
+                if (dotz.GetComponent<Dots>().isVertice)
+                {
+                    vertex2 = vertex1;
+                    vertex1 = dotz;
+                    // check
+                    foreach(GameObject middotz in midpoints)
+                    {
+                        if (Vector3.Distance(middotz.transform.position, midpoint.transform.position) / Vector3.Distance(vertex1.transform.position, vertex2.transform.position) < 0.01)
+                        {
+                            midpoint.GetComponent<Dots>().isperp = true;
+                            Destroy(middotz);
+                        }
+                    }
+                    midpoints.Clear();
+                    continue;
+                }
+
+                if (dotz.GetComponent<Dots>().ismid)
+                {
+                    midpoint = dotz;
+                }
+                else
+                {
+                    midpoints.Add(dotz);
+                }
+
+            }
+
+            /*
+            GameObject vertex1 = null;
+            GameObject vertex2 = null;
+            GameObject midpoint = null;
+            foreach (GameObject dotz in dots)
+            {
+                if (dotz.GetComponent<Dots>().isVertice)
+                {
+                    if (vertex1 == null)
+                    {
+                        vertex1 = dotz;
+                    }
+                    else if (vertex2 == null)
+                    {
+                        vertex2 = vertex1;
+                        vertex1 = dotz;
+                    }                    
+                }
+                if (vertex1 != null && vertex2 != null) break;
+            }
+
+            foreach (GameObject dotz in dots)
+            {
+                // 꼭지점이 나오면 새로운 변으로 갱신한다
+                if(vertex2 != dotz && dotz.GetComponent<Dots>().isVertice)
+                {
+                    vertex2 = vertex1;
+                    vertex1 = dotz;
+                }
+                // 중점이 나오면 갱신한다
+                if (dotz.GetComponent<Dots>().ismid)
+                {
+                    midpoint = dotz;
+                }
+                // 수직선의 경우
+                if (dotz.GetComponent<Dots>().isperp)
+                {
+                    // 중점과 거리가 짧으면 중점을 중복점으로 만들고 제거한다.
+                    if (Vector3.Distance(midpoint.transform.position, dotz.transform.position) / Vector3.Distance(vertex2.transform.position, vertex1.transform.position) < 0.01)
+                    {
+                        midpoint.GetComponent<Dots>().isperp = true;
+                        Destroy(dotz);
+                    }
+                }
+                
+            }*/
 
         }
+
+
+
         return;
     }
     void OnMouseUp()
