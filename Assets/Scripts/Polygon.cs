@@ -197,7 +197,6 @@ public class Polygon : MonoBehaviour
                     {
                         midDot.GetComponent<Dots>().isperp = true;
                     }
-                    if (midDot.transform.position.z != -1) Debug.Log("Strange position found");
                     dots.Add(midDot);
                 }
             }
@@ -225,49 +224,60 @@ public class Polygon : MonoBehaviour
             }*/          
         }
 
-                
-        GameObject vertex1 = null;
-        GameObject vertex2 = null;
-        List<GameObject> midpoints = new List<GameObject>();
-
-        GameObject midpoint = null;
-        foreach(GameObject dotz in dots)
+        
+        int vertex1 = -1;
+        int vertex2 = -1;
+        List<int> midpoints = new List<int>();
+        List<int> deletepoints = new List<int>();
+        int midpoint = -1;
+        for(int i = 0; i <= dots.Count; i++)
         {
-            if (dotz.GetComponent<Dots>().isVertice)
+            if (i==dots.Count || dots[i].GetComponent<Dots>().isVertice)
             {
+                //Debug.Log(i + " is vertex");
                 vertex2 = vertex1;
-                vertex1 = dotz;
-                // check
-                if (vertex1 != null && vertex2 != null)
+                vertex1 = i;
+                if (i == dots.Count) vertex1 = 0;
+                if (vertex1 != -1 && vertex2 != -1)
                 {
-                    for(int i = 0; i < midpoints.Count; i++)
+                    for (int j = 0; j < midpoints.Count; j++)
                     {
-                        if (Vector3.Distance(midpoints[i].transform.position, midpoint.transform.position) / Vector3.Distance(vertex1.transform.position, vertex2.transform.position) < 1)
+                        if (Vector3.Distance(dots[midpoints[j]].transform.position, dots[midpoint].transform.position) / Vector3.Distance(dots[vertex1].transform.position, dots[vertex2].transform.position) < 0.08)
                         {
-                            Debug.Log("dest");
-                            midpoint.GetComponent<Dots>().isperp = true;
-                            //Destroy(midpoints[i]);
-                            //midpoints.RemoveAt(i);
-                            i--;
+                            //if (dots[midpoint].GetComponent<Dots>().isVertice) Debug.Log("vertex changing to perp");
+                            Debug.Log("midpoint to overlap " + midpoint + " mm " + midpoints[j]);
+                            dots[midpoint].GetComponent<Dots>().isperp = true;
+                            deletepoints.Add(midpoints[j]);
                         }
                     }
                 }
                 midpoints.Clear();
             }
-
-            if (dotz.GetComponent<Dots>().ismid)
+            else if (dots[i].GetComponent<Dots>().ismid)
             {
-                midpoint = dotz;
+                midpoint = i;
             }
-            else
+            else if(dots[i].GetComponent<Dots>().isperp)
             {
-                midpoints.Add(dotz);
+                midpoints.Add(i);
             }
-
         }
-
+        
+        int diff = 0;
+        for(int i = 0; i < dots.Count; i++)
+        {
+            if (deletepoints.Count!=0 && i == deletepoints[0]-diff)
+            {
+                Destroy(dots[i]);
+                dots.RemoveAt(i);
+                deletepoints.RemoveAt(0);
+                diff++;
+                i--;
+            }
+        }              
         return;
     }
+
     void OnMouseUp()
     {
         if (!this.isSelected)

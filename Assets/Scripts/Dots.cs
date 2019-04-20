@@ -30,6 +30,8 @@ public class Dots : MonoBehaviour
         tf = (Transform)transforms[1];
         rend = (Renderer)renderes[1];
 
+        if (ismid && isperp) this.GetComponent<Renderer>().material.color = Color.black;
+
     }
     void Update()
     {
