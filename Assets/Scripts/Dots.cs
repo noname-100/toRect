@@ -61,6 +61,7 @@ public class Dots : MonoBehaviour
             this.GetComponent<Renderer>().material.color = Color.cyan;
         }
     }
+
     void OnMouseExit()
     {
         if (!this.isSelected && !this.selectable)
@@ -72,11 +73,7 @@ public class Dots : MonoBehaviour
             this.GetComponent<Renderer>().material.color = Color.blue;
         }
     }
-    /*
-    private void OnMouseUp()
-    {
-        //center = rend.bounds.center;
-    }*/
+
     void OnMouseDown()
     {
         pushTime = Time.time;

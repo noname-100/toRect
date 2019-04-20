@@ -222,28 +222,11 @@ public class Polygon : MonoBehaviour
                 }
             }*/
 
-
-            // 변 단위로 중점과 수직점들을 확인하자.
-            List<GameObject> midpoints = new List<GameObject>();
+            /*
             GameObject vertex1 = null;
             GameObject vertex2 = null;
-
-           /* foreach (GameObject dotz in dots)
-            {
-                if(vertex1==null && vertex2 == null)
-                {
-                    vertex1 = dotz;
-                }
-                if(vertex2 == null)
-                {
-                    vertex2 = vertex1;
-                    vertex1 = dotz;
-                }
-                break;
-            }*/
-
-            // TODO : null bug on first index
-            // TODO : color fix on dots.cs
+            List<GameObject> midpoints = new List<GameObject>();
+            
             GameObject midpoint = null;
             foreach(GameObject dotz in dots)
             {
@@ -277,58 +260,8 @@ public class Polygon : MonoBehaviour
                 }
 
             }
-
-            /*
-            GameObject vertex1 = null;
-            GameObject vertex2 = null;
-            GameObject midpoint = null;
-            foreach (GameObject dotz in dots)
-            {
-                if (dotz.GetComponent<Dots>().isVertice)
-                {
-                    if (vertex1 == null)
-                    {
-                        vertex1 = dotz;
-                    }
-                    else if (vertex2 == null)
-                    {
-                        vertex2 = vertex1;
-                        vertex1 = dotz;
-                    }                    
-                }
-                if (vertex1 != null && vertex2 != null) break;
-            }
-
-            foreach (GameObject dotz in dots)
-            {
-                // 꼭지점이 나오면 새로운 변으로 갱신한다
-                if(vertex2 != dotz && dotz.GetComponent<Dots>().isVertice)
-                {
-                    vertex2 = vertex1;
-                    vertex1 = dotz;
-                }
-                // 중점이 나오면 갱신한다
-                if (dotz.GetComponent<Dots>().ismid)
-                {
-                    midpoint = dotz;
-                }
-                // 수직선의 경우
-                if (dotz.GetComponent<Dots>().isperp)
-                {
-                    // 중점과 거리가 짧으면 중점을 중복점으로 만들고 제거한다.
-                    if (Vector3.Distance(midpoint.transform.position, dotz.transform.position) / Vector3.Distance(vertex2.transform.position, vertex1.transform.position) < 0.01)
-                    {
-                        midpoint.GetComponent<Dots>().isperp = true;
-                        Destroy(dotz);
-                    }
-                }
-                
-            }*/
-
+            */
         }
-
-
-
         return;
     }
     void OnMouseUp()
