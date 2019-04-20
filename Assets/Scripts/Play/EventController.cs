@@ -7,6 +7,15 @@ using UnityEngine.UI;
 
 // 게임 시작, 끝, 난이도, 시간설정, 점수설정 등은 여기에 있음.
 
+public class myclass
+{
+    myclass(int x)
+    {
+        tmp = x;
+    }
+    int tmp;
+}
+
 public class EventController : MonoBehaviour {
 
     // 난이도요소

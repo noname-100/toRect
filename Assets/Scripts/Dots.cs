@@ -37,7 +37,7 @@ public class Dots : MonoBehaviour
         {
             Vector3 mousePosition3D = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
             LineRenderer lineRenderer = GetComponent<LineRenderer>();
-            lineRenderer.SetPositions(new Vector3[] { transform.position, Camera.main.ScreenToWorldPoint(mousePosition3D) });
+            lineRenderer.SetPositions(new Vector3[] { transform.position, Camera.main.ScreenToWorldPoint(mousePosition3D) }); //**
         }
         else
         {
@@ -57,7 +57,7 @@ public class Dots : MonoBehaviour
         }
         if (this.selectable)
         {
-            // 하나를 고른 상태에서 나머지 하나 hover
+            // 하나를 고른 상태에서 나머지 하나
             this.GetComponent<Renderer>().material.color = Color.cyan;
         }
     }

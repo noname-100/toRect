@@ -37,7 +37,7 @@ public class Polygon : MonoBehaviour
         {
             foreach (GameObject dot in dots)
             {
-                dot.GetComponent<Dots>().selectable = false;
+                dot.GetComponent<Dots>().selectable = false; // **
             }
         }
 
@@ -151,9 +151,9 @@ public class Polygon : MonoBehaviour
             // vertex
             GameObject dot = Instantiate(Resources.Load("Prefabs/Circle"), transform.TransformPoint(vertices3D[i]) + new Vector3(0, 0, -1), transform.rotation) as GameObject;
             dot.name = "dot" + i;
-            dot.GetComponent<Dots>().isVertice = true;
             dot.transform.parent = gameObject.transform;
             dot.AddComponent(System.Type.GetType("Dots"));
+            dot.GetComponent<Dots>().isVertice = true;
             dots.Add(dot);
 
             // Find mid dot
@@ -174,6 +174,8 @@ public class Polygon : MonoBehaviour
 
             midDots = midDots.OrderBy(o => (Mathf.Abs(o.x - transform.TransformPoint(vertices3D[i]).x))).ToList();
             
+
+            // create dot instances
             foreach (Vector3 dotVector in midDots)
             {
                 if (Vector3.Distance(transform.TransformPoint(vertices3D[i]), dotVector) > 1.001 && Vector3.Distance(transform.TransformPoint(vertices3D[(i + 1) % c]), dotVector) > 1.001 && Vector3.Distance(dots[dots.Count - 1].transform.position, dotVector) > 0.001)
@@ -195,7 +197,7 @@ public class Polygon : MonoBehaviour
                     {
                         midDot.GetComponent<Dots>().isperp = true;
                     }
-                    
+                    if (midDot.transform.position.z != -1) Debug.Log("Strange position found");
                     dots.Add(midDot);
                 }
             }
@@ -220,48 +222,50 @@ public class Polygon : MonoBehaviour
                     dot3.GetComponent<Dots>().isVertice = false;
                     dots.Add(dot3);
                 }
-            }*/
+            }*/          
+        }
 
-            /*
-            GameObject vertex1 = null;
-            GameObject vertex2 = null;
-            List<GameObject> midpoints = new List<GameObject>();
-            
-            GameObject midpoint = null;
-            foreach(GameObject dotz in dots)
+                
+        GameObject vertex1 = null;
+        GameObject vertex2 = null;
+        List<GameObject> midpoints = new List<GameObject>();
+
+        GameObject midpoint = null;
+        foreach(GameObject dotz in dots)
+        {
+            if (dotz.GetComponent<Dots>().isVertice)
             {
-                if (dotz.GetComponent<Dots>().isVertice)
+                vertex2 = vertex1;
+                vertex1 = dotz;
+                // check
+                if (vertex1 != null && vertex2 != null)
                 {
-                    vertex2 = vertex1;
-                    vertex1 = dotz;
-                    // check
-                    if (vertex1 != null && vertex2 != null)
+                    for(int i = 0; i < midpoints.Count; i++)
                     {
-                        foreach (GameObject middotz in midpoints)
+                        if (Vector3.Distance(midpoints[i].transform.position, midpoint.transform.position) / Vector3.Distance(vertex1.transform.position, vertex2.transform.position) < 1)
                         {
-                            if (Vector3.Distance(middotz.transform.position, midpoint.transform.position) / Vector3.Distance(vertex1.transform.position, vertex2.transform.position) < 0.01)
-                            {
-                                midpoint.GetComponent<Dots>().isperp = true;
-                                Destroy(middotz);
-                            }
+                            Debug.Log("dest");
+                            midpoint.GetComponent<Dots>().isperp = true;
+                            //Destroy(midpoints[i]);
+                            //midpoints.RemoveAt(i);
+                            i--;
                         }
                     }
-                    midpoints.Clear();
-                    continue;
                 }
-
-                if (dotz.GetComponent<Dots>().ismid)
-                {
-                    midpoint = dotz;
-                }
-                else
-                {
-                    midpoints.Add(dotz);
-                }
-
+                midpoints.Clear();
             }
-            */
+
+            if (dotz.GetComponent<Dots>().ismid)
+            {
+                midpoint = dotz;
+            }
+            else
+            {
+                midpoints.Add(dotz);
+            }
+
         }
+
         return;
     }
     void OnMouseUp()
@@ -319,7 +323,7 @@ public class Polygon : MonoBehaviour
         for (int i = 0; i < c - (lowerVertex + higherVertex + 1); i++)
         {
 
-            dots[(i + index + higherVertex + 1) % c].GetComponent<Dots>().selectable = true;
+            dots[(i + index + higherVertex + 1) % c].GetComponent<Dots>().selectable = true; // **
             dots[(i + index + higherVertex + 1) % c].GetComponent<Renderer>().material.color = Color.blue;
 
         }
