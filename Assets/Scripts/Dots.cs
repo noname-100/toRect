@@ -69,6 +69,7 @@ public class Dots : MonoBehaviour
         if (!this.isSelected && !this.selectable)
         {
             this.GetComponent<Renderer>().material.color = Color.white;
+            if (isperp && ismid) this.GetComponent<Renderer>().material.color = Color.black;
         }
         if (this.selectable)
         {

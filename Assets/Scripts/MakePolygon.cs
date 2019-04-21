@@ -103,7 +103,7 @@ public class MakePolygon : MonoBehaviour
         vertices[0].y = 0;
         vertices[1].x = Random.Range(-t/2,t/2);
         vertices[1].y = Random.Range(3f, 5f);
-        vertices[2].x = Random.Range(vertices[1].x + 1,t/2);
+        vertices[2].x = Random.Range(vertices[1].x + 1.5f,t/2);
         vertices[2].y = vertices[1].y;
         vertices[3].x = t/2;
         vertices[3].y = 0;
@@ -129,7 +129,6 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[4];
         Polygon.jiktojung = false;
-        float t = Random.Range(3f, 5f);
         vertices[0].x = 0;
         vertices[0].y = 0;
         vertices[1].x = Random.Range(-0.3f , 0.3f );
@@ -146,7 +145,58 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[5];
 
+        vertices[0].x = 0f;
+        vertices[0].y = -2.000f;
+        vertices[1].x = -1.902f;
+        vertices[1].y = -0.618f;
+        vertices[2].x = -1.176f;
+        vertices[2].y = 1.618f;
+        vertices[3].x = 1.176f;
+        vertices[3].y = 1.618f;
+        vertices[4].x = 1.902f;
+        vertices[4].y = -0.618f;
 
+        return vertices;
+    }
+
+    public static Vector2[] MakeHexagon()
+    {
+        vertices = new Vector2[6];
+
+        vertices[0].x = 5f;
+        vertices[0].y = -8.660f;
+        vertices[1].x = -5f;
+        vertices[1].y = -8.660f;
+        vertices[2].x = -10f;
+        vertices[2].y = 0f;
+        vertices[3].x = -5f;
+        vertices[3].y = 8.660f;
+        vertices[4].x = 5f;
+        vertices[4].y = 8.660f;
+        vertices[5].x = 10f;
+        vertices[5].y = 0f;
+
+        return vertices;
+    }
+
+    public static Vector2[] MakeHeptagon()
+    {
+        vertices = new Vector2[7];
+
+        vertices[0].x = 0f;
+        vertices[0].y = -10f;
+        vertices[1].x = -7.818f;
+        vertices[1].y = -6.235f;
+        vertices[2].x = -9.749f;
+        vertices[2].y = 2.225f;
+        vertices[3].x = -4.339f;
+        vertices[3].y = 9.010f;
+        vertices[4].x = 4.339f;
+        vertices[4].y = 9.010f;
+        vertices[5].x = 9.749f;
+        vertices[5].y = 2.225f;
+        vertices[6].x = 7.818f;
+        vertices[6].y = -6.235f;
 
         return vertices;
     }
@@ -155,6 +205,22 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[8];
 
+        vertices[0].x = 3.827f;
+        vertices[0].y = -9.239f;
+        vertices[1].x = -3.827f;
+        vertices[1].y = -9.239f;
+        vertices[2].x = -9.239f;
+        vertices[2].y = -3.827f;
+        vertices[3].x = -9.239f;
+        vertices[3].y =  3.827f;
+        vertices[4].x = -3.827f;
+        vertices[4].y = 9.239f;
+        vertices[5].x = 3.827f;
+        vertices[5].y = 9.239f;
+        vertices[6].x = 9.239f;
+        vertices[6].y = 3.827f;
+        vertices[7].x = 9.239f;
+        vertices[7].y = -3.827f;
 
         return vertices;
     }

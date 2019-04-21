@@ -178,7 +178,7 @@ public class Polygon : MonoBehaviour
             // create dot instances
             foreach (Vector3 dotVector in midDots)
             {
-                if (Vector3.Distance(transform.TransformPoint(vertices3D[i]), dotVector) > 1.001 && Vector3.Distance(transform.TransformPoint(vertices3D[(i + 1) % c]), dotVector) > 1.001 && Vector3.Distance(dots[dots.Count - 1].transform.position, dotVector) > 0.001)
+                if (true/*Vector3.Distance(transform.TransformPoint(vertices3D[i]), dotVector) > 1.001 && Vector3.Distance(transform.TransformPoint(vertices3D[(i + 1) % c]), dotVector) > 1.001 && Vector3.Distance(dots[dots.Count - 1].transform.position, dotVector) > 0.001*/)
                 {
                     GameObject midDot = Instantiate(Resources.Load("Prefabs/Circle"), dotVector, transform.rotation) as GameObject;
                     midDot.name = "dotmid" + i;
@@ -245,7 +245,7 @@ public class Polygon : MonoBehaviour
                         if (Vector3.Distance(dots[midpoints[j]].transform.position, dots[midpoint].transform.position) / Vector3.Distance(dots[vertex1].transform.position, dots[vertex2].transform.position) < 0.12)
                         {
                             //if (dots[midpoint].GetComponent<Dots>().isVertice) Debug.Log("vertex changing to perp");
-                            Debug.Log("midpoint to overlap " + midpoint + " mm " + midpoints[j]);
+                            //Debug.Log("midpoint to overlap " + midpoint + " mm " + midpoints[j]);
                             dots[midpoint].GetComponent<Dots>().isperp = true;
                             deletepoints.Add(midpoints[j]);
                         }

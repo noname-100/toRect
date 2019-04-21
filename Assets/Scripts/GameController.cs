@@ -67,10 +67,11 @@ public class GameController : MonoBehaviour
         firstTriangle.AddComponent(System.Type.GetType("Polygon"));
 
         /*
-        firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeParallelogram());
+        firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakePentagon());
         polygonList.Add(firstTriangle);
-        return;   
+        return; 
         */
+        
 
         switch (gameType)
         {
@@ -93,15 +94,21 @@ public class GameController : MonoBehaviour
                 vertexes = MakePolygon.MakeQuadrangle();
                 break;
             case 6: // 다각형2(오각형) TODO : 생성함수
-                vertexes = MakePolygon.MakeTriangle(2);
+                vertexes = MakePolygon.MakePentagon();
                 break;
-            case 7: // 다각형3(팔각형) TODO : 생성함수
-                vertexes = MakePolygon.MakeTriangle(2);
+            case 7: // 다각형3(육각형) TODO : 생성함수
+                vertexes = MakePolygon.MakeHexagon();
                 break;
-            case 8: // 직투정
+            case 8: // 다각형3(칠각형) TODO : 생성함수
+                vertexes = MakePolygon.MakeHeptagon();
+                break;
+            case 9: // 다각형3(팔각형) TODO : 생성함수
+                vertexes = MakePolygon.MakeOctagon();
+                break;
+            case 10: // 직투정
                 vertexes = MakePolygon.MakeJig();
                 break;
-            case 9: // 직투정2 TODO : 생성함수
+            case 11: // 직투정2 TODO : 생성함수
                 vertexes = MakePolygon.MakeJig();
                 break;
         }
@@ -120,8 +127,8 @@ public class GameController : MonoBehaviour
                 currmidy += vertexes[i].y;
             }
             currmidx /= vertexes.Length; currmidy /= vertexes.Length;
-            float backgroundMidPointx = backgroundMidpoints[gameType <= 7 ? 0 : 1].x; // GAME TYPE HARD CODED HERE : map type
-            float backgroundMidPointy = backgroundMidpoints[gameType <= 7 ? 0 : 1].y;
+            float backgroundMidPointx = backgroundMidpoints[gameType <= 9 ? 0 : 1].x; // GAME TYPE HARD CODED HERE : map type
+            float backgroundMidPointy = backgroundMidpoints[gameType <= 9 ? 0 : 1].y;
             Vector2 diff = new Vector2(currmidx - backgroundMidPointx, currmidy - backgroundMidPointy);
             Vector2[] vectors = new Vector2[vertexes.Length];
             float maxlength = -99999999f;
@@ -133,8 +140,8 @@ public class GameController : MonoBehaviour
                 vectors[i].y = vertexes[i].y - backgroundMidPointy;
                 if (Mathf.Pow(vectors[i].x, 2) + Mathf.Pow(vectors[i].y, 2) > maxlength) maxlength = Mathf.Pow(vectors[i].x, 2) + Mathf.Pow(vectors[i].y, 2);
             }
-            float tomatch = UnityEngine.Random.Range(0.6f * maxLength[gameType <= 7 ? 0 : 1], 0.67f * maxLength[gameType <= 7 ? 0 : 1]); // GAME TYPE HARD CODED HERE : map type
-            float proportion = 1.7f * tomatch / Mathf.Pow(maxlength,0.5f);
+            float tomatch = UnityEngine.Random.Range(0.6f * maxLength[gameType <= 9 ? 0 : 1], 0.67f * maxLength[gameType <= 9 ? 0 : 1]); // GAME TYPE HARD CODED HERE : map type
+            float proportion = 1.5f * tomatch / Mathf.Pow(maxlength,0.5f);
 
             Vector2[] result = new Vector2[vertexes.Length];
             for (int i = 0; i < result.Length; i++)
