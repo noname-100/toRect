@@ -6,6 +6,7 @@ public class MakePolygon : MonoBehaviour
 {
     public static Vector2[] vertices;
     public GameObject EC;
+    public GameObject plate;
     private EventController ec;
 
     // Start is called before the first frame update
@@ -13,7 +14,7 @@ public class MakePolygon : MonoBehaviour
     {
 
         ec = EC.GetComponent<EventController>();
-
+        
 
     }
 
@@ -225,7 +226,7 @@ public class MakePolygon : MonoBehaviour
         return vertices;
     }
 
-    public static List<Vector2[]> MakeSimilars()
+    public List<Vector2[]> MakeSimilars()
     {
         List<Vector2[]> triangles = new List<Vector2[]>();
 
@@ -267,6 +268,10 @@ public class MakePolygon : MonoBehaviour
         triangle[2].x = rightedge - 2 * dist - a - xzero - a * b * coeff;
         triangle[2].y = groundy + a * b * coeff;
         triangles.Add(triangle);
+
+        // resize plate
+        plate.transform.localScale += new Vector3((a/2.54f)-1, (b/3.52f)-1, 0);
+
         return triangles;
     }
 }

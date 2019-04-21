@@ -447,7 +447,7 @@ GameObject:
   - component: {fileID: 93566056}
   - component: {fileID: 93566057}
   m_Layer: 0
-  m_Name: "\uCD08\uCF54\uCE69 \uC811\uC2DC"
+  m_Name: chocochipplate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -460,8 +460,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 93566055}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.55, y: 0.96, z: 0}
-  m_LocalScale: {x: 1.0892186, y: 1.0819085, z: 1.6120435}
+  m_LocalPosition: {x: 3.725, y: 0.95, z: 0}
+  m_LocalScale: {x: 1.3033918, y: 1.2946442, z: 1.9290199}
   m_Children: []
   m_Father: {fileID: 512297779}
   m_RootOrder: 1
@@ -904,6 +904,7 @@ GameObject:
   m_Component:
   - component: {fileID: 271237297}
   - component: {fileID: 271237296}
+  - component: {fileID: 271237298}
   m_Layer: 0
   m_Name: GameControllerObject
   m_TagString: Untagged
@@ -938,6 +939,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &271237298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 271237295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5294cde2703fad84e9e426ebcfe9dceb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EC: {fileID: 1008905277}
+  plate: {fileID: 1019486343}
 --- !u!1 &274817836
 GameObject:
   m_ObjectHideFlags: 0
@@ -1450,7 +1464,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 480196625}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.78, y: -2.17, z: -2.48}
+  m_LocalPosition: {x: 4.2, y: 2.23, z: -2.48}
   m_LocalScale: {x: 20, y: 21.381826, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1629,7 +1643,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &512297778
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3083,7 +3097,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1006986676
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3137,7 +3151,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.48, y: 1.49, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1019486344}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3347,6 +3362,105 @@ MonoBehaviour:
   TextBox: {fileID: 804625885}
   TextBox_text: {fileID: 893930890}
   storyProgress: 0
+--- !u!1 &1019486343
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1019486344}
+  - component: {fileID: 1019486345}
+  - component: {fileID: 1019486346}
+  m_Layer: 0
+  m_Name: pieplate
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1019486344
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1019486343}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 3.72, y: 0.27, z: -0.27}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1006986677}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!212 &1019486345
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1019486343}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 6dbf25608b8e4472594ab6f1ebc439b7, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 2.42, y: 1.76}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+--- !u!61 &1019486346
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1019486343}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.42, y: 1.76}
+    newSize: {x: 2.42, y: 1.76}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.4, y: 1.8}
+  m_EdgeRadius: 0
 --- !u!1 &1045279335
 GameObject:
   m_ObjectHideFlags: 0
@@ -6261,7 +6375,7 @@ GameObject:
   - component: {fileID: 1875134852}
   - component: {fileID: 1875134853}
   m_Layer: 0
-  m_Name: "\uD504\uB77C\uC774\uD32C"
+  m_Name: frypan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6274,8 +6388,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1875134851}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.2067566, y: -1.6838927, z: -0.75}
-  m_LocalScale: {x: 0.82349336, y: 0.8179666, z: 1.2187701}
+  m_LocalPosition: {x: 4.269, y: -1.86, z: -0.75}
+  m_LocalScale: {x: 0.78126264, y: 0.7760193, z: 1.1562687}
   m_Children: []
   m_Father: {fileID: 512297779}
   m_RootOrder: 0

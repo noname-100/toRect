@@ -325,6 +325,8 @@ private void Awake()
             currentGame = PlayerPrefs.GetInt("Game");
         }
 
+        currentGame = 12;
+
         // 배경화면 및 게임아이템 설정
         // TODO : 프라이팬 등의 도구 세트 변경 작업도 여기서 수행한다.
         // *** (주의) GAMEMODE 설정 변경시 currentGame 숫자 범위 변경 필요함 ***
@@ -343,7 +345,7 @@ private void Awake()
         {
             // 합동삼각형
             SimilarityBackground.SetActive(true);
-        }
+        }        
 
         gc.makeNew(currentGame);
         return;

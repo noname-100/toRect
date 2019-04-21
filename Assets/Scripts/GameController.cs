@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     public bool polygonSelected;
     private Vector2[] problemTriangle;
     public GameObject EC;
+    private MakePolygon mp;
     private EventController ec;
     private StoryScript ss;
     private List<Vector2[]> backgroundBorders;
@@ -30,6 +31,7 @@ public class GameController : MonoBehaviour
         counter++;
         ss = EC.GetComponent<StoryScript>();
         ec = EC.GetComponent<EventController>();
+        mp = gameObject.GetComponent<MakePolygon>();
 
         backgroundBorders = new List<Vector2[]>();
         backgroundMidpoints = new List<Vector2>();
@@ -178,7 +180,7 @@ public class GameController : MonoBehaviour
         {
             // 합동삼각형은 여기 생성부에서 자체처리 + 렌더 + 리스트추가
             List<Vector2[]> similarTriangles = new List<Vector2[]>();
-            similarTriangles = MakePolygon.MakeSimilars();
+            similarTriangles = mp.MakeSimilars();
             var similarTriangle1 = new GameObject("Polygon");
             var similarTriangle2 = new GameObject("Polygon");
             var similarTriangle3 = new GameObject("Polygon");
