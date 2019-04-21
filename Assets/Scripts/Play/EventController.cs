@@ -99,7 +99,6 @@ private void Awake()
             MakeNewGame();
             ResetTimeManager();
             StartCoroutine("Timer");
-            gc.makeNew(currentGame);
         }
         else
         {

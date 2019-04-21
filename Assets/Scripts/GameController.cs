@@ -52,7 +52,7 @@ public class GameController : MonoBehaviour
 
     public void makeNew(int gameType)
     {
-
+        Debug.Log("called");
         foreach (GameObject p in polygonList)
         {
             Destroy(p);
@@ -63,10 +63,9 @@ public class GameController : MonoBehaviour
         var firstTriangle = new GameObject("Polygon");
         firstTriangle.AddComponent(System.Type.GetType("Polygon"));
 
-        /*Debug.Log(gameType);
-        firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeJig());
+        /*firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeQuadrangle());
         polygonList.Add(firstTriangle);
-        return;*/
+        return;   */  
 
         switch (gameType)
         {
@@ -86,7 +85,7 @@ public class GameController : MonoBehaviour
                 vertexes = MakePolygon.MakeTrapezoid();
                 break;
             case 5: // 다각형2(사각형) TODO : 생성함수
-                vertexes = MakePolygon.MakeTriangle(2);
+                vertexes = MakePolygon.MakeQuadrangle();
                 break;
             case 6: // 다각형2(오각형) TODO : 생성함수
                 vertexes = MakePolygon.MakeTriangle(2);
@@ -101,6 +100,8 @@ public class GameController : MonoBehaviour
                 vertexes = MakePolygon.MakeJig();
                 break;
         }
+
+        //vertexes = MakePolygon.MakeQuadrangle();
 
         // normalize here
         // 가장 긴 변이 최대 범위의 50% ~ 80% 범위로 랜덤 비율적용되게 하고, 다른 변들도 그렇게 적용한다.
@@ -128,7 +129,7 @@ public class GameController : MonoBehaviour
                 if (Mathf.Pow(vectors[i].x, 2) + Mathf.Pow(vectors[i].y, 2) > maxlength) maxlength = Mathf.Pow(vectors[i].x, 2) + Mathf.Pow(vectors[i].y, 2);
             }
             float tomatch = UnityEngine.Random.Range(0.6f * maxLength[gameType <= 7 ? 0 : 1], 0.67f * maxLength[gameType <= 7 ? 0 : 1]); // GAME TYPE HARD CODED HERE : map type
-            float proportion = 4f * tomatch / maxlength;
+            float proportion = tomatch / maxlength;
 
             Vector2[] result = new Vector2[vertexes.Length];
             for (int i = 0; i < result.Length; i++)
@@ -230,7 +231,8 @@ public class GameController : MonoBehaviour
 
         if (Math.Abs(distance[0] - distance[1]) <= 100 && Math.Abs(distance[0] - distance[2]) <= 100 && Math.Abs(distance[0] - distance[3]) <= 100)
         {
-            return true;
+            // TODO : 이거 그냥 모든 사각형이면 성립하잖아ㅋㅋ
+            return false;
         }
         else
         {

@@ -128,7 +128,16 @@ public class MakePolygon : MonoBehaviour
     public static Vector2[] MakeQuadrangle()
     {
         vertices = new Vector2[4];
-
+        Polygon.jiktojung = false;
+        
+        vertices[0].x = 0;
+        vertices[0].y = 0;
+        vertices[1].x = Random.Range(-0.3f, 0.3f);
+        vertices[1].y = Random.Range(0.3f, 0.7f);
+        vertices[2].x = Random.Range(0.7f, 1.3f);
+        vertices[2].y = Random.Range(0.3f, 0.7f);
+        vertices[3].x = 1;
+        vertices[3].y = 0;
 
         return vertices;
     }
