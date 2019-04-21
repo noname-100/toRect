@@ -103,7 +103,7 @@ public class MakePolygon : MonoBehaviour
         vertices[0].y = 0;
         vertices[1].x = Random.Range(-t/2,t/2);
         vertices[1].y = Random.Range(3f, 5f);
-        vertices[2].x = Random.Range(vertices[1].x,t/2);
+        vertices[2].x = Random.Range(vertices[1].x + 1,t/2);
         vertices[2].y = vertices[1].y;
         vertices[3].x = t/2;
         vertices[3].y = 0;
@@ -129,13 +129,13 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[4];
         Polygon.jiktojung = false;
-        
+        float t = Random.Range(3f, 5f);
         vertices[0].x = 0;
         vertices[0].y = 0;
-        vertices[1].x = Random.Range(-0.3f, 0.3f);
-        vertices[1].y = Random.Range(0.3f, 0.7f);
-        vertices[2].x = Random.Range(0.7f, 1.3f);
-        vertices[2].y = Random.Range(0.3f, 0.7f);
+        vertices[1].x = Random.Range(-0.3f , 0.3f );
+        vertices[1].y = Random.Range(0.3f , 0.7f );
+        vertices[2].x = Random.Range(0.7f , 1.3f );
+        vertices[2].y = Random.Range(0.3f , 0.7f );
         vertices[3].x = 1;
         vertices[3].y = 0;
 

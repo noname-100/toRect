@@ -18,9 +18,11 @@ public class GameController : MonoBehaviour
     private List<Vector2> backgroundMidpoints;
     private List<float> maxLength;
     private Vector2[] vertexes;
+    private int counter;
 
     private void Awake()
     {
+        counter++;
         ss = EC.GetComponent<StoryScript>();
         ec = EC.GetComponent<EventController>();
 
@@ -52,7 +54,8 @@ public class GameController : MonoBehaviour
 
     public void makeNew(int gameType)
     {
-        Debug.Log("called");
+        Debug.Log(counter + " called " + gameType);
+        counter++;
         foreach (GameObject p in polygonList)
         {
             Destroy(p);
@@ -63,9 +66,11 @@ public class GameController : MonoBehaviour
         var firstTriangle = new GameObject("Polygon");
         firstTriangle.AddComponent(System.Type.GetType("Polygon"));
 
-        /*firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeQuadrangle());
+        /*
+        firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeParallelogram());
         polygonList.Add(firstTriangle);
-        return;   */  
+        return;   
+        */
 
         switch (gameType)
         {
@@ -73,7 +78,7 @@ public class GameController : MonoBehaviour
                 vertexes = MakePolygon.MakeTriangle(1);
                 break;
             case 1: // 예각2
-                vertexes = MakePolygon.MakeTriangle(1);
+                vertexes = MakePolygon.MakeParallelogram();
                 break;
             case 2: // 직각
                 vertexes = MakePolygon.MakeTriangle(0);
@@ -129,7 +134,7 @@ public class GameController : MonoBehaviour
                 if (Mathf.Pow(vectors[i].x, 2) + Mathf.Pow(vectors[i].y, 2) > maxlength) maxlength = Mathf.Pow(vectors[i].x, 2) + Mathf.Pow(vectors[i].y, 2);
             }
             float tomatch = UnityEngine.Random.Range(0.6f * maxLength[gameType <= 7 ? 0 : 1], 0.67f * maxLength[gameType <= 7 ? 0 : 1]); // GAME TYPE HARD CODED HERE : map type
-            float proportion = tomatch / maxlength;
+            float proportion = 1.7f * tomatch / Mathf.Pow(maxlength,0.5f);
 
             Vector2[] result = new Vector2[vertexes.Length];
             for (int i = 0; i < result.Length; i++)
@@ -156,9 +161,10 @@ public class GameController : MonoBehaviour
                 area += Vector3.Cross(meshVertices[q], meshVertices[p]);
             }
             area *= 0.5f;
-            if (area.magnitude < 3.8f)
+            Debug.Log("area " + area.magnitude);
+            if (area.magnitude < 2.4f)
             {
-                Debug.Log("remaking..");
+                Debug.Log(counter + " remaking..");
                 Destroy(firstTriangle);
                 polygonList.RemoveAt(polygonList.Count - 1);
                 makeNew(gameType);
