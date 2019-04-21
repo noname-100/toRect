@@ -20,6 +20,11 @@ public class GameController : MonoBehaviour
     private Vector2[] vertexes;
     private int counter;
 
+    // 중요 : 출제 변경시 여기에서 범위 변경 필수!!!
+    private int biscuitProblems = 9;
+    private int rec2squareProblems = 11;
+    private int similarityProblems = 13;
+
     private void Awake()
     {
         counter++;
@@ -61,17 +66,9 @@ public class GameController : MonoBehaviour
             Destroy(p);
         }
         polygonList.Clear();
-
         
         var firstTriangle = new GameObject("Polygon");
         firstTriangle.AddComponent(System.Type.GetType("Polygon"));
-
-        /*
-        firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakePentagon());
-        polygonList.Add(firstTriangle);
-        return; 
-        */
-        
 
         switch (gameType)
         {
@@ -118,7 +115,7 @@ public class GameController : MonoBehaviour
         // normalize here
         // 가장 긴 변이 최대 범위의 50% ~ 80% 범위로 랜덤 비율적용되게 하고, 다른 변들도 그렇게 적용한다.
 
-        if (gameType <= 9)
+        if (gameType <= 11) // GAME TYPE HARD CODED HERE : 투렉트 + 직투정 생성
         {
             float currmidx = 0; float currmidy = 0;
             for (int i = 0; i < vertexes.Length; i++)
@@ -127,8 +124,8 @@ public class GameController : MonoBehaviour
                 currmidy += vertexes[i].y;
             }
             currmidx /= vertexes.Length; currmidy /= vertexes.Length;
-            float backgroundMidPointx = backgroundMidpoints[gameType <= 9 ? 0 : 1].x; // GAME TYPE HARD CODED HERE : map type
-            float backgroundMidPointy = backgroundMidpoints[gameType <= 9 ? 0 : 1].y;
+            float backgroundMidPointx = backgroundMidpoints[gameType <= biscuitProblems ? 0 : 1].x;
+            float backgroundMidPointy = backgroundMidpoints[gameType <= biscuitProblems ? 0 : 1].y;
             Vector2 diff = new Vector2(currmidx - backgroundMidPointx, currmidy - backgroundMidPointy);
             Vector2[] vectors = new Vector2[vertexes.Length];
             float maxlength = -99999999f;
@@ -140,7 +137,7 @@ public class GameController : MonoBehaviour
                 vectors[i].y = vertexes[i].y - backgroundMidPointy;
                 if (Mathf.Pow(vectors[i].x, 2) + Mathf.Pow(vectors[i].y, 2) > maxlength) maxlength = Mathf.Pow(vectors[i].x, 2) + Mathf.Pow(vectors[i].y, 2);
             }
-            float tomatch = UnityEngine.Random.Range(0.6f * maxLength[gameType <= 9 ? 0 : 1], 0.67f * maxLength[gameType <= 9 ? 0 : 1]); // GAME TYPE HARD CODED HERE : map type
+            float tomatch = UnityEngine.Random.Range(0.6f * maxLength[gameType <= biscuitProblems ? 0 : 1], 0.67f * maxLength[gameType <= biscuitProblems ? 0 : 1]);
             float proportion = 1.5f * tomatch / Mathf.Pow(maxlength,0.5f);
 
             Vector2[] result = new Vector2[vertexes.Length];
@@ -180,9 +177,20 @@ public class GameController : MonoBehaviour
         else
         {
             // 합동삼각형은 여기 생성부에서 자체처리 + 렌더 + 리스트추가
-            Debug.Log("Similarity triangle problem called");
-            firstTriangle.GetComponent<Polygon>().render(MakePolygon.MakeTriangle(0));
-            polygonList.Add(firstTriangle);
+            List<Vector2[]> similarTriangles = new List<Vector2[]>();
+            similarTriangles = MakePolygon.MakeSimilars();
+            var similarTriangle1 = new GameObject("Polygon");
+            var similarTriangle2 = new GameObject("Polygon");
+            var similarTriangle3 = new GameObject("Polygon");
+            similarTriangle1.AddComponent(System.Type.GetType("Polygon"));
+            similarTriangle2.AddComponent(System.Type.GetType("Polygon"));
+            similarTriangle3.AddComponent(System.Type.GetType("Polygon"));
+            similarTriangle1.GetComponent<Polygon>().render(similarTriangles[0]);
+            similarTriangle2.GetComponent<Polygon>().render(similarTriangles[1]);
+            similarTriangle3.GetComponent<Polygon>().render(similarTriangles[2]);
+            polygonList.Add(similarTriangle1);
+            polygonList.Add(similarTriangle2);
+            polygonList.Add(similarTriangle3);
 
         }
 
@@ -252,5 +260,20 @@ public class GameController : MonoBehaviour
             //Debug.Log("calculated, but not rectangle");
             return false;
         }          
+    }
+
+    public int getBiscuitProblems()
+    {
+        return biscuitProblems;
+    }
+
+    public int getRec2SquareProblems()
+    {
+        return rec2squareProblems;
+    }
+
+    public int getSimilarityProblems()
+    {
+        return similarityProblems;
     }
 }

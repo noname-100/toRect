@@ -317,7 +317,7 @@ private void Awake()
         if (currentMode == 0)
         {
             // 문제랜덤생성, TODO : 점수 및 콤보증가에 따라 난이도 높은 문제 증가할 확률 증가
-            currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, 10f));
+            currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, (float)gc.getSimilarityProblems()));
             PlayerPrefs.SetInt("Game", currentGame);
         }
         else
@@ -330,11 +330,11 @@ private void Awake()
         // *** (주의) GAMEMODE 설정 변경시 currentGame 숫자 범위 변경 필요함 ***
         ClearBackground();
 
-        if(currentGame >= 0 && currentGame <= 7)
+        if(currentGame >= 0 && currentGame <= gc.getBiscuitProblems())
         {
             // 투렉트
             RectangleBiscuitBackground.SetActive(true);
-        }else if(currentGame >= 8 && currentGame <= 9)
+        }else if(currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
             // 직투정
             Rec2SquareBackground.SetActive(true);

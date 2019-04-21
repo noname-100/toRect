@@ -224,4 +224,49 @@ public class MakePolygon : MonoBehaviour
 
         return vertices;
     }
+
+    public static List<Vector2[]> MakeSimilars()
+    {
+        List<Vector2[]> triangles = new List<Vector2[]>();
+
+        float a = 1.8f;
+        float b = a * Random.Range(1f, 2.3f);
+        float rightedge = 1.2f;
+        float dist = 0.5f;
+        Vector2[] triangle = new Vector2[3];
+        float coeff = 1f / (float)Mathf.Pow(b * b + a * a, 0.5f); // 1/(a^2+b^2)^0.5
+        float xzero = 4.7f - 2 * dist - a - a * b * coeff - a * coeff; // 바닥 오른쪽에서의 이격
+        xzero /= 2f;
+        float groundy = -0.345f - b / 2f; // 합동삼각형 바닥 좌표
+
+        // 맨 오른쪽 가장 큰 삼각형
+        triangle[0].x = rightedge - xzero;
+        triangle[0].y = groundy;
+        triangle[1].x = rightedge - a - xzero;
+        triangle[1].y = groundy;
+        triangle[2].x = rightedge - xzero;
+        triangle[2].y = groundy + b;
+        triangles.Add(triangle);
+
+        // 중간 삼각형
+        triangle = new Vector2[3];
+        triangle[0].x = rightedge - dist - a - xzero;
+        triangle[0].y = groundy;
+        triangle[1].x = rightedge - dist - a - xzero - a * b * coeff;
+        triangle[1].y = groundy;
+        triangle[2].x = rightedge - dist - a - xzero;
+        triangle[2].y = groundy + + b*b*coeff;
+        triangles.Add(triangle);
+
+        // 맨 왼쪽 작은 삼각형
+        triangle = new Vector2[3];
+        triangle[0].x = rightedge - 2 * dist - a - xzero - a * b * coeff;
+        triangle[0].y = groundy;
+        triangle[1].x = rightedge - 2 * dist - a - xzero - a * b * coeff - a * a * coeff;
+        triangle[1].y = groundy;
+        triangle[2].x = rightedge - 2 * dist - a - xzero - a * b * coeff;
+        triangle[2].y = groundy + a * b * coeff;
+        triangles.Add(triangle);
+        return triangles;
+    }
 }
