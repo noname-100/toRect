@@ -5,10 +5,15 @@ using UnityEngine;
 public class MakePolygon : MonoBehaviour
 {
     public static Vector2[] vertices;
-    
+    public GameObject EC;
+    private EventController ec;
+
     // Start is called before the first frame update
     void Start()
     {
+
+        ec = EC.GetComponent<EventController>();
+
 
     }
 
@@ -20,6 +25,7 @@ public class MakePolygon : MonoBehaviour
 
     public static Vector2[] MakeTriangle(int mode)
     {
+        // TODO : normalize
         vertices = new Vector2[3];
         Polygon.jiktojung = false;
         if(mode==0){//직각
@@ -116,6 +122,31 @@ public class MakePolygon : MonoBehaviour
         vertices[2].y = 3;
         vertices[3].x = 0;
         vertices[3].y = 3;
+        return vertices;
+    }
+
+    public static Vector2[] MakeQuadrangle()
+    {
+        vertices = new Vector2[4];
+
+
+        return vertices;
+    }
+
+    public static Vector2[] MakePentagon()
+    {
+        vertices = new Vector2[5];
+
+
+
+        return vertices;
+    }
+
+    public static Vector2[] MakeOctagon()
+    {
+        vertices = new Vector2[8];
+
+
         return vertices;
     }
 }

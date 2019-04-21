@@ -507,5 +507,15 @@ private void Awake()
         isPlay = x;
     }
 
+    public int GetScore()
+    {
+        return score;
+    }
+
+    public int GetCombo()
+    {
+        return combo;
+    }
+
 }
 
