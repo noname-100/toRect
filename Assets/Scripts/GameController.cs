@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour
 
     public void makeNew(int gameType)
     {
-        Debug.Log(counter + " called " + gameType);
+        // Debug.Log(counter + " called " + gameType);
         counter++;
         foreach (GameObject p in polygonList)
         {
@@ -204,65 +204,169 @@ public class GameController : MonoBehaviour
 
     public bool isSolvedSimilarity()
     {
-        return false;
-    }
-
-    public bool isSolvedRec2Square()
-    {
-        return false;
-    }
-
-    public bool isSolvedRect()
-    {
-        if (polygonList.Count != 1)
+        if(polygonList.Count != 1)
         {
-            //Debug.Log("polyon size is not 1" + polygonList.Count);
-            return false;
+            Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
         }
 
         Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
         if (reference == null)
         {
-            //Debug.Log("reference not read properly. returns null");
+            //Debug.Log("similarity reference not read properly. returns null");
             return false;
         }
 
         if (reference.Length != 4)
         {
-            //Debug.Log("edge not four" + reference.Length);
-            for(int i = 0; i < reference.Length; i++)
+            Debug.Log("edge not four, instead : " + reference.Length);
+            for (int i = 0; i < reference.Length; i++)
+            {
+                //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
+            }
+            return false;
+        }
+        
+        Vector3 prevpoint = new Vector3(1,1,-45);
+        Vector3 currpoint = new Vector3(1, 1, -45);
+        Vector3 nextpoint = new Vector3(1, 1, -45);
+
+        for (int i = 0; i < reference.Length + 3; i++)
+        {
+            int curr = i >= 4 ? i - 4 : i;
+            prevpoint = currpoint;
+            currpoint = nextpoint;
+            nextpoint = reference[curr];
+            if(!isNull(prevpoint) && !isNull(currpoint) && !isNull(nextpoint))
+            {
+                if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
+                {
+                    Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                    return false;
+                }
+            }
+        }
+
+        Debug.Log("this is rectangle");
+
+        // 여기에서 판 위에 직사각형이 있는지 체크한다.
+
+        return true;
+    }
+
+    public bool isNull(Vector3 given)
+    {
+        if(given.x != 1 || given.y != 1 || given.z != -45)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public bool isSolvedRec2Square()
+    {
+        if (polygonList.Count != 1)
+        {
+            Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
+        }
+
+        Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
+        if (reference == null)
+        {
+            //Debug.Log("similarity reference not read properly. returns null");
+            return false;
+        }
+
+        if (reference.Length != 4)
+        {
+            Debug.Log("edge not four, instead : " + reference.Length);
+            for (int i = 0; i < reference.Length; i++)
             {
                 //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
             }
             return false;
         }
 
-        float centerX = 0;
-        float centerY = 0;
-        for (int i = 0; i < 4; i++)
-        {
-            centerX += reference[i].x;
-            centerY += reference[i].y;
-        }
-        centerX /= 4;
-        centerY /= 4;
+        Vector3 prevpoint = new Vector3(1, 1, -45);
+        Vector3 currpoint = new Vector3(1, 1, -45);
+        Vector3 nextpoint = new Vector3(1, 1, -45);
 
-        float[] distance = new float[4];
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < reference.Length + 3; i++)
         {
-            distance[i] = (centerX - reference[i].x) * (centerX - reference[i].x) + (centerY - reference[i].y) * (centerY - reference[i].y);
+            int curr = i >= 4 ? i - 4 : i;
+            prevpoint = currpoint;
+            currpoint = nextpoint;
+            nextpoint = reference[curr];
+            if (!isNull(prevpoint) && !isNull(currpoint) && !isNull(nextpoint))
+            {
+                if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
+                {
+                    Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                    return false;
+                }
+                else
+                {
+                    if((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude > 0.01)
+                    {
+                        Debug.Log("rectangle is not square, length diff : " + ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude));
+                        return false;
+                    }
+                }
+            }
         }
 
-        if (Math.Abs(distance[0] - distance[1]) <= 100 && Math.Abs(distance[0] - distance[2]) <= 100 && Math.Abs(distance[0] - distance[3]) <= 100)
+        Debug.Log("this is square");
+        return true;
+    }
+
+    public bool isSolvedRect()
+    {
+        if (polygonList.Count != 1)
         {
-            // TODO : 이거 그냥 모든 사각형이면 성립하잖아ㅋㅋ
+            Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
+        }
+
+        Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
+        if (reference == null)
+        {
+            //Debug.Log("similarity reference not read properly. returns null");
             return false;
         }
-        else
+
+        if (reference.Length != 4)
         {
-            //Debug.Log("calculated, but not rectangle");
+            Debug.Log("edge not four, instead : " + reference.Length);
+            for (int i = 0; i < reference.Length; i++)
+            {
+                //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
+            }
             return false;
-        }          
+        }
+
+        Vector3 prevpoint = new Vector3(1, 1, -45);
+        Vector3 currpoint = new Vector3(1, 1, -45);
+        Vector3 nextpoint = new Vector3(1, 1, -45);
+
+        for (int i = 0; i < reference.Length + 3; i++)
+        {
+            int curr = i >= 4 ? i - 4 : i;
+            prevpoint = currpoint;
+            currpoint = nextpoint;
+            nextpoint = reference[curr];
+            if (!isNull(prevpoint) && !isNull(currpoint) && !isNull(nextpoint))
+            {
+                if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
+                {
+                    Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                    return false;
+                }
+            }
+        }
+
+        Debug.Log("this is rectangle");
+        return true;
     }
 
     public int getBiscuitProblems()

@@ -274,13 +274,13 @@ public class MakePolygon : MonoBehaviour
         // resize plate
         sprite = plate.GetComponent<SpriteRenderer>();
         
-        Debug.Log("a : " + a + " b : " + b);
-        Debug.Log(counter + "before x : " + 2 * sprite.bounds.extents.x + " y : " + 2 * sprite.bounds.extents.y);
-        Debug.Log(a / (2 * sprite.bounds.extents.x));
-        Debug.Log(b / (2 * sprite.bounds.extents.y));
+        //Debug.Log("a : " + a + " b : " + b);
+        //Debug.Log(counter + "before x : " + 2 * sprite.bounds.extents.x + " y : " + 2 * sprite.bounds.extents.y);
+        //Debug.Log(a / (2 * sprite.bounds.extents.x));
+        //Debug.Log(b / (2 * sprite.bounds.extents.y));
         plate.transform.localScale = new Vector3(b / (2 * sprite.bounds.extents.y) + 0.1f, a / (2 * sprite.bounds.extents.x)+ 0.1f, 0);
         //plate.transform.localScale = new Vector3(2, 1, 0);
-        Debug.Log(counter + "after x : " + 2 * sprite.bounds.extents.x + " y : " + 2 * sprite.bounds.extents.y);
+        //Debug.Log(counter + "after x : " + 2 * sprite.bounds.extents.x + " y : " + 2 * sprite.bounds.extents.y);
         
 
         counter++;

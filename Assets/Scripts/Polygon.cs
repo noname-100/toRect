@@ -477,7 +477,7 @@ public class Polygon : MonoBehaviour
                         //Debug.Log("merging.. " + vertices3D.Length);
                         for (int i = 0; i < newPol.Count; i++)
                         {
-                            Debug.Log("new vertex x : " + newPol[i].x + " y : " + newPol[i].y);
+                            //Debug.Log("new vertex x : " + newPol[i].x + " y : " + newPol[i].y);
                         }
                         var newPolygon = new GameObject("Polygon");
                         newPolygon.AddComponent(System.Type.GetType("Polygon"));
