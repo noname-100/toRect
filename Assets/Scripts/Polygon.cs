@@ -243,7 +243,7 @@ public class Polygon : MonoBehaviour
                 {
                     for (int j = 0; j < midpoints.Count; j++)
                     {
-                        if (Vector3.Distance(dots[midpoints[j]].transform.position, dots[midpoint].transform.position) / Vector3.Distance(dots[vertex1].transform.position, dots[vertex2].transform.position) < 0.12)
+                        if (Vector3.Distance(dots[midpoints[j]].transform.position, dots[midpoint].transform.position) / Vector3.Distance(dots[vertex1].transform.position, dots[vertex2].transform.position) < 0.09)
                         {
                             //if (dots[midpoint].GetComponent<Dots>().isVertice) Debug.Log("vertex changing to perp");
                             //Debug.Log("midpoint to overlap " + midpoint + " mm " + midpoints[j]);

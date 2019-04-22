@@ -295,7 +295,7 @@ public class GameController : MonoBehaviour
         }
 
         // Debug.Log("Similarity : final answer met");
-        if(PlayerPrefs.GetInt("Mode")==0) ScorePopup();
+        if(PlayerPrefs.GetInt("Mode")==0) StartCoroutine(ScorePopup());
         return true;
     }
 
@@ -311,19 +311,11 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void ScorePopup()
+    IEnumerator ScorePopup()
     {
         Debug.Log("ScorePopup Called");
         ScoreSign.SetActive(true);
-        int count = 0;
-        for (int i = 0; i < 10000000; i++)
-        {
-            for(int j = 0; j < 10000000; j++)
-            {
-                if (count % 2 == 0) count++;
-                else count--;
-            }
-        }
+        yield return new WaitForSeconds(1f);
         ScoreSign.SetActive(false);
     }
 
@@ -381,7 +373,7 @@ public class GameController : MonoBehaviour
         }
 
         // Debug.Log("All remainders are square");
-        if (PlayerPrefs.GetInt("Mode") == 0) ScorePopup();
+        if (PlayerPrefs.GetInt("Mode") == 0) StartCoroutine(ScorePopup());
         return true;
     }
 
@@ -430,8 +422,8 @@ public class GameController : MonoBehaviour
             }
         }
 
-        // Debug.Log("Biscuit this is rectangle");
-        if (PlayerPrefs.GetInt("Mode") == 0) ScorePopup();
+        Debug.Log("Biscuit this is rectangle");
+        if (PlayerPrefs.GetInt("Mode") == 0) StartCoroutine(ScorePopup());
         return true;
     }
 
