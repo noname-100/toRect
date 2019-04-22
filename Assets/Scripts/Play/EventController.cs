@@ -64,9 +64,10 @@ public class EventController : MonoBehaviour {
 
 private void Awake()
     {
-
+        
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
+        Debug.Log("current Game Mode is : " + currentMode);
         gc = GC.GetComponent<GameController>();
         ss = EC.GetComponent<StoryScript>();
         sr = plate.GetComponent<SpriteRenderer>();
@@ -337,7 +338,7 @@ private void Awake()
          * 
          */
 
-          currentGame = 10; // TEST 값
+         // currentGame = 5; // TEST 값
 
 
         // 배경화면 및 게임아이템 설정

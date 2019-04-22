@@ -20,7 +20,8 @@ public class GameController : MonoBehaviour
     private List<float> maxLength;
     private Vector2[] vertexes;
     private int counter;
-    public GameObject plate;
+    public GameObject Plate;
+    public GameObject ScoreSign;
 
     // 중요 : 출제 변경시 여기에서 범위 변경 필수!!!
     private int biscuitProblems = 9;
@@ -181,7 +182,7 @@ public class GameController : MonoBehaviour
                 area += Vector3.Cross(meshVertices[q], meshVertices[p]);
             }
             area *= 0.5f;
-            Debug.Log("area " + area.magnitude);
+            // Debug.Log("area " + area.magnitude);
             if (area.magnitude < 2.4f)
             {
                 Debug.Log(counter + " remaking..");
@@ -267,7 +268,7 @@ public class GameController : MonoBehaviour
         Debug.Log("this is rectangle");
 
         // 여기에서 판 위에 직사각형이 있는지 체크한다.
-        if((plate.transform.position-polygonList[0].transform.position).magnitude > 1.6)
+        if((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.6)
         {
             /*Mesh mesh = polygonList[0].GetComponent<MeshFilter>().mesh;
             mesh.RecalculateBounds();
@@ -283,7 +284,7 @@ public class GameController : MonoBehaviour
             currmidx /= 4;
             currmidy /= 4;
             Debug.Log("currmidx : " + currmidx + " " + "currmidy : " + currmidy);*/
-            Debug.Log("Pie not on plate dist : " + (plate.transform.position - polygonList[0].transform.position).magnitude);
+            Debug.Log("Pie not on plate dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
             return false;
         }
 
@@ -294,6 +295,7 @@ public class GameController : MonoBehaviour
         }
 
         Debug.Log("Similarity : final answer met");
+        if(PlayerPrefs.GetInt("Mode")==0) ScorePopup();
         return true;
     }
 
@@ -307,6 +309,14 @@ public class GameController : MonoBehaviour
         {
             return true;
         }
+    }
+
+    public void ScorePopup()
+    {
+        Debug.Log("ScorePopup Called");
+        ScoreSign.SetActive(true);
+        System.Threading.Thread.Sleep(350);
+        ScoreSign.SetActive(false);
     }
 
     public bool isSolvedRec2Square()
@@ -363,6 +373,7 @@ public class GameController : MonoBehaviour
         }
 
         Debug.Log("All remainders are square");
+        if (PlayerPrefs.GetInt("Mode") == 0) ScorePopup();
         return true;
     }
 
@@ -412,6 +423,7 @@ public class GameController : MonoBehaviour
         }
 
         Debug.Log("Biscuit this is rectangle");
+        if (PlayerPrefs.GetInt("Mode") == 0) ScorePopup();
         return true;
     }
 
