@@ -32,6 +32,8 @@ public class EventController : MonoBehaviour {
     public int isPlay; // 0 : 게임 정지 1 : 게임 시작 시그널 2 : 게임 실행중
     public GameObject EC;
     private StoryScript ss;
+    public GameObject plate;
+    private SpriteRenderer sr;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
@@ -67,6 +69,7 @@ private void Awake()
         currentMode = PlayerPrefs.GetInt("Mode");
         gc = GC.GetComponent<GameController>();
         ss = EC.GetComponent<StoryScript>();
+        sr = plate.GetComponent<SpriteRenderer>();
         
         hints = 3;
         score = 0;
@@ -198,7 +201,8 @@ private void Awake()
 
         if (gc.isSolvedSimilarity() || (isHelp==2 && currentMode ==3))
         {
-            if(currentMode == 0)
+            plate.transform.localScale = new Vector3(1f, 1f, 0);
+            if (currentMode == 0)
             {
                 winflag = 1;
             }
