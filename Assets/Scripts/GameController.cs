@@ -250,15 +250,29 @@ public class GameController : MonoBehaviour
         Debug.Log("this is rectangle");
 
         // 여기에서 판 위에 직사각형이 있는지 체크한다.
-        if((plate.transform.position-polygonList[0].transform.position).magnitude > 0.3)
+        if((plate.transform.position-polygonList[0].transform.position).magnitude > 1.6)
         {
+            /*Mesh mesh = polygonList[0].GetComponent<MeshFilter>().mesh;
+            mesh.RecalculateBounds();
+            mesh.RecalculateNormals();
+            reference = mesh.vertices;
+            float currmidx = 0;
+            float currmidy = 0;
+            for(int i = 0; i < 4; i++)
+            {
+                currmidx += reference[0].x;
+                currmidy += reference[0].y;
+            }
+            currmidx /= 4;
+            currmidy /= 4;
+            Debug.Log("currmidx : " + currmidx + " " + "currmidy : " + currmidy);*/
             Debug.Log("Pie not on plate dist : " + (plate.transform.position - polygonList[0].transform.position).magnitude);
             return false;
         }
 
-        if(!(polygonList[0].transform.rotation.z >= 20 && polygonList[0].transform.rotation.z <= 40) && !(polygonList[0].transform.rotation.z <= -140 && polygonList[0].transform.rotation.z >= -160))
+        if(!(polygonList[0].transform.eulerAngles.z >= 20 && polygonList[0].transform.rotation.eulerAngles.z <= 40) && !(polygonList[0].transform.rotation.eulerAngles.z <= -140 && polygonList[0].transform.rotation.eulerAngles.z >= -160))
         {
-            Debug.Log("Pie not in right angle, curr : " + polygonList[0].transform.rotation.z);
+            Debug.Log("Pie not in right angle, curr : " + polygonList[0].transform.rotation.eulerAngles.z);
             return false;
         }
 
