@@ -12,6 +12,7 @@ public class Polygon : MonoBehaviour
     public bool dotSelected = false;
     public bool mergeable = false;
     public static bool jiktojung = false;
+    public static float jiktojunglength = 0f;
     public int merger;
     private List<GameObject> dots = new List<GameObject>();
     // Start is called before the first frame update

@@ -63,13 +63,12 @@ public class GameController : MonoBehaviour
     public void makeNew(int gameType)
     {
         // Debug.Log(counter + " called " + gameType);
-        counter++;
+        // counter++;
         foreach (GameObject p in polygonList)
         {
             Destroy(p);
         }
         polygonList.Clear();
-
 
         /*
          * 
@@ -77,10 +76,10 @@ public class GameController : MonoBehaviour
          * 
          */
         
-        GameObject square = new GameObject("Polygon");
+        /*GameObject square = new GameObject("Polygon");
         square.AddComponent(System.Type.GetType("Polygon"));
-        square.GetComponent<Polygon>().render(MakePolygon.MakeSquare(1,0,0,0));
-        return;
+        square.GetComponent<Polygon>().render(MakePolygon.MakeSquare(1,0,0,60));
+        return;*/
 
         // 출제변경시 여기의 biscuitProblems 등 변수 전환 + buttoncontroller_title 변수 전환, 
         switch (gameType)
@@ -117,9 +116,11 @@ public class GameController : MonoBehaviour
                 break;
             case 10: // 직투정
                 vertexes = MakePolygon.MakeJig();
+                GenerateSquares();
                 break;
             case 11: // 직투정2 TODO : 생성함수
                 vertexes = MakePolygon.MakeJig();
+                GenerateSquares();
                 break;
         }
 
@@ -214,6 +215,11 @@ public class GameController : MonoBehaviour
         return;
     }
 
+    public void GenerateSquares()
+    {
+
+    }
+
     public bool isSolvedSimilarity()
     {
         if(polygonList.Count != 1)
@@ -305,58 +311,58 @@ public class GameController : MonoBehaviour
 
     public bool isSolvedRec2Square()
     {
-        if (polygonList.Count != 1)
+        for (int z = 0; z < polygonList.Count; z++)
         {
-            Debug.Log("Rec2Square answer check : polygon more than 1 : " + polygonList.Count);
-            return false;
-        }
 
-        Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
-        if (reference == null)
-        {
-            //Debug.Log("Rec2Square reference not read properly. returns null");
-            return false;
-        }
-
-        if (reference.Length != 4)
-        {
-            Debug.Log("Rec2Square not four, instead : " + reference.Length);
-            for (int i = 0; i < reference.Length; i++)
+            Vector3[] reference = polygonList[z].GetComponent<Polygon>().vertices3D;
+            if (reference == null)
             {
-                //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
+                //Debug.Log("Rec2Square reference not read properly. returns null");
+                return false;
             }
-            return false;
-        }
 
-        Vector3 prevpoint = new Vector3(1, 1, -45);
-        Vector3 currpoint = new Vector3(1, 1, -45);
-        Vector3 nextpoint = new Vector3(1, 1, -45);
-
-        for (int i = 0; i < reference.Length + 3; i++)
-        {
-            int curr = i >= 4 ? i - 4 : i;
-            prevpoint = currpoint;
-            currpoint = nextpoint;
-            nextpoint = reference[curr];
-            if (!isNull(prevpoint) && !isNull(currpoint) && !isNull(nextpoint))
+            if (reference.Length != 4)
             {
-                if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
+                Debug.Log("Rec2Square not four, instead : " + reference.Length);
+                for (int i = 0; i < reference.Length; i++)
                 {
-                    Debug.Log("Rec2Square found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
-                    return false;
+                    //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
                 }
-                else
+                return false;
+            }
+
+            Vector3 prevpoint = new Vector3(1, 1, -45);
+            Vector3 currpoint = new Vector3(1, 1, -45);
+            Vector3 nextpoint = new Vector3(1, 1, -45);
+
+            for (int i = 0; i < reference.Length + 3; i++)
+            {
+                int curr = i >= 4 ? i - 4 : i;
+                prevpoint = currpoint;
+                currpoint = nextpoint;
+                nextpoint = reference[curr];
+                if (!isNull(prevpoint) && !isNull(currpoint) && !isNull(nextpoint))
                 {
-                    if((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude > 0.01)
+                    if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
                     {
-                        Debug.Log("Rec2Square rectangle is not square, length diff : " + ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude));
+                        Debug.Log("Rec2Square found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                         return false;
+                    }
+                    else
+                    {
+                        if ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude > 0.01)
+                        {
+                            Debug.Log("Rec2Square rectangle is not square, length diff : " + ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude));
+                            return false;
+                        }
                     }
                 }
             }
+
+            Debug.Log(z + " quadrangle is square");
         }
 
-        Debug.Log("this is square");
+        Debug.Log("All remainders are square");
         return true;
     }
 

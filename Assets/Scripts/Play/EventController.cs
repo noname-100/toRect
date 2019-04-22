@@ -333,15 +333,15 @@ private void Awake()
 
         /*
          * 
-         *  새로운 문제 출제 TEST 시 여기에 있는 currentGame 바꿔서 테스트 !!!
+         *  TEST CODE : 새로운 문제 출제시 여기에 있는 currentGame 바꿔서 테스트(MakePolygon 아닌 실제 게임 전체를 뜻함).
          * 
          */
-         // currentGame = 12; // TEST 값
+
+          currentGame = 10; // TEST 값
 
 
         // 배경화면 및 게임아이템 설정
         // TODO : 프라이팬 등의 도구 세트 변경 작업도 여기서 수행한다.
-
         ClearBackground();
 
         if(currentGame >= 0 && currentGame <= gc.getBiscuitProblems())
@@ -352,6 +352,7 @@ private void Awake()
         {
             // 직투정
             Rec2SquareBackground.SetActive(true);
+
         }
         else
         {
