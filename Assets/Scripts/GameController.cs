@@ -69,6 +69,8 @@ public class GameController : MonoBehaviour
         }
         polygonList.Clear();
         
+
+        // 출제변경시 여기의 biscuitProblems 등 변수 전환 + buttoncontroller_title 변수 전환, 
         switch (gameType)
         {
             case 0: // 예각1

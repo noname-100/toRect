@@ -76,7 +76,7 @@ private void Awake()
         combo = 0;
         movementStatus = 0;
         solveTime = 45; // 임의 변수초기화 값
-
+        
         // 배경화면 초기화
         ClearBackground();
 
@@ -158,7 +158,7 @@ private void Awake()
         }
 
         // 필요한 모든 검증장치를 여기에 추가한다.
-        if (gc.isSolvedRect() || (isHelp==2 && currentMode==1))
+        if (gc.isSolvedRect() || (isHelp==2 && currentGame<=gc.getBiscuitProblems()))
         {
             if(currentMode == 0)
             {
@@ -179,7 +179,7 @@ private void Awake()
             }
         }
 
-        if (gc.isSolvedRec2Square() || (isHelp==2 && currentMode == 2))
+        if (gc.isSolvedRec2Square() || (isHelp==2 && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems()))
         {
             if(currentMode == 0)
             {
@@ -189,7 +189,7 @@ private void Awake()
             {
                 if (ss.GetstoryProgress() == 2)
                 {
-                    Debug.Log("here2");
+                    //Debug.Log("here2");
                     GameOver(true);
                 }
                 isPlay = 0;
@@ -199,7 +199,7 @@ private void Awake()
             }
         }
 
-        if (gc.isSolvedSimilarity() || (isHelp==2 && currentMode ==3))
+        if (gc.isSolvedSimilarity() || (isHelp==2 && currentGame >= gc.getRec2SquareProblems()+1 && currentGame <= gc.getSimilarityProblems()))
         {
             Debug.Log("called");
             plate.transform.localScale = new Vector3(1f, 1f, 0);
@@ -330,7 +330,7 @@ private void Awake()
             currentGame = PlayerPrefs.GetInt("Game");
         }
 
-        currentGame = 12;
+        // currentGame = 12; // TEST 값
 
         // 배경화면 및 게임아이템 설정
         // TODO : 프라이팬 등의 도구 세트 변경 작업도 여기서 수행한다.
