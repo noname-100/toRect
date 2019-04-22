@@ -185,7 +185,7 @@ public class GameController : MonoBehaviour
             // Debug.Log("area " + area.magnitude);
             if (area.magnitude < 2.4f)
             {
-                Debug.Log(counter + " remaking..");
+                // Debug.Log(counter + " remaking..");
                 Destroy(firstTriangle);
                 polygonList.RemoveAt(polygonList.Count - 1);
                 makeNew(gameType);
@@ -225,7 +225,7 @@ public class GameController : MonoBehaviour
     {
         if(polygonList.Count != 1)
         {
-            Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
+            // Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
             return false;
         }
 
@@ -238,7 +238,7 @@ public class GameController : MonoBehaviour
 
         if (reference.Length != 4)
         {
-            Debug.Log("edge not four, instead : " + reference.Length);
+            // Debug.Log("edge not four, instead : " + reference.Length);
             for (int i = 0; i < reference.Length; i++)
             {
                 //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
@@ -260,12 +260,12 @@ public class GameController : MonoBehaviour
             {
                 if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
                 {
-                    Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                    // Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                     return false;
                 }
             }
         }
-        Debug.Log("this is rectangle");
+        // Debug.Log("this is rectangle");
 
         // 여기에서 판 위에 직사각형이 있는지 체크한다.
         if((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.6)
@@ -283,18 +283,18 @@ public class GameController : MonoBehaviour
             }
             currmidx /= 4;
             currmidy /= 4;
-            Debug.Log("currmidx : " + currmidx + " " + "currmidy : " + currmidy);*/
-            Debug.Log("Pie not on plate dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
+            // Debug.Log("currmidx : " + currmidx + " " + "currmidy : " + currmidy);*/
+            // Debug.Log("Pie not on plate dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
             return false;
         }
 
         if(!(polygonList[0].transform.eulerAngles.z >= 20 && polygonList[0].transform.rotation.eulerAngles.z <= 40) && !(polygonList[0].transform.rotation.eulerAngles.z <= -140 && polygonList[0].transform.rotation.eulerAngles.z >= -160))
         {
-            Debug.Log("Pie not in right angle, curr : " + polygonList[0].transform.rotation.eulerAngles.z);
+            // Debug.Log("Pie not in right angle, curr : " + polygonList[0].transform.rotation.eulerAngles.z);
             return false;
         }
 
-        Debug.Log("Similarity : final answer met");
+        // Debug.Log("Similarity : final answer met");
         if(PlayerPrefs.GetInt("Mode")==0) ScorePopup();
         return true;
     }
@@ -315,7 +315,15 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("ScorePopup Called");
         ScoreSign.SetActive(true);
-        System.Threading.Thread.Sleep(350);
+        int count = 0;
+        for (int i = 0; i < 10000000; i++)
+        {
+            for(int j = 0; j < 10000000; j++)
+            {
+                if (count % 2 == 0) count++;
+                else count--;
+            }
+        }
         ScoreSign.SetActive(false);
     }
 
@@ -333,7 +341,7 @@ public class GameController : MonoBehaviour
 
             if (reference.Length != 4)
             {
-                Debug.Log("Rec2Square not four, instead : " + reference.Length);
+                // Debug.Log("Rec2Square not four, instead : " + reference.Length);
                 for (int i = 0; i < reference.Length; i++)
                 {
                     //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
@@ -355,24 +363,24 @@ public class GameController : MonoBehaviour
                 {
                     if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
                     {
-                        Debug.Log("Rec2Square found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                        // Debug.Log("Rec2Square found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                         return false;
                     }
                     else
                     {
                         if ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude > 0.01)
                         {
-                            Debug.Log("Rec2Square rectangle is not square, length diff : " + ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude));
+                            // Debug.Log("Rec2Square rectangle is not square, length diff : " + ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude));
                             return false;
                         }
                     }
                 }
             }
 
-            Debug.Log(z + " quadrangle is square");
+            // Debug.Log(z + " quadrangle is square");
         }
 
-        Debug.Log("All remainders are square");
+        // Debug.Log("All remainders are square");
         if (PlayerPrefs.GetInt("Mode") == 0) ScorePopup();
         return true;
     }
@@ -381,7 +389,7 @@ public class GameController : MonoBehaviour
     {
         if (polygonList.Count != 1)
         {
-            Debug.Log("Biscuit answer check : polygon more than 1 : " + polygonList.Count);
+            // Debug.Log("Biscuit answer check : polygon more than 1 : " + polygonList.Count);
             return false;
         }
 
@@ -394,10 +402,10 @@ public class GameController : MonoBehaviour
 
         if (reference.Length != 4)
         {
-            Debug.Log("Biscuit edge not four, instead : " + reference.Length);
+            // Debug.Log("Biscuit edge not four, instead : " + reference.Length);
             for (int i = 0; i < reference.Length; i++)
             {
-                //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
+                // Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
             }
             return false;
         }
@@ -416,13 +424,13 @@ public class GameController : MonoBehaviour
             {
                 if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
                 {
-                    Debug.Log("Biscuit found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                    // Debug.Log("Biscuit found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                     return false;
                 }
             }
         }
 
-        Debug.Log("Biscuit this is rectangle");
+        // Debug.Log("Biscuit this is rectangle");
         if (PlayerPrefs.GetInt("Mode") == 0) ScorePopup();
         return true;
     }
