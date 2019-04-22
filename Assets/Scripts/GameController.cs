@@ -69,7 +69,18 @@ public class GameController : MonoBehaviour
             Destroy(p);
         }
         polygonList.Clear();
+
+
+        /*
+         * 
+         *  TEST CODE : MakePolygon에서 새로운 형태 추가했을 경우 테스트하는 곳이다.
+         * 
+         */
         
+        GameObject square = new GameObject("Polygon");
+        square.AddComponent(System.Type.GetType("Polygon"));
+        square.GetComponent<Polygon>().render(MakePolygon.MakeSquare(1,0,0,0));
+        return;
 
         // 출제변경시 여기의 biscuitProblems 등 변수 전환 + buttoncontroller_title 변수 전환, 
         switch (gameType)

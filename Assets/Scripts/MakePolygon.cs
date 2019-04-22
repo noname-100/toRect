@@ -26,6 +26,25 @@ public class MakePolygon : MonoBehaviour
         
     }
 
+    public static Vector2[] MakeSquare(float length, float x, float y, float angle)
+    {
+
+        vertices = new Vector2[4];
+        float radius = (length / Mathf.Pow(2, 0.5f));
+        Polygon.jiktojung = false;
+        vertices[0].x = radius * Mathf.Cos((45 + angle)/180 * Mathf.PI);
+        vertices[0].y = radius * Mathf.Sin((45 + angle)/180 * Mathf.PI);
+        vertices[1].x = radius * Mathf.Cos((135 + angle) / 180 * Mathf.PI);
+        vertices[1].y = radius * Mathf.Sin((135 + angle) / 180 * Mathf.PI);
+        vertices[2].x = radius * Mathf.Cos((225 + angle) / 180 * Mathf.PI);
+        vertices[2].y = radius * Mathf.Sin((225 + angle) / 180 * Mathf.PI);
+        vertices[3].x = radius * Mathf.Cos((315 + angle) / 180 * Mathf.PI);
+        vertices[3].y = radius * Mathf.Sin((315 + angle) / 180 * Mathf.PI);
+
+        return vertices;
+
+    }
+
     public static Vector2[] MakeTriangle(int mode)
     {
         // TODO : normalize
