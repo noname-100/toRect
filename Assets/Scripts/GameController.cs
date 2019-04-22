@@ -20,6 +20,7 @@ public class GameController : MonoBehaviour
     private List<float> maxLength;
     private Vector2[] vertexes;
     private int counter;
+    public GameObject plate;
 
     // 중요 : 출제 변경시 여기에서 범위 변경 필수!!!
     private int biscuitProblems = 9;
@@ -207,6 +208,7 @@ public class GameController : MonoBehaviour
         if(polygonList.Count != 1)
         {
             Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
+            return false;
         }
 
         Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
@@ -245,11 +247,22 @@ public class GameController : MonoBehaviour
                 }
             }
         }
-
         Debug.Log("this is rectangle");
 
         // 여기에서 판 위에 직사각형이 있는지 체크한다.
+        if((plate.transform.position-polygonList[0].transform.position).magnitude > 0.3)
+        {
+            Debug.Log("Pie not on plate dist : " + (plate.transform.position - polygonList[0].transform.position).magnitude);
+            return false;
+        }
 
+        if(!(polygonList[0].transform.rotation.z >= 20 && polygonList[0].transform.rotation.z <= 40) && !(polygonList[0].transform.rotation.z <= -140 && polygonList[0].transform.rotation.z >= -160))
+        {
+            Debug.Log("Pie not in right angle, curr : " + polygonList[0].transform.rotation.z);
+            return false;
+        }
+
+        Debug.Log("Similarity : final answer met");
         return true;
     }
 
@@ -269,19 +282,20 @@ public class GameController : MonoBehaviour
     {
         if (polygonList.Count != 1)
         {
-            Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
+            Debug.Log("Rec2Square answer check : polygon more than 1 : " + polygonList.Count);
+            return false;
         }
 
         Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
         if (reference == null)
         {
-            //Debug.Log("similarity reference not read properly. returns null");
+            //Debug.Log("Rec2Square reference not read properly. returns null");
             return false;
         }
 
         if (reference.Length != 4)
         {
-            Debug.Log("edge not four, instead : " + reference.Length);
+            Debug.Log("Rec2Square not four, instead : " + reference.Length);
             for (int i = 0; i < reference.Length; i++)
             {
                 //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
@@ -303,14 +317,14 @@ public class GameController : MonoBehaviour
             {
                 if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
                 {
-                    Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                    Debug.Log("Rec2Square found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                     return false;
                 }
                 else
                 {
                     if((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude > 0.01)
                     {
-                        Debug.Log("rectangle is not square, length diff : " + ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude));
+                        Debug.Log("Rec2Square rectangle is not square, length diff : " + ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude));
                         return false;
                     }
                 }
@@ -325,19 +339,20 @@ public class GameController : MonoBehaviour
     {
         if (polygonList.Count != 1)
         {
-            Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
+            Debug.Log("Biscuit answer check : polygon more than 1 : " + polygonList.Count);
+            return false;
         }
 
         Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
         if (reference == null)
         {
-            //Debug.Log("similarity reference not read properly. returns null");
+            //Debug.Log("Biscuit reference not read properly. returns null");
             return false;
         }
 
         if (reference.Length != 4)
         {
-            Debug.Log("edge not four, instead : " + reference.Length);
+            Debug.Log("Biscuit edge not four, instead : " + reference.Length);
             for (int i = 0; i < reference.Length; i++)
             {
                 //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
@@ -359,13 +374,13 @@ public class GameController : MonoBehaviour
             {
                 if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
                 {
-                    Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                    Debug.Log("Biscuit found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                     return false;
                 }
             }
         }
 
-        Debug.Log("this is rectangle");
+        Debug.Log("Biscuit this is rectangle");
         return true;
     }
 

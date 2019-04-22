@@ -143,6 +143,7 @@ private void Awake()
         // 시간종료
         if (current_Time < 0)
         {
+            plate.transform.localScale = new Vector3(1f, 1f, 0);
             LostLife();
             ResetTimeManager();
             MakeNewGame();
@@ -158,7 +159,7 @@ private void Awake()
         }
 
         // 필요한 모든 검증장치를 여기에 추가한다.
-        if (gc.isSolvedRect() || (isHelp==2 && currentGame<=gc.getBiscuitProblems()))
+        if ((gc.isSolvedRect() || isHelp==2 )&& currentGame<=gc.getBiscuitProblems())
         {
             if(currentMode == 0)
             {
@@ -179,7 +180,7 @@ private void Awake()
             }
         }
 
-        if (gc.isSolvedRec2Square() || (isHelp==2 && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems()))
+        if ((gc.isSolvedRec2Square() || isHelp==2) && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
             if(currentMode == 0)
             {
@@ -199,9 +200,9 @@ private void Awake()
             }
         }
 
-        if (gc.isSolvedSimilarity() || (isHelp==2 && currentGame >= gc.getRec2SquareProblems()+1 && currentGame <= gc.getSimilarityProblems()))
+        if ((gc.isSolvedSimilarity() || isHelp==2) && currentGame >= gc.getRec2SquareProblems()+1 && currentGame <= gc.getSimilarityProblems())
         {
-            Debug.Log("called");
+            //Debug.Log("called");
             plate.transform.localScale = new Vector3(1f, 1f, 0);
             if (currentMode == 0)
             {
