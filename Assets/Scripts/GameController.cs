@@ -69,9 +69,6 @@ public class GameController : MonoBehaviour
         }
         polygonList.Clear();
         
-        var firstTriangle = new GameObject("Polygon");
-        firstTriangle.AddComponent(System.Type.GetType("Polygon"));
-
         switch (gameType)
         {
             case 0: // 예각1
@@ -119,6 +116,8 @@ public class GameController : MonoBehaviour
 
         if (gameType <= 11) // GAME TYPE HARD CODED HERE : 투렉트 + 직투정 생성
         {
+            var firstTriangle = new GameObject("Polygon");
+            firstTriangle.AddComponent(System.Type.GetType("Polygon"));
             float currmidx = 0; float currmidy = 0;
             for (int i = 0; i < vertexes.Length; i++)
             {

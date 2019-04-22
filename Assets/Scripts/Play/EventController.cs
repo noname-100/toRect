@@ -201,6 +201,7 @@ private void Awake()
 
         if (gc.isSolvedSimilarity() || (isHelp==2 && currentMode ==3))
         {
+            Debug.Log("called");
             plate.transform.localScale = new Vector3(1f, 1f, 0);
             if (currentMode == 0)
             {

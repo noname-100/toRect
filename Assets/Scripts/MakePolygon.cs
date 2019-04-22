@@ -281,7 +281,7 @@ public class MakePolygon : MonoBehaviour
         plate.transform.localScale = new Vector3(b / (2 * sprite.bounds.extents.y), a / (2 * sprite.bounds.extents.x), 0);
         //plate.transform.localScale = new Vector3(2, 1, 0);
         Debug.Log(counter + "after x : " + 2 * sprite.bounds.extents.x + " y : " + 2 * sprite.bounds.extents.y);
-        plate.transform.localScale = new Vector3(1f, 1f, 0);
+        
 
         counter++;
         return triangles;
