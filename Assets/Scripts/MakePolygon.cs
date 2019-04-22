@@ -232,9 +232,9 @@ public class MakePolygon : MonoBehaviour
     {
         List<Vector2[]> triangles = new List<Vector2[]>();
 
-        float a = 2.3f;
+        float a = 2.5f;
         float b = a * Random.Range(1f, 2.1f);
-        float rightedge = 1.4f;
+        float rightedge = 1.5f;
         float dist = 0.45f;
         Vector2[] triangle = new Vector2[3];
         float coeff = 1f / (float)Mathf.Pow(b * b + a * a, 0.5f); // 1/(a^2+b^2)^0.5
@@ -278,7 +278,7 @@ public class MakePolygon : MonoBehaviour
         Debug.Log(counter + "before x : " + 2 * sprite.bounds.extents.x + " y : " + 2 * sprite.bounds.extents.y);
         Debug.Log(a / (2 * sprite.bounds.extents.x));
         Debug.Log(b / (2 * sprite.bounds.extents.y));
-        plate.transform.localScale = new Vector3(b / (2 * sprite.bounds.extents.y), a / (2 * sprite.bounds.extents.x), 0);
+        plate.transform.localScale = new Vector3(b / (2 * sprite.bounds.extents.y) + 0.1f, a / (2 * sprite.bounds.extents.x)+ 0.1f, 0);
         //plate.transform.localScale = new Vector3(2, 1, 0);
         Debug.Log(counter + "after x : " + 2 * sprite.bounds.extents.x + " y : " + 2 * sprite.bounds.extents.y);
         

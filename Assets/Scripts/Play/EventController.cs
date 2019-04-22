@@ -330,7 +330,7 @@ private void Awake()
             currentGame = PlayerPrefs.GetInt("Game");
         }
 
-        // currentGame = 12; // TEST 값
+         currentGame = 12; // TEST 값
 
         // 배경화면 및 게임아이템 설정
         // TODO : 프라이팬 등의 도구 세트 변경 작업도 여기서 수행한다.
