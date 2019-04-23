@@ -236,9 +236,89 @@ public class GameController : MonoBehaviour
         return;
     }
 
+    private Vector2 APointOnFryPan()
+    {
+        Vector2 ret = new Vector2();
+
+        float radiusFrypan = 1.912f;
+        float angle = UnityEngine.Random.Range(0f, 360f);
+        float r = 0;
+
+        // TODO : r 산정할때 정사각형 조각의 최대반경 고려해줘야함
+        if (angle <= 32 && angle >= 360 - 32)
+        {
+            r = UnityEngine.Random.Range(0f, (1.6f / (float) Mathf.Cos(angle)));
+        }
+        else
+        {
+            r = UnityEngine.Random.Range(0f, radiusFrypan);
+        }
+
+        ret.x = r * Mathf.Cos(angle);
+        ret.y = r * Mathf.Sin(angle);
+
+        return ret;
+    }
+
+    private bool isColliding(Vector2 candidate, float radius, List<Vector3> Collisions)
+    {
+        for(int i = 0; i < Collisions.Count; i++)
+        {
+            Vector2 curr = new Vector2(Collisions[i].y, Collisions[i].z);
+            if((curr-candidate).magnitude < radius + Collisions[i].x)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void GenerateSquares()
     {
+        int howMany = (int) UnityEngine.Random.Range(2f, 4f);
+        List<Vector2[]> Squares = new List<Vector2[]>();
+        List<Vector3> Collisions = new List<Vector3>();
 
+        for(int i = 0; i < howMany; i++)
+        {
+            try
+            {
+                int dummyVariable = 0;
+                do
+                {
+                    dummyVariable++;
+                    if (dummyVariable == 10000) throw new Exception(); // to prevent infinite loop
+                    Vector2 candidate = APointOnFryPan();
+                    float length;
+                    float answerLength = 2;
+                    if (i == 0) length = answerLength; // answer square size
+                    else length = UnityEngine.Random.Range(answerLength - 0.5f, answerLength + 0.5f); // TODO : 정답 정사각형과 구분되는 사이즈 생성 필요
+
+                    // check for collision
+                    for (int j = 0; j < Squares.Count; j++)
+                    {
+                        if (isColliding(candidate, length * Mathf.Pow(2, 0.5f), Collisions)) continue;
+                    }
+                    Collisions.Add(new Vector3(length * (float)Mathf.Pow(2, 0.5f), candidate.x, candidate.y));
+                    Squares.Add(MakePolygon.MakeSquare(length, candidate.x, candidate.y, UnityEngine.Random.Range(0f, 360f)));
+                    break;
+                    
+                } while (true);
+            }catch(Exception e)
+            {
+                Debug.Log("Failed to find proper point on Frypan : Too many tries");
+            }
+        }
+
+        for(int i = 0; i < howMany; i++)
+        {
+            GameObject Square = new GameObject("Square");
+            Square.AddComponent<Polygon>();
+            Square.GetComponent<Polygon>().render(Squares[i]);
+            polygonList.Add(Square);
+        }
+
+        return;
     }
 
     public void MakeFormulas()
