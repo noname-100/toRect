@@ -85,7 +85,6 @@ public class GameController : MonoBehaviour
             Destroy(p);
         }
         polygonList.Clear();
-        ec.SetFormulaBonus(false);
 
         /*
          * 
@@ -93,13 +92,14 @@ public class GameController : MonoBehaviour
          * 
          */
         
-        /*GameObject square = new GameObject("Polygon");
+        GameObject square = new GameObject("Polygon");
         square.AddComponent(System.Type.GetType("Polygon"));
-        Vector2[] v = MakePolygon.MakeTriangle(0);
+        Vector2[] v = MakePolygon.MakeSquare(1,1,1,0);
         square.GetComponent<Polygon>().render(v);
         polygonList.Add(square);
+        ec.Debug_KillAnswerCheck();
         return;
-        */
+        
 
         // 출제변경시 여기의 biscuitProblems 등 변수 전환 + buttoncontroller_title 변수 전환, 
         switch (gameType)

@@ -30,6 +30,7 @@ public class EventController : MonoBehaviour {
     public GameObject plate;
     private SpriteRenderer sr;
     private bool formulaBonus = false;
+    private bool killAnswerCheck = false;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
@@ -178,6 +179,8 @@ private void Awake()
             }
         }
 
+        if (killAnswerCheck) goto SkipAnswerCheck;
+
         if ((gc.isSolvedRec2Square() || isHelp==2) && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
             if(currentMode == 0)
@@ -219,6 +222,9 @@ private void Awake()
                 return;
             }
         }
+
+        SkipAnswerCheck:
+            
 
         if(winflag == 1)
         {
@@ -554,5 +560,9 @@ private void Awake()
         formulaBonus = given;
     }
 
+    public void Debug_KillAnswerCheck()
+    {
+        killAnswerCheck = true;
+    }
 }
 
