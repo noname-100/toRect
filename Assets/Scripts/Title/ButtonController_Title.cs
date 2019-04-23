@@ -63,7 +63,7 @@ public class ButtonController_Title : MonoBehaviour {
     public void jiktojungStoryModeStart()
     {
         PlayerPrefs.SetInt("Mode", 2);
-        PlayerPrefs.SetInt("Game", 8);
+        PlayerPrefs.SetInt("Game", 10);
         SceneManager.LoadScene("Play");
         return;
     }
@@ -71,7 +71,7 @@ public class ButtonController_Title : MonoBehaviour {
     public void pieStoryModeStart()
     {
         PlayerPrefs.SetInt("Mode", 3);
-        PlayerPrefs.SetInt("Game", 10);
+        PlayerPrefs.SetInt("Game", 12);
         SceneManager.LoadScene("Play");
         return;
     }

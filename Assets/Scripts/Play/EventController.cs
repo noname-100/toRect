@@ -352,7 +352,7 @@ private void Awake()
          * 
          */
 
-         currentGame = 10; // TEST 값
+         // currentGame = 10; // TEST 값
          
 
         // 배경화면 및 게임아이템 설정
@@ -452,11 +452,6 @@ private void Awake()
                 break;
         }
         return;
-    }
-
-    public void FormulaAnswerClick(int m)
-    {
-
     }
     
     public void GameOver(bool isCleared) // life==0일때 gamemanager에서 호출하는 모달 팝업 매니징 함수

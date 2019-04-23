@@ -94,10 +94,10 @@ public class GameController : MonoBehaviour
         
         /*GameObject square = new GameObject("Polygon");
         square.AddComponent(System.Type.GetType("Polygon"));
-        Vector2[] v = MakePolygon.MakeSquare(1,1,1,0);
+        Vector2[] v = MakePolygon.MakeJig();
         square.GetComponent<Polygon>().render(v);
         polygonList.Add(square);
-        // ec.Debug_KillAnswerCheck();
+        ec.Debug_KillAnswerCheck();
         return;*/
         
 

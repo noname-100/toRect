@@ -153,18 +153,22 @@ public class ButtonController_Play : MonoBehaviour
         {
             // TODO : 만약 단계별 클리어화면 추가되면 여기에서 작업한다.
             PlayerPrefs.SetInt("Mode", 1);
+            PlayerPrefs.SetInt("Game", 0);
         }
         else if(currentMode == 1)
         {
             PlayerPrefs.SetInt("Mode", 2);
+            PlayerPrefs.SetInt("Game", gc.getBiscuitProblems()+1);
         }
         else if(currentMode == 2)
         {
             PlayerPrefs.SetInt("Mode", 3);
+            PlayerPrefs.SetInt("Game", gc.getRec2SquareProblems()+1);
         }
         else
         {
             PlayerPrefs.SetInt("Mode", 0);
+            PlayerPrefs.SetInt("Game", (int) UnityEngine.Random.Range(0f,gc.getSimilarityProblems()));
         }
         SceneManager.LoadScene("Play");
         return;
