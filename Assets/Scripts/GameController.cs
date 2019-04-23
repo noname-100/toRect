@@ -230,9 +230,6 @@ public class GameController : MonoBehaviour
             polygonList.Add(similarTriangle3);
 
         }
-
-
-
         return;
     }
 
@@ -290,7 +287,7 @@ public class GameController : MonoBehaviour
                     if (dummyVariable == 10000) throw new Exception(); // to prevent infinite loop
                     Vector2 candidate = APointOnFryPan();
                     float length;
-                    float answerLength = 0.8f;
+                    float answerLength = Polygon.jiktojunglength;
                     if (i == 0) length = answerLength; // answer square size
                     else length = UnityEngine.Random.Range(answerLength - 0.5f, answerLength + 0.5f); // TODO : 정답 정사각형과 구분되는 사이즈 생성 필요
 
@@ -317,7 +314,6 @@ public class GameController : MonoBehaviour
             Square.GetComponent<Polygon>().render(Squares[i]);
             polygonList.Add(Square);
         }
-
         return;
     }
 
