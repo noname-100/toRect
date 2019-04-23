@@ -34,6 +34,7 @@ public class EventController : MonoBehaviour {
     private StoryScript ss;
     public GameObject plate;
     private SpriteRenderer sr;
+    private bool formulaBonus = false;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
@@ -71,7 +72,8 @@ private void Awake()
         gc = GC.GetComponent<GameController>();
         ss = EC.GetComponent<StoryScript>();
         sr = plate.GetComponent<SpriteRenderer>();
-        
+
+        formulaBonus = false;
         hints = 3;
         score = 0;
         combo = 0;
@@ -234,39 +236,47 @@ private void Awake()
         return;
     }
 
+    private void FormulaBonusGift()
+    {
+        score += 20;
+        return;
+    }
+
     private void BonusGift()
     {
         combo += 2;
         score += 5;
+        return;
     }
 
     private void AddPointManager()
     {
         //if (currentMode == 0) return;
+        if (formulaBonus == true) FormulaBonusGift();
 
         // 게임종류, 여기는 중간로직이 많아질수도 있으니까 if문으로썼다!!
-        if(currentGame == 0)
+        if (currentGame == 0)
         {
             score += 10;
         }
-        else if(currentGame == 1)
+        else if (currentGame == 1)
         {
             score += 13;
         }
-        else if(currentGame == 2)
+        else if (currentGame == 2)
         {
             score += 16;
         }
-        else if(currentGame == 3)
+        else if (currentGame == 3)
         {
             score += 20;
         }
-        else if(currentGame == 4)
+        else if (currentGame == 4)
         {
             score += 24;
 
         }
-        else if(currentGame == 5)
+        else if (currentGame == 5)
         {
             score += 16;
         }
@@ -276,9 +286,9 @@ private void Awake()
         }
 
         // 총시간, 콤보로 추가점수
-        score += (int) Math.Floor(0.3 * (60 - solveTime) + combo * 3.5d);
+        score += (int)Math.Floor(0.3 * (60 - solveTime) + combo * 3.5d);
         float norm = 0.4f;
-        score = (int) Math.Floor(norm * score);
+        score = (int)Math.Floor(norm * score);
 
         ScoreText.text = score.ToString() + " 점";
         return;
@@ -440,6 +450,10 @@ private void Awake()
         return;
     }
 
+    public void FormulaAnswerClick(int m)
+    {
+
+    }
     
     public void GameOver(bool isCleared) // life==0일때 gamemanager에서 호출하는 모달 팝업 매니징 함수
     {                                    // isCleared면 Clear, 아니면 GameOver
@@ -530,6 +544,16 @@ private void Awake()
     public int GetCombo()
     {
         return combo;
+    }
+
+    public bool GetFormulaBonus()
+    {
+        return formulaBonus;
+    }
+
+    public void SetFormulaBonus(bool given)
+    {
+        formulaBonus = given;
     }
 
 }

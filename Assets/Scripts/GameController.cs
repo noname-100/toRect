@@ -3,31 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
+using UnityEngine.UI;
 
 // 문제 생성, 문제 해결 확인은 여기에 있음
 
 public class GameController : MonoBehaviour
 {
+
+    // 문제생성 관련
     public List<GameObject> polygonList;
     public bool polygonSelected;
     private Vector2[] problemTriangle;
-    public GameObject EC;
-    private MakePolygon mp;
-    private EventController ec;
-    private StoryScript ss;
     private List<Vector2[]> backgroundBorders;
     private List<Vector2> backgroundMidpoints;
     private List<float> maxLength;
     private Vector2[] vertexes;
     private int counter;
+
+    // 게임 관련
+    public GameObject EC;
+    private MakePolygon mp;
+    private EventController ec;
+    private StoryScript ss;
     public GameObject Plate;
     public GameObject ScoreSign;
-    public GameObject dish;
+    public GameObject chocodish;
+    public Text formula1, formula2, formula3;
 
     // 중요 : 출제 변경시 여기에서 범위 변경 필수!!!
     private int biscuitProblems = 9;
     private int rec2squareProblems = 11;
     private int similarityProblems = 13;
+    // 공식출제종류변수
+    private int formulaProblems = 5;
+    private int formulaAnswer = 0;
 
     private void Awake()
     {
@@ -72,6 +81,7 @@ public class GameController : MonoBehaviour
             Destroy(p);
         }
         polygonList.Clear();
+        ec.SetFormulaBonus(false);
 
         /*
          * 
@@ -123,10 +133,12 @@ public class GameController : MonoBehaviour
             case 10: // 직투정
                 vertexes = MakePolygon.MakeJig();
                 GenerateSquares(); // 초코칩 생성함수
+                MakeFormulas(); // 수식 생성함수
                 break;
             case 11: // 직투정2
                 vertexes = MakePolygon.MakeJig();
                 GenerateSquares();
+                MakeFormulas();
                 break;
         }
 
@@ -223,6 +235,75 @@ public class GameController : MonoBehaviour
     public void GenerateSquares()
     {
 
+    }
+
+    public void MakeFormulas()
+    {
+
+        List<string> candidates = new List<string>();
+        candidates.Add(FormulaPool(0));
+        candidates.Add(FormulaPool((int)Mathf.Ceil(UnityEngine.Random.Range(0f, 5f))));
+        candidates.Add(FormulaPool((int)Mathf.Ceil(UnityEngine.Random.Range(0f, 5f))));
+        bool answerInserted = false;
+
+        int curr = (int) UnityEngine.Random.Range(0f, 3f);
+        if (curr == 0)
+        {
+            formulaAnswer = 0;
+            answerInserted = true;
+        }
+        formula1.text = candidates[curr];
+        candidates.RemoveAt(curr);
+
+        curr = (int)UnityEngine.Random.Range(0f, 2f);
+        if (curr == 0)
+        {
+            formulaAnswer = 1;
+            answerInserted = true;
+        }
+        formula2.text = candidates[curr];
+        candidates.RemoveAt(curr);
+
+        if (!answerInserted) formulaAnswer = 2;
+        formula3.text = candidates[0];
+
+    }
+
+    // TODO : X 대신 a, b, c 사용해서 공식 섞어줘야 한다.
+    public string FormulaPool(int kind)
+    {
+        string ret;
+
+        // TODO : need shuffle here
+        char x = 'a';
+        char y = 'b';
+        char z = 'c';
+
+        if(kind == 0) // TODO : ANSWER FOMULA, might differ. Logic comes here
+        {
+            ret = "ANSWER FORMULA COMES HERE";
+        }else if(kind == 1) // (x+A)(x+B) = (x+C)^2 - D
+        {
+            ret = "("+x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + )" + "+y+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
+        }
+        else if(kind == 2) // x^2 + A = (x+B)(x+C)
+        {
+            ret = "("+x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + )" + "+z+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
+        }
+        else if(kind ==3) // TBD
+        {
+            ret = "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
+        }
+        else if (kind == 4) // TBD
+        {
+            ret = "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
+        }
+        else // TBD
+        {
+            ret = "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
+        }
+
+        return ret;
     }
 
     public bool isSolvedSimilarity()
@@ -430,5 +511,15 @@ public class GameController : MonoBehaviour
     public int getSimilarityProblems()
     {
         return similarityProblems;
+    }
+
+    public int getFormulaProblems()
+    {
+        return formulaProblems;
+    }
+
+    public int getFormulaAnswer()
+    {
+        return formulaAnswer;
     }
 }

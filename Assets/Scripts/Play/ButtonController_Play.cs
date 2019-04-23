@@ -14,11 +14,18 @@ public class ButtonController_Play : MonoBehaviour
     public GameObject RankingButton;
     public GameObject RankPage;
     public GameObject EC;
-//    public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground;
     private EventController ec;
+    public GameObject GC;
+    private GameController gc;
+    public GameObject FormulaBoard;
+    
+    private bool formulaBoardState;
+    private bool isFormulaBoardSelectable;
 
     public void Awake()
     {
+        isFormulaBoardSelectable = true;
+        formulaBoardState = false;
         SoundOnButton.SetActive(false);
         SoundOffButton.SetActive(true);
         AllChangeModeButton.SetActive(true);
@@ -26,6 +33,7 @@ public class ButtonController_Play : MonoBehaviour
         SlideChangeModeButton.SetActive(false);
         RankPage.SetActive(false);
         ec = EC.GetComponent<EventController>();
+        gc = GC.GetComponent<GameController>();
 
         int currentMode = PlayerPrefs.GetInt("Mode");
 
@@ -69,11 +77,46 @@ public class ButtonController_Play : MonoBehaviour
         return;
     }
 
-    // TODO : 각 스테이지에 맞게 즉시클리어 가능한 버튼 만들것.
+    // Temp - Solve 디버깅용 즉시클리어 버튼
     public void ImmediateWin()
     {
         ec.GameManager(2);
         return;
+    }
+
+    public void FormulaBoardToggle()
+    {
+        Debug.Log("FormulaBoardToggle called");
+        if (!isFormulaBoardSelectable)
+        {
+            FormulaBoard.SetActive(false);
+            formulaBoardState = false;
+        }
+
+        if(formulaBoardState == false)
+        {
+            FormulaBoard.SetActive(true);
+            formulaBoardState = true;
+        }
+        else
+        {
+            FormulaBoard.SetActive(false);
+            formulaBoardState = false;
+        }
+    }
+
+    public void FormulaSelect(int which)
+    {
+        if(which == gc.getFormulaAnswer())
+        {
+            ec.SetFormulaBonus(true);
+        }
+        else
+        {
+            ec.SetFormulaBonus(false);
+            isFormulaBoardSelectable = false;
+            FormulaBoardToggle();
+        }
     }
 
     public void NextChapter()
