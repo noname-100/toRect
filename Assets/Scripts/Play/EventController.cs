@@ -246,8 +246,11 @@ private void Awake()
 
     private void AddPointManager()
     {
-        //if (currentMode == 0) return;
-        if (formulaBonus == true) FormulaBonusGift();
+        if (formulaBonus == true)
+        {
+            FormulaBonusGift();
+            formulaBonus = false;
+        }
 
         // 게임종류, 여기는 중간로직이 많아질수도 있으니까 if문으로썼다!!
         if (currentGame == 0)

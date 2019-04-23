@@ -386,6 +386,7 @@ public class GameController : MonoBehaviour
         }
     }
 
+    // 주의 : 이거는 문제해결시 팝업, 공식선택시 보너스팝업은 ButtonColler_Play에 있음
     IEnumerator ScorePopup()
     {
         Debug.Log("ScorePopup Called");

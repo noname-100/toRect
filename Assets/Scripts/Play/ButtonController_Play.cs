@@ -26,6 +26,7 @@ public class ButtonController_Play : MonoBehaviour
     public GameObject GC;
     private GameController gc;
     public GameObject FormulaBoard;
+    public GameObject ScoreSign;
     
     private bool formulaBoardState;
     private bool isFormulaBoardSelectable;
@@ -115,14 +116,26 @@ public class ButtonController_Play : MonoBehaviour
         return;
     }
 
+    // 주의 : 문제해결시 팝업은 GameController에 있음
+    IEnumerator FormulaBonusPopup()
+    {
+        Debug.Log("ScorePopup Called");
+        ScoreSign.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        ScoreSign.SetActive(false);
+    }
+
     public void FormulaSelect(int which)
     {
         if(which == gc.getFormulaAnswer())
         {
             ec.SetFormulaBonus(true);
+            Debug.Log("answer formula selected");
+            StartCoroutine(FormulaBonusPopup());
         }
         else
         {
+            Debug.Log("wrong formula selected");
             ec.SetFormulaBonus(false);
             
         }
