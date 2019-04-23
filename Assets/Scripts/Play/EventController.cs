@@ -4,17 +4,12 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 
-
-// 게임 시작, 끝, 난이도, 시간설정, 점수설정 등은 여기에 있음.
-
-public class myclass
-{
-    myclass(int x)
-    {
-        tmp = x;
-    }
-    int tmp;
-}
+/*
+ * 
+ *  EventController 은 Gamemanager, Pointmanager, Timemanager 등의 게임 운영요소를 포함한다.
+ * 
+ * 
+ */
 
 public class EventController : MonoBehaviour {
 

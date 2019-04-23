@@ -5,7 +5,11 @@ using System;
 using System.Linq;
 using UnityEngine.UI;
 
-// 문제 생성, 문제 해결 확인은 여기에 있음
+/*
+ * 
+ * GameController은 문제 및 문제풀이 도구 생성과 정답 처리 함수를 포함한다.
+ * 
+ */
 
 public class GameController : MonoBehaviour
 {

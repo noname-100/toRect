@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+/*
+ * 
+ * 가장 핵심이 되는 도형 클래스. split/merge/createdots 등의 동작 포함
+ * 
+ */
+
 public class Polygon : MonoBehaviour
 {
     public Vector2[] VerticesPublic2D;

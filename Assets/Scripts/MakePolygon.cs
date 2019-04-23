@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * 
+ *  문제 출제 클래스
+ * 
+ */
+
 public class MakePolygon : MonoBehaviour
 {
     public static Vector2[] vertices;

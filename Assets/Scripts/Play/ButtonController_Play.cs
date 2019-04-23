@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+/*
+ *  ButtonController_Play 는 버튼 입력에 따른 반응들을 관리한다.
+ * 
+ * 
+ * 
+ * 
+ */
 public class ButtonController_Play : MonoBehaviour
 {
 
@@ -91,6 +99,7 @@ public class ButtonController_Play : MonoBehaviour
         {
             FormulaBoard.SetActive(false);
             formulaBoardState = false;
+            return;
         }
 
         if(formulaBoardState == false)
@@ -103,6 +112,7 @@ public class ButtonController_Play : MonoBehaviour
             FormulaBoard.SetActive(false);
             formulaBoardState = false;
         }
+        return;
     }
 
     public void FormulaSelect(int which)
@@ -114,9 +124,12 @@ public class ButtonController_Play : MonoBehaviour
         else
         {
             ec.SetFormulaBonus(false);
-            isFormulaBoardSelectable = false;
-            FormulaBoardToggle();
+            
         }
+        isFormulaBoardSelectable = false;
+        FormulaBoard.SetActive(false);
+        formulaBoardState = false;
+        return;
     }
 
     public void NextChapter()
