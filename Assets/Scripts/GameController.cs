@@ -92,13 +92,13 @@ public class GameController : MonoBehaviour
          * 
          */
         
-        GameObject square = new GameObject("Polygon");
+        /*GameObject square = new GameObject("Polygon");
         square.AddComponent(System.Type.GetType("Polygon"));
         Vector2[] v = MakePolygon.MakeSquare(1,1,1,0);
         square.GetComponent<Polygon>().render(v);
         polygonList.Add(square);
-        ec.Debug_KillAnswerCheck();
-        return;
+        // ec.Debug_KillAnswerCheck();
+        return;*/
         
 
         // 출제변경시 여기의 biscuitProblems 등 변수 전환 + buttoncontroller_title 변수 전환, 
@@ -254,8 +254,8 @@ public class GameController : MonoBehaviour
             r = UnityEngine.Random.Range(0f, radiusFrypan);
         }
 
-        ret.x = r * Mathf.Cos(angle);
-        ret.y = r * Mathf.Sin(angle);
+        ret.x = r * Mathf.Cos(angle) + 6.36f;
+        ret.y = r * Mathf.Sin(angle) - 2.26f;
 
         return ret;
     }
@@ -275,7 +275,7 @@ public class GameController : MonoBehaviour
 
     public void GenerateSquares()
     {
-        int howMany = (int) UnityEngine.Random.Range(2f, 4f);
+        int howMany = (int) UnityEngine.Random.Range(3f, 6f);
         List<Vector2[]> Squares = new List<Vector2[]>();
         List<Vector3> Collisions = new List<Vector3>();
 
@@ -290,7 +290,7 @@ public class GameController : MonoBehaviour
                     if (dummyVariable == 10000) throw new Exception(); // to prevent infinite loop
                     Vector2 candidate = APointOnFryPan();
                     float length;
-                    float answerLength = 2;
+                    float answerLength = 0.8f;
                     if (i == 0) length = answerLength; // answer square size
                     else length = UnityEngine.Random.Range(answerLength - 0.5f, answerLength + 0.5f); // TODO : 정답 정사각형과 구분되는 사이즈 생성 필요
 
