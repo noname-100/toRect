@@ -480,9 +480,31 @@ public class Polygon : MonoBehaviour
                         {
                             //Debug.Log("new vertex x : " + newPol[i].x + " y : " + newPol[i].y);
                         }
+
+                        float newmidx = 0;
+                        float newmidy = 0;
+                        for (int i = 0; i < newPol.Count; i++)
+                        {
+                            newmidx += newPol[i].x;
+                            newmidy += newPol[i].y;
+                        }
+                        newmidx /= newPol.Count;
+                        newmidy /= newPol.Count;
+
+                        for(int i = 0; i < newPol.Count; i++)
+                        {
+                            newPol[i] = new Vector2(newPol[i].x - newmidx, newPol[i].y - newmidy);
+                        }
+
                         var newPolygon = new GameObject("Polygon");
                         newPolygon.AddComponent(System.Type.GetType("Polygon"));
                         newPolygon.GetComponent<Polygon>().render(newPol.ToArray());
+
+                        /*
+                         *  mesh의 position을 보정해주는 코드 추가함
+                         */ 
+                        
+                        newPolygon.transform.position = new Vector3(newmidx, newmidy, 0);                        
                         controller.GetComponent<GameController>().polygonList.Add(newPolygon);
                         controller.GetComponent<GameController>().polygonList.Remove(pol);
                         controller.GetComponent<GameController>().polygonList.Remove(gameObject);

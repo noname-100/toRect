@@ -30,6 +30,7 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
+
         counter++;
         ss = EC.GetComponent<StoryScript>();
         ec = EC.GetComponent<EventController>();
@@ -79,8 +80,11 @@ public class GameController : MonoBehaviour
         
         /*GameObject square = new GameObject("Polygon");
         square.AddComponent(System.Type.GetType("Polygon"));
-        square.GetComponent<Polygon>().render(MakePolygon.MakeSquare(1,0,0,60));
-        return;*/
+        Vector2[] v = MakePolygon.MakeTriangle(0);
+        square.GetComponent<Polygon>().render(v);
+        polygonList.Add(square);
+        return;
+        */
 
         // 출제변경시 여기의 biscuitProblems 등 변수 전환 + buttoncontroller_title 변수 전환, 
         switch (gameType)
@@ -165,6 +169,7 @@ public class GameController : MonoBehaviour
             }
 
             firstTriangle.GetComponent<Polygon>().render(result);
+            // firstTriangle.transform.position = new Vector3(backgroundMidPointx, backgroundMidPointy, 0);
             polygonList.Add(firstTriangle);
 
             // rotate here
@@ -422,7 +427,7 @@ public class GameController : MonoBehaviour
             }
         }
 
-        Debug.Log("Biscuit this is rectangle");
+        // Debug.Log("Biscuit this is rectangle");
         if (PlayerPrefs.GetInt("Mode") == 0) StartCoroutine(ScorePopup());
         return true;
     }
