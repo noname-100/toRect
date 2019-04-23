@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class ButtonController_Title : MonoBehaviour {
 
+    public GameObject[] HelpContentsCommon = new GameObject[2];
     public GameObject[] HelpContentsBiscuit = new GameObject[1];
     public GameObject[] HelpContentsRec2Square = new GameObject[2];
     public GameObject[] HelpContentsSimilarity = new GameObject[1];
@@ -20,6 +21,7 @@ public class ButtonController_Title : MonoBehaviour {
     private int page;
     private int helpGameModeIndex;
     private int helpLength;
+    private bool isCommonHelpStatus;
 
     // Used to auto upload from PlayerPrefs
     public void Awake()
@@ -29,6 +31,7 @@ public class ButtonController_Title : MonoBehaviour {
         HelpContents.Add(HelpContentsRec2Square);
         HelpContents.Add(HelpContentsSimilarity);
         helpGameModeIndex = 0;
+        isCommonHelpStatus = true;
 
         ModeSelect.SetActive(false);
         RankPage.SetActive(false);
@@ -84,57 +87,69 @@ public class ButtonController_Title : MonoBehaviour {
         return;
     }
 
-    public void SoundOn()
+    public void OpenCommonHelpPage()
     {
-        PlayerPrefs.SetFloat("isSoundOn", 1f);
-        AudioListener.volume = 1f;
-        return;
-    }
+        isCommonHelpStatus = true;
 
-    public void SoundOff()
-    {
-        PlayerPrefs.SetFloat("isSoundOn", 0f);
-        AudioListener.volume = 0f;
-        return;
-    }
-
-    private void clearAll()
-    {
-        StoryModeHelp.SetActive(false);
-        for(int i = 0; i < HelpContents.Count; i++)
-        {
-            for(int j = 0; j < HelpContents[i].Length; j++)
-            {
-                HelpContents[i][j].SetActive(false);
-            }
-        }
-        LeftButton.SetActive(false);
-        RightButton.SetActive(false);
-        return;
     }
 
     public void OpenPage(int gamemode)
     {
-        helpGameModeIndex = gamemode;
         page = 0;
-        clearAll();
-        HelpWindow.SetActive(true);
-        HelpContents[helpGameModeIndex][page].SetActive(true);
-        if (HelpContents[helpGameModeIndex].Length != 1) RightButton.SetActive(true);
-        else RightButton.SetActive(false);
-        LeftButton.SetActive(false);
+        if (!isCommonHelpStatus)
+        {
+            helpGameModeIndex = gamemode;
+            clearAll();
+            HelpWindow.SetActive(true);
+            HelpContents[helpGameModeIndex][page].SetActive(true);
+            if (HelpContents[helpGameModeIndex].Length != 1) RightButton.SetActive(true);
+            else RightButton.SetActive(false);
+            LeftButton.SetActive(false);
+        }
+        else
+        {
+            helpGameModeIndex = -1;            
+            clearAll();
+            HelpWindow.SetActive(true);
+            HelpContentsCommon[page].SetActive(true);
+            RightButton.SetActive(true);
+            LeftButton.SetActive(false);
+        }
         return;
     }
 
     public void MoveRightPage()
     {
-        clearAll();
-        LeftButton.SetActive(true);
-        if (page == HelpContents[helpGameModeIndex].Length - 2) RightButton.SetActive(false);
-        else RightButton.SetActive(true);
-        HelpContents[helpGameModeIndex][page].SetActive(false);
-        page++;
-        HelpContents[helpGameModeIndex][page].SetActive(true);
+        if (!isCommonHelpStatus)
+        {
+            clearAll();
+            LeftButton.SetActive(true);
+            if (page == HelpContents[helpGameModeIndex].Length - 2) RightButton.SetActive(false);
+            else RightButton.SetActive(true);
+            HelpContents[helpGameModeIndex][page].SetActive(false);
+            page++;
+            HelpContents[helpGameModeIndex][page].SetActive(true);
+        }
+        else
+        {
+            clearAll();
+            if(page == HelpContentsCommon.Length-1)
+            {
+                HelpWindow.SetActive(false);
+                LeftButton.SetActive(false);
+                RightButton.SetActive(false);
+                StoryModeHelp.SetActive(true);
+                isCommonHelpStatus = false;
+            }
+            else
+            {
+                LeftButton.SetActive(true);
+                RightButton.SetActive(true);
+                HelpContentsCommon[page].SetActive(false);
+                page++;
+                HelpContentsCommon[page].SetActive(true);
+            }
+        }
         return;
     }
 
@@ -147,6 +162,52 @@ public class ButtonController_Title : MonoBehaviour {
         HelpContents[helpGameModeIndex][page].SetActive(false);
         page--;
         HelpContents[helpGameModeIndex][page].SetActive(true);
+        return;
+    }
+
+    private void clearAll()
+    {
+        StoryModeHelp.SetActive(false);
+        for (int i = 0; i < HelpContentsCommon.Length; i++)
+        {
+            HelpContentsCommon[i].SetActive(false);
+        }
+
+        for (int i = 0; i < HelpContents.Count; i++)
+        {
+            for (int j = 0; j < HelpContents[i].Length; j++)
+            {
+                HelpContents[i][j].SetActive(false);
+            }
+        }
+        LeftButton.SetActive(false);
+        RightButton.SetActive(false);
+        return;
+    }
+
+    public void CloseButton()
+    {
+        clearAll();
+        HelpWindow.SetActive(false);
+        isCommonHelpStatus = true;
+    }
+
+    public void QuitGame()
+    {
+
+    }
+
+    public void SoundOn()
+    {
+        PlayerPrefs.SetFloat("isSoundOn", 1f);
+        AudioListener.volume = 1f;
+        return;
+    }
+
+    public void SoundOff()
+    {
+        PlayerPrefs.SetFloat("isSoundOn", 0f);
+        AudioListener.volume = 0f;
         return;
     }
 }
