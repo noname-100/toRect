@@ -10,5 +10,5 @@ Project Documentation is hosted [here](https://torect.readthedocs.io/en/latest/)
 
 ## How to use Sphinx
 
-* [Official Document is here](http://www.sphinx-doc.org/en/master/usage/quickstart.html#setting-up-the-documentation-sources)
+* [Official Documentation is here](http://www.sphinx-doc.org/en/master/usage/quickstart.html#setting-up-the-documentation-sources)
 
