@@ -92,13 +92,13 @@ public class GameController : MonoBehaviour
          * 
          */
         
-        GameObject square = new GameObject("Polygon");
+        /*GameObject square = new GameObject("Polygon");
         square.AddComponent(System.Type.GetType("Polygon"));
         Vector2[] v = MakePolygon.MakeJig();
         square.GetComponent<Polygon>().render(v);
         polygonList.Add(square);
         ec.Debug_KillAnswerCheck();
-        return;
+        return;*/
         
 
         // 출제변경시 여기의 biscuitProblems 등 변수 전환 + buttoncontroller_title 변수 전환, 
@@ -137,7 +137,7 @@ public class GameController : MonoBehaviour
             case 10: // 직투정
                 vertexes = MakePolygon.MakeJig();
                 GenerateSquares(); // 초코칩 생성함수
-                MakeFormulas(); // 수식 생성함수
+                //MakeFormulas(); // 수식 생성함수
                 break;
             case 11: // 직투정2
                 vertexes = MakePolygon.MakeJig();
