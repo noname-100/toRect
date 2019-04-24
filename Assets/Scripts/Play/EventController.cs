@@ -4,8 +4,12 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 
-
-// 게임 시작, 끝, 난이도, 시간설정, 점수설정 등은 여기에 있음.
+/*
+ * 
+ *  EventController 은 Gamemanager, Pointmanager, Timemanager 등의 게임 운영요소를 포함한다.
+ * 
+ * 
+ */
 
 public class EventController : MonoBehaviour {
 
@@ -23,6 +27,10 @@ public class EventController : MonoBehaviour {
     public int isPlay; // 0 : 게임 정지 1 : 게임 시작 시그널 2 : 게임 실행중
     public GameObject EC;
     private StoryScript ss;
+    public GameObject plate;
+    private SpriteRenderer sr;
+    private bool formulaBonus = false;
+    private bool killAnswerCheck = false;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
@@ -53,18 +61,21 @@ public class EventController : MonoBehaviour {
 
 private void Awake()
     {
-
+        
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
+        Debug.Log("current Game Mode is : " + currentMode);
         gc = GC.GetComponent<GameController>();
         ss = EC.GetComponent<StoryScript>();
-        
+        sr = plate.GetComponent<SpriteRenderer>();
+
+        formulaBonus = false;
         hints = 3;
         score = 0;
         combo = 0;
         movementStatus = 0;
         solveTime = 45; // 임의 변수초기화 값
-
+        
         // 배경화면 초기화
         ClearBackground();
 
@@ -90,7 +101,6 @@ private void Awake()
             MakeNewGame();
             ResetTimeManager();
             StartCoroutine("Timer");
-            gc.makeNew(currentGame);
         }
         else
         {
@@ -132,6 +142,7 @@ private void Awake()
         // 시간종료
         if (current_Time < 0)
         {
+            plate.transform.localScale = new Vector3(1f, 1f, 0);
             LostLife();
             ResetTimeManager();
             MakeNewGame();
@@ -147,7 +158,7 @@ private void Awake()
         }
 
         // 필요한 모든 검증장치를 여기에 추가한다.
-        if (gc.isSolvedRect() || (isHelp==2 && currentMode==1))
+        if ((gc.isSolvedRect() || isHelp==2 )&& currentGame<=gc.getBiscuitProblems())
         {
             if(currentMode == 0)
             {
@@ -168,7 +179,9 @@ private void Awake()
             }
         }
 
-        if (gc.isSolvedRec2Square() || (isHelp==2 && currentMode == 2))
+        if (killAnswerCheck) goto SkipAnswerCheck;
+
+        if ((gc.isSolvedRec2Square() || isHelp==2) && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
             if(currentMode == 0)
             {
@@ -178,7 +191,7 @@ private void Awake()
             {
                 if (ss.GetstoryProgress() == 2)
                 {
-                    Debug.Log("here2");
+                    //Debug.Log("here2");
                     GameOver(true);
                 }
                 isPlay = 0;
@@ -188,9 +201,11 @@ private void Awake()
             }
         }
 
-        if (gc.isSolvedSimilarity() || (isHelp==2 && currentMode ==3))
+        if ((gc.isSolvedSimilarity() || isHelp==2) && currentGame >= gc.getRec2SquareProblems()+1 && currentGame <= gc.getSimilarityProblems())
         {
-            if(currentMode == 0)
+            //Debug.Log("called");
+            plate.transform.localScale = new Vector3(1f, 1f, 0);
+            if (currentMode == 0)
             {
                 winflag = 1;
             }
@@ -208,6 +223,9 @@ private void Awake()
             }
         }
 
+        SkipAnswerCheck:
+            
+
         if(winflag == 1)
         {
             combo++;
@@ -219,39 +237,50 @@ private void Awake()
         return;
     }
 
+    private void FormulaBonusGift()
+    {
+        score += 20;
+        return;
+    }
+
     private void BonusGift()
     {
         combo += 2;
         score += 5;
+        return;
     }
 
     private void AddPointManager()
     {
-        //if (currentMode == 0) return;
+        if (formulaBonus == true)
+        {
+            FormulaBonusGift();
+            formulaBonus = false;
+        }
 
         // 게임종류, 여기는 중간로직이 많아질수도 있으니까 if문으로썼다!!
-        if(currentGame == 0)
+        if (currentGame == 0)
         {
             score += 10;
         }
-        else if(currentGame == 1)
+        else if (currentGame == 1)
         {
             score += 13;
         }
-        else if(currentGame == 2)
+        else if (currentGame == 2)
         {
             score += 16;
         }
-        else if(currentGame == 3)
+        else if (currentGame == 3)
         {
             score += 20;
         }
-        else if(currentGame == 4)
+        else if (currentGame == 4)
         {
             score += 24;
 
         }
-        else if(currentGame == 5)
+        else if (currentGame == 5)
         {
             score += 16;
         }
@@ -261,9 +290,9 @@ private void Awake()
         }
 
         // 총시간, 콤보로 추가점수
-        score += (int) Math.Floor(0.3 * (60 - solveTime) + combo * 3.5d);
+        score += (int)Math.Floor(0.3 * (60 - solveTime) + combo * 3.5d);
         float norm = 0.4f;
-        score = (int) Math.Floor(norm * score);
+        score = (int)Math.Floor(norm * score);
 
         ScoreText.text = score.ToString() + " 점";
         return;
@@ -309,7 +338,7 @@ private void Awake()
         if (currentMode == 0)
         {
             // 문제랜덤생성, TODO : 점수 및 콤보증가에 따라 난이도 높은 문제 증가할 확률 증가
-            currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, 10f));
+            currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, (float)gc.getSimilarityProblems()));
             PlayerPrefs.SetInt("Game", currentGame);
         }
         else
@@ -317,25 +346,34 @@ private void Awake()
             currentGame = PlayerPrefs.GetInt("Game");
         }
 
+        /*
+         * 
+         *  TEST CODE : 새로운 문제 출제시 여기에 있는 currentGame 바꿔서 테스트(MakePolygon 아닌 실제 게임 전체를 뜻함).
+         * 
+         */
+
+         // currentGame = 10; // TEST 값
+         
+
         // 배경화면 및 게임아이템 설정
         // TODO : 프라이팬 등의 도구 세트 변경 작업도 여기서 수행한다.
-        // *** (주의) GAMEMODE 설정 변경시 currentGame 숫자 범위 변경 필요함 ***
         ClearBackground();
 
-        if(currentGame >= 0 && currentGame <= 7)
+        if(currentGame >= 0 && currentGame <= gc.getBiscuitProblems())
         {
             // 투렉트
             RectangleBiscuitBackground.SetActive(true);
-        }else if(currentGame >= 8 && currentGame <= 9)
+        }else if(currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
             // 직투정
             Rec2SquareBackground.SetActive(true);
+
         }
         else
         {
             // 합동삼각형
             SimilarityBackground.SetActive(true);
-        }
+        }        
 
         gc.makeNew(currentGame);
         return;
@@ -415,7 +453,6 @@ private void Awake()
         }
         return;
     }
-
     
     public void GameOver(bool isCleared) // life==0일때 gamemanager에서 호출하는 모달 팝업 매니징 함수
     {                                    // isCleared면 Clear, 아니면 GameOver
@@ -498,5 +535,29 @@ private void Awake()
         isPlay = x;
     }
 
+    public int GetScore()
+    {
+        return score;
+    }
+
+    public int GetCombo()
+    {
+        return combo;
+    }
+
+    public bool GetFormulaBonus()
+    {
+        return formulaBonus;
+    }
+
+    public void SetFormulaBonus(bool given)
+    {
+        formulaBonus = given;
+    }
+
+    public void Debug_KillAnswerCheck()
+    {
+        killAnswerCheck = true;
+    }
 }
 

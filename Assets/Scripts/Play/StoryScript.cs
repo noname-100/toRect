@@ -73,7 +73,6 @@ public class StoryScript : MonoBehaviour {
     // Use this for initialization
     private void Awake()
     {
-        Debug.Log("only for debugging");
         // adding scripts
 
         textscripts = new List<string[]>();
@@ -133,7 +132,7 @@ public class StoryScript : MonoBehaviour {
                     break;
                 case 5:
                     Stop_TextBox_B();
-                    PlayerPrefs.SetInt("Game", 1);
+                    PlayerPrefs.SetInt("Game", 2);
                     ec.SetisPlay(1);
                     break;
                 case 6:
@@ -144,7 +143,7 @@ public class StoryScript : MonoBehaviour {
                     break;
                 case 8:
                     Stop_TextBox_B();
-                    PlayerPrefs.SetInt("Game", 1);
+                    PlayerPrefs.SetInt("Game", 5);
                     ec.SetisPlay(1);
                     break;
                 case 9:
@@ -155,7 +154,7 @@ public class StoryScript : MonoBehaviour {
                     break;
                 case 11:
                     Stop_TextBox_B();
-                    PlayerPrefs.SetInt("Game", 1);
+                    PlayerPrefs.SetInt("Game", 9);
                     ec.SetisPlay(1);
                     break;
             }

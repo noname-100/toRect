@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+/*
+ * 
+ * 가장 핵심이 되는 도형 클래스. split/merge/createdots 등의 동작 포함
+ * 
+ */
+
 public class Polygon : MonoBehaviour
 {
     public Vector2[] VerticesPublic2D;
@@ -12,12 +18,12 @@ public class Polygon : MonoBehaviour
     public bool dotSelected = false;
     public bool mergeable = false;
     public static bool jiktojung = false;
+    public static float jiktojunglength = 0f;
     public int merger;
     private List<GameObject> dots = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
@@ -38,7 +44,7 @@ public class Polygon : MonoBehaviour
         {
             foreach (GameObject dot in dots)
             {
-                dot.GetComponent<Dots>().selectable = false;
+                dot.GetComponent<Dots>().selectable = false; // **
             }
         }
 
@@ -149,14 +155,19 @@ public class Polygon : MonoBehaviour
         var c = vertices3D.Count();
         for (int i = 0; i < c; i++)
         {
+            // vertex
             GameObject dot = Instantiate(Resources.Load("Prefabs/Circle"), transform.TransformPoint(vertices3D[i]) + new Vector3(0, 0, -1), transform.rotation) as GameObject;
             dot.name = "dot" + i;
             dot.transform.parent = gameObject.transform;
             dot.AddComponent(System.Type.GetType("Dots"));
+            dot.GetComponent<Dots>().isVertice = true;
             dots.Add(dot);
-            List<Vector3> midDots = new List<Vector3>();
-            midDots.Add(transform.TransformPoint((vertices3D[i] + vertices3D[(i + 1) % c]) / 2) + new Vector3(0, 0, -1));
-            //Find perpendicular dot
+
+            // Find mid dot
+            List<Vector3> midDots = new List<Vector3>();       
+            midDots.Add(transform.TransformPoint((vertices3D[i] + vertices3D[(i + 1) % c]) / 2) + new Vector3(0, 0, -3));
+            
+            // Find perpendicular dot
             for (int j = 0; j < c - 2; j++)
             {
                 Vector3 vector = vertices3D[(i + j + 2) % c] - vertices3D[i];
@@ -164,19 +175,35 @@ public class Polygon : MonoBehaviour
                 Vector3 perpDot = transform.TransformPoint(Vector3.Project(vector, onNormal) + vertices3D[i]);
                 if ((perpDot.x - transform.TransformPoint(vertices3D[i]).x) * (perpDot.x - transform.TransformPoint(vertices3D[(i + 1) % c]).x) < 0)
                 {
-                    midDots.Add(perpDot + new Vector3(0, 0, -1));
+                        midDots.Add(perpDot + new Vector3(0, 0, -1));                              
                 }
             }
+
             midDots = midDots.OrderBy(o => (Mathf.Abs(o.x - transform.TransformPoint(vertices3D[i]).x))).ToList();
+            
+
+            // create dot instances
             foreach (Vector3 dotVector in midDots)
             {
-                if (Vector3.Distance(transform.TransformPoint(vertices3D[i]), dotVector) > 1.001 && Vector3.Distance(transform.TransformPoint(vertices3D[(i + 1) % c]), dotVector) > 1.001 && Vector3.Distance(dots[dots.Count - 1].transform.position, dotVector) > 0.001)
+                if (true/*Vector3.Distance(transform.TransformPoint(vertices3D[i]), dotVector) > 1.001 && Vector3.Distance(transform.TransformPoint(vertices3D[(i + 1) % c]), dotVector) > 1.001 && Vector3.Distance(dots[dots.Count - 1].transform.position, dotVector) > 0.001*/)
                 {
                     GameObject midDot = Instantiate(Resources.Load("Prefabs/Circle"), dotVector, transform.rotation) as GameObject;
                     midDot.name = "dotmid" + i;
                     midDot.transform.parent = gameObject.transform;
                     midDot.AddComponent(System.Type.GetType("Dots"));
-                    midDot.GetComponent<Dots>().isVertice = false;
+
+                    // sort if mid or perp point
+                    if (midDot.transform.position.z == -3)
+                    {
+                        midDot.GetComponent<Dots>().ismid = true;
+                        Vector3 tmp = midDot.transform.position;
+                        tmp.z = -1;
+                        midDot.transform.position = tmp;
+                    }
+                    else
+                    {
+                        midDot.GetComponent<Dots>().isperp = true;
+                    }
                     dots.Add(midDot);
                 }
             }
@@ -201,13 +228,63 @@ public class Polygon : MonoBehaviour
                     dot3.GetComponent<Dots>().isVertice = false;
                     dots.Add(dot3);
                 }
-            }*/
-
-
-
+            }*/          
         }
+
+        
+        int vertex1 = -1;
+        int vertex2 = -1;
+        List<int> midpoints = new List<int>();
+        List<int> deletepoints = new List<int>();
+        int midpoint = -1;
+        for(int i = 0; i <= dots.Count; i++)
+        {
+            if (i==dots.Count || dots[i].GetComponent<Dots>().isVertice)
+            {
+                //Debug.Log(i + " is vertex");
+                vertex2 = vertex1;
+                vertex1 = i;
+                if (i == dots.Count) vertex1 = 0;
+                if (vertex1 != -1 && vertex2 != -1)
+                {
+                    for (int j = 0; j < midpoints.Count; j++)
+                    {
+                        if (Vector3.Distance(dots[midpoints[j]].transform.position, dots[midpoint].transform.position) / Vector3.Distance(dots[vertex1].transform.position, dots[vertex2].transform.position) < 0.09)
+                        {
+                            //if (dots[midpoint].GetComponent<Dots>().isVertice) Debug.Log("vertex changing to perp");
+                            //Debug.Log("midpoint to overlap " + midpoint + " mm " + midpoints[j]);
+                            dots[midpoint].GetComponent<Dots>().isperp = true;
+                            deletepoints.Add(midpoints[j]);
+                        }
+                    }
+                }
+                midpoints.Clear();
+            }
+            else if (dots[i].GetComponent<Dots>().ismid)
+            {
+                midpoint = i;
+            }
+            else if(dots[i].GetComponent<Dots>().isperp)
+            {
+                midpoints.Add(i);
+            }
+        }
+        
+        int diff = 0;
+        for(int i = 0; i < dots.Count; i++)
+        {
+            if (deletepoints.Count!=0 && i == deletepoints[0]-diff)
+            {
+                Destroy(dots[i]);
+                dots.RemoveAt(i);
+                deletepoints.RemoveAt(0);
+                diff++;
+                i--;
+            }
+        }              
         return;
     }
+
     void OnMouseUp()
     {
         if (!this.isSelected)
@@ -263,7 +340,7 @@ public class Polygon : MonoBehaviour
         for (int i = 0; i < c - (lowerVertex + higherVertex + 1); i++)
         {
 
-            dots[(i + index + higherVertex + 1) % c].GetComponent<Dots>().selectable = true;
+            dots[(i + index + higherVertex + 1) % c].GetComponent<Dots>().selectable = true; // **
             dots[(i + index + higherVertex + 1) % c].GetComponent<Renderer>().material.color = Color.blue;
 
         }
@@ -407,11 +484,33 @@ public class Polygon : MonoBehaviour
                         //Debug.Log("merging.. " + vertices3D.Length);
                         for (int i = 0; i < newPol.Count; i++)
                         {
-                            Debug.Log("new vertex x : " + newPol[i].x + " y : " + newPol[i].y);
+                            //Debug.Log("new vertex x : " + newPol[i].x + " y : " + newPol[i].y);
                         }
+
+                        float newmidx = 0;
+                        float newmidy = 0;
+                        for (int i = 0; i < newPol.Count; i++)
+                        {
+                            newmidx += newPol[i].x;
+                            newmidy += newPol[i].y;
+                        }
+                        newmidx /= newPol.Count;
+                        newmidy /= newPol.Count;
+
+                        for(int i = 0; i < newPol.Count; i++)
+                        {
+                            newPol[i] = new Vector2(newPol[i].x - newmidx, newPol[i].y - newmidy);
+                        }
+
                         var newPolygon = new GameObject("Polygon");
                         newPolygon.AddComponent(System.Type.GetType("Polygon"));
                         newPolygon.GetComponent<Polygon>().render(newPol.ToArray());
+
+                        /*
+                         *  mesh의 position을 보정해주는 코드 추가함
+                         */ 
+                        
+                        newPolygon.transform.position = new Vector3(newmidx, newmidy, 0);                        
                         controller.GetComponent<GameController>().polygonList.Add(newPolygon);
                         controller.GetComponent<GameController>().polygonList.Remove(pol);
                         controller.GetComponent<GameController>().polygonList.Remove(gameObject);
