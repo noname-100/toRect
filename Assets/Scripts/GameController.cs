@@ -92,13 +92,13 @@ public class GameController : MonoBehaviour
          * 
          */
         
-        GameObject square = new GameObject("Polygon");
+        /*GameObject square = new GameObject("Polygon");
         square.AddComponent(System.Type.GetType("Polygon"));
         Vector2[] v = MakePolygon.MakeJig();
         square.GetComponent<Polygon>().render(v);
         polygonList.Add(square);
         ec.Debug_KillAnswerCheck();
-        return;
+        return;*/
         
 
         // 출제변경시 여기의 biscuitProblems 등 변수 전환 + buttoncontroller_title 변수 전환, 
@@ -228,7 +228,6 @@ public class GameController : MonoBehaviour
             polygonList.Add(similarTriangle1);
             polygonList.Add(similarTriangle2);
             polygonList.Add(similarTriangle3);
-
         }
         return;
     }
@@ -275,7 +274,7 @@ public class GameController : MonoBehaviour
         int howMany = (int) UnityEngine.Random.Range(3f, 6f);
         List<Vector2[]> Squares = new List<Vector2[]>();
         List<Vector3> Collisions = new List<Vector3>();
-
+                
         for(int i = 0; i < howMany; i++)
         {
             try
@@ -283,6 +282,7 @@ public class GameController : MonoBehaviour
                 int dummyVariable = 0;
                 do
                 {
+                    collided:
                     dummyVariable++;
                     if (dummyVariable == 10000) throw new Exception(); // to prevent infinite loop
                     Vector2 candidate = APointOnFryPan();
@@ -294,7 +294,7 @@ public class GameController : MonoBehaviour
                     // check for collision
                     for (int j = 0; j < Squares.Count; j++)
                     {
-                        if (isColliding(candidate, length * Mathf.Pow(2, 0.5f), Collisions)) continue;
+                        if (isColliding(candidate, length * Mathf.Pow(2, 0.5f), Collisions)) goto collided;
                     }
                     Collisions.Add(new Vector3(length * (float)Mathf.Pow(2, 0.5f), candidate.x, candidate.y));
                     Squares.Add(MakePolygon.MakeSquare(length, candidate.x, candidate.y, UnityEngine.Random.Range(0f, 360f)));
@@ -306,14 +306,14 @@ public class GameController : MonoBehaviour
                 Debug.Log("Failed to find proper point on Frypan : Too many tries");
             }
         }
-
+        
         for(int i = 0; i < howMany; i++)
         {
             GameObject Square = new GameObject("Square");
             Square.AddComponent<Polygon>();
             Square.GetComponent<Polygon>().render(Squares[i]);
             polygonList.Add(Square);
-        }
+        }        
         return;
     }
 

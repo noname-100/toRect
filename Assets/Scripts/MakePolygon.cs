@@ -37,7 +37,7 @@ public class MakePolygon : MonoBehaviour
 
         vertices = new Vector2[4];
         float radius = (length / Mathf.Pow(2, 0.5f));
-        Polygon.jiktojung = false;
+        Polygon.jiktojung = true;
         vertices[0].x = radius * Mathf.Cos((45 + angle)/180 * Mathf.PI) + x;
         vertices[0].y = radius * Mathf.Sin((45 + angle)/180 * Mathf.PI) + y;
         vertices[1].x = radius * Mathf.Cos((135 + angle) / 180 * Mathf.PI) + x;
@@ -173,7 +173,7 @@ public class MakePolygon : MonoBehaviour
     public static Vector2[] MakePentagon()
     {
         vertices = new Vector2[5];
-
+        Polygon.jiktojung = false;
         vertices[0].x = 0f;
         vertices[0].y = -2.000f;
         vertices[1].x = -1.902f;
@@ -191,7 +191,7 @@ public class MakePolygon : MonoBehaviour
     public static Vector2[] MakeHexagon()
     {
         vertices = new Vector2[6];
-
+        Polygon.jiktojung = false;
         vertices[0].x = 5f;
         vertices[0].y = -8.660f;
         vertices[1].x = -5f;
@@ -211,7 +211,7 @@ public class MakePolygon : MonoBehaviour
     public static Vector2[] MakeHeptagon()
     {
         vertices = new Vector2[7];
-
+        Polygon.jiktojung = false;
         vertices[0].x = 0f;
         vertices[0].y = -10f;
         vertices[1].x = -7.818f;
@@ -233,7 +233,7 @@ public class MakePolygon : MonoBehaviour
     public static Vector2[] MakeOctagon()
     {
         vertices = new Vector2[8];
-
+        Polygon.jiktojung = false;
         vertices[0].x = 3.827f;
         vertices[0].y = -9.239f;
         vertices[1].x = -3.827f;
@@ -257,7 +257,7 @@ public class MakePolygon : MonoBehaviour
     public List<Vector2[]> MakeSimilars()
     {
         List<Vector2[]> triangles = new List<Vector2[]>();
-
+        Polygon.jiktojung = false;
         float a = 2.5f;
         float b = a * Random.Range(1f, 2.1f);
         float rightedge = 1.5f;
