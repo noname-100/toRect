@@ -30,7 +30,7 @@ public class Dots : MonoBehaviour
         tf = (Transform)transforms[1];
         rend = (Renderer)renderes[1];
 
-        if (ismid && isperp) this.GetComponent<Renderer>().material.color = Color.black;
+        if (ismid) this.GetComponent<Renderer>().material.color = Color.black;
 
     }
     void Update()
@@ -69,7 +69,7 @@ public class Dots : MonoBehaviour
         if (!this.isSelected && !this.selectable)
         {
             this.GetComponent<Renderer>().material.color = Color.white;
-            if (isperp && ismid) this.GetComponent<Renderer>().material.color = Color.black;
+            if (ismid) this.GetComponent<Renderer>().material.color = Color.black;
         }
         if (this.selectable)
         {
@@ -114,25 +114,25 @@ public class Dots : MonoBehaviour
 
     private void OnMouseDrag()
     {
-
-        Vector3 sum = Vector3.zero;
-        foreach (Vector3 vertice in this.transform.parent.GetComponent<Polygon>().vertices3D)
-        {
-            sum += vertice;
+        if(isVertice){
+            Vector3 sum = Vector3.zero;
+            foreach (Vector3 vertice in this.transform.parent.GetComponent<Polygon>().vertices3D)
+            {
+                sum += vertice;
+            }
+            Vector3 center = transform.parent.transform.TransformPoint(sum / this.transform.parent.GetComponent<Polygon>().vertices3D.Length);
+            Vector3 mouse = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, center.z));
+            float angle = Vector3.SignedAngle(new Vector3((mouse - center).x, (mouse - center).y, 0), new Vector3((transform.position - center).x, (transform.position - center).y, 0), Vector3.forward);
+            if (angle > 3)
+            {
+                transform.parent.transform.RotateAround(center, Vector3.forward, -angle);
+            }
+            else if (angle < -3)
+            {
+                transform.parent.transform.RotateAround(center, Vector3.forward, -angle);
+            }
+            //transform.parent.transform.eulerAngles += new Vector3(0, 0, angle);
         }
-        Vector3 center = transform.parent.transform.TransformPoint(sum / this.transform.parent.GetComponent<Polygon>().vertices3D.Length);
-        Vector3 mouse = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, center.z));
-        float angle = Vector3.SignedAngle(new Vector3((mouse - center).x, (mouse - center).y, 0), new Vector3((transform.position - center).x, (transform.position - center).y, 0), Vector3.forward);
-        if (angle > 3)
-        {
-            transform.parent.transform.RotateAround(center, Vector3.forward, -angle);
-        }
-        else if (angle < -3)
-        {
-            transform.parent.transform.RotateAround(center, Vector3.forward, -angle);
-        }
-        //transform.parent.transform.eulerAngles += new Vector3(0, 0, angle);
-
     }
 
     public void render()

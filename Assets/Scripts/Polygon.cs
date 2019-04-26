@@ -34,6 +34,7 @@ public class Polygon : MonoBehaviour
             if (Input.GetKeyDown("space"))
             {
                 flip();
+                //merge();
             }
         }
         if (dotSelected)
@@ -185,7 +186,7 @@ public class Polygon : MonoBehaviour
             // create dot instances
             foreach (Vector3 dotVector in midDots)
             {
-                if (true/*Vector3.Distance(transform.TransformPoint(vertices3D[i]), dotVector) > 1.001 && Vector3.Distance(transform.TransformPoint(vertices3D[(i + 1) % c]), dotVector) > 1.001 && Vector3.Distance(dots[dots.Count - 1].transform.position, dotVector) > 0.001*/)
+                if (Vector3.Distance(transform.TransformPoint(vertices3D[i]), dotVector) > 1.001 && Vector3.Distance(transform.TransformPoint(vertices3D[(i + 1) % c]), dotVector) > 1.001 && Vector3.Distance(dots[dots.Count - 1].transform.position, dotVector) > 0.001)
                 {
                     GameObject midDot = Instantiate(Resources.Load("Prefabs/Circle"), dotVector, transform.rotation) as GameObject;
                     midDot.name = "dotmid" + i;
@@ -249,7 +250,7 @@ public class Polygon : MonoBehaviour
                 {
                     for (int j = 0; j < midpoints.Count; j++)
                     {
-                        if (Vector3.Distance(dots[midpoints[j]].transform.position, dots[midpoint].transform.position) / Vector3.Distance(dots[vertex1].transform.position, dots[vertex2].transform.position) < 0.09)
+                        if (Vector3.Distance(dots[midpoints[j]].transform.position, dots[midpoint].transform.position) / Vector3.Distance(dots[vertex1].transform.position, dots[vertex2].transform.position) < 0.01)
                         {
                             //if (dots[midpoint].GetComponent<Dots>().isVertice) Debug.Log("vertex changing to perp");
                             //Debug.Log("midpoint to overlap " + midpoint + " mm " + midpoints[j]);
@@ -341,7 +342,11 @@ public class Polygon : MonoBehaviour
         {
 
             dots[(i + index + higherVertex + 1) % c].GetComponent<Dots>().selectable = true; // **
-            dots[(i + index + higherVertex + 1) % c].GetComponent<Renderer>().material.color = Color.blue;
+            if (dots[(i + index + higherVertex + 1) % c].GetComponent<Dots>().ismid) {
+                dots[(i + index + higherVertex + 1) % c].GetComponent<Renderer>().material.color = Color.black;
+            }else{
+                dots[(i + index + higherVertex + 1) % c].GetComponent<Renderer>().material.color = Color.blue;
+            }
 
         }
         return;
@@ -422,23 +427,33 @@ public class Polygon : MonoBehaviour
                         Vector3 y1 = pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[j]);
                         Vector3 y2 = pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(j + 1) % pol.GetComponent<Polygon>().vertices3D.Count()]);
                         float distY = Vector3.Distance(y1, y2);
-                        if (distX - distY < 0.001 && distX - distY > -0.001)
+                        if (distX - distY < 0.01 && distX - distY > -0.01)
                         {
                             //Debug.Log(Vector3.Angle(x1 - x2, y1 - y2));
                             //Debug.Log("distX: "+distX+"distY: "+distY);
                             if (Vector3.Distance(x1, y2) < 0.2 && Vector3.Distance(x2, y1) < 0.2 && Vector3.Distance(x1, y2) + Vector3.Distance(x2, y1) > 0)
                             {
-                                if (Mathf.Abs(Vector3.SignedAngle(x1 - x2, y1 - y2, Vector3.forward)) > 170)
+                                float d = Mathf.Abs(Vector3.Angle(x1 - x2, y1 - y2));
+                                if (d > 170)
                                 {
                                     Vector3 diffX = new Vector3(x1.x - x2.x, x1.y - x2.y, 0);
                                     Vector3 diffY = new Vector3(y2.x - y1.x, y2.y - y1.y, 0);
                                     //Debug.Log("The signed angle between v" + i + "-v" + (i+1) + "and t" + (j+1) + "-t"+j);
                                     //Debug.Log(Mathf.Abs(Vector3.SignedAngle(transform.TransformPoint(vertices3D[i]) - transform.TransformPoint(vertices3D[(i+1)%vertices3D.Count()]), pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[j]) - pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(j + 1) % pol.GetComponent<Polygon>().vertices3D.Count()]), Vector3.forward)));
-                                    transform.eulerAngles += new Vector3(0, 0, Vector3.Angle(x1 - x2, y1 - y2) + 180);
-                                    if (Mathf.Abs(Vector3.SignedAngle(transform.TransformPoint(vertices3D[i]) - transform.TransformPoint(vertices3D[(i + 1) % vertices3D.Count()]), pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[j]) - pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(j + 1) % pol.GetComponent<Polygon>().vertices3D.Count()]), Vector3.forward)) != 180)
+                                    //Debug.Log(d);
+                                    transform.eulerAngles += new Vector3(0, 0, d + 180);
+                                    //Debug.Log("We're going to add:");
+                                    //Debug.Log(d);
+                                    if (Mathf.Abs(Mathf.Abs(Vector3.Angle(transform.TransformPoint(vertices3D[i]) - transform.TransformPoint(vertices3D[(i + 1) % vertices3D.Count()]), pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[j]) - pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(j + 1) % pol.GetComponent<Polygon>().vertices3D.Count()])))-180)>0.1)
                                     {
-                                        transform.eulerAngles -= 2 * (new Vector3(0, 0, Vector3.Angle(x1 - x2, y1 - y2) + 180));
+                                        //Debug.Log("Angle still weird:");
+                                        //Debug.Log(Mathf.Abs(Vector3.Angle(transform.TransformPoint(vertices3D[i]) - transform.TransformPoint(vertices3D[(i + 1) % vertices3D.Count()]), pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[j]) - pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(j + 1) % pol.GetComponent<Polygon>().vertices3D.Count()]))));
+                                        transform.eulerAngles -= 2 * (new Vector3(0, 0, d + 180));
+                                        //Debug.Log("So subtract:");
+                                        //Debug.Log(2*d);
                                     }
+                                    //Debug.Log("Changed Angle:");
+                                    //Debug.Log(Mathf.Abs(Vector3.Angle(transform.TransformPoint(vertices3D[i]) - transform.TransformPoint(vertices3D[(i + 1) % vertices3D.Count()]), pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[j]) - pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[(j + 1) % pol.GetComponent<Polygon>().vertices3D.Count()]))));
                                     transform.position += (pol.transform.TransformPoint(pol.GetComponent<Polygon>().vertices3D[j]) - transform.TransformPoint(vertices3D[(i + 1) % vertices3D.Count()]));
                                     foreach (GameObject pols in controller.GetComponent<GameController>().polygonList)
                                     {
