@@ -109,7 +109,7 @@ public class MakePolygon : MonoBehaviour
         vertices[0].x = -t/2;
         vertices[0].y = 0;
         vertices[1].x = -t/2;
-        vertices[1].y = Random.Range(0, t);
+        vertices[1].y = Random.Range(t-1.2f, t-0.6f);
         vertices[2].x = -t/2 + vertices[1].y;
         vertices[2].y = vertices[1].y;
         vertices[3].x = t/2;
