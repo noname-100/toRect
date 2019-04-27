@@ -167,9 +167,9 @@ private void Awake()
             else
             {
                 // move to storyscript state machine
-                if (ss.GetstoryProgress() == 11)
+                if (ss.GetstoryProgress() == 12)
                 {
-                    Debug.Log("here");
+                    // Debug.Log("here");
                     GameOver(true);
                 }
                 isPlay = 0;
@@ -189,7 +189,7 @@ private void Awake()
             }
             else
             {
-                if (ss.GetstoryProgress() == 2)
+                if (ss.GetstoryProgress() == 4)
                 {
                     //Debug.Log("here2");
                     GameOver(true);
@@ -211,7 +211,7 @@ private void Awake()
             }
             else
             {
-                if (ss.GetstoryProgress() == 2)
+                if (ss.GetstoryProgress() == 3)
                 {
                     Debug.Log("here3");
                     GameOver(true);
@@ -352,7 +352,7 @@ private void Awake()
          * 
          */
 
-        currentGame = 10; // TEST 값
+        // currentGame = 10; // TEST 값
          
 
         // 배경화면 및 게임아이템 설정
