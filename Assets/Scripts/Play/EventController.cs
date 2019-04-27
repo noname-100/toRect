@@ -142,6 +142,11 @@ private void Awake()
         // 시간종료
         if (current_Time < 0)
         {
+            if(currentMode != 0)
+            {
+                GameOver(false);
+                return;
+            }
             plate.transform.localScale = new Vector3(1f, 1f, 0);
             LostLife();
             ResetTimeManager();
@@ -315,7 +320,7 @@ private void Awake()
         else if(currentMode == 1)
         {   // Biscuit Story Mode
             bonusTimeLimit = 45; // not used
-            if (currentGame == 0) solveTime = 60;
+            if (currentGame == 0) solveTime = 5;
             else if (currentGame == 1) solveTime = 50;
             else if (currentGame == 2) solveTime = 40;
             else if (currentGame == 3) solveTime = 45;
@@ -465,23 +470,31 @@ private void Awake()
         Chapter2ClearBackground.SetActive(false);
         Chapter3ClearBackground.SetActive(false);
 
-        switch (currentMode)
+        if (isCleared)
         {
-            case 0:
-                GameOverBackground.SetActive(true);
-                GameOverBack.SetActive(true);
-                break;
-            case 1:
-                Chapter1ClearBackground.SetActive(true);
-                break;
-            case 2:
-                Chapter2ClearBackground.SetActive(true);
-                break;
-            case 3:
-                Chapter3ClearBackground.SetActive(true);
-                break;
+            switch (currentMode)
+            {
+                case 0: // 순위모드 실패시
+                    GameOverBackground.SetActive(true);
+                    GameOverBack.SetActive(true);
+                    break;
+                case 1: // 스토리모드 성공시
+                    Chapter1ClearBackground.SetActive(true);
+                    break;
+                case 2:
+                    Chapter2ClearBackground.SetActive(true);
+                    break;
+                case 3:
+                    Chapter3ClearBackground.SetActive(true);
+                    break;
+            }
         }
-
+        else
+        {
+            // 스토리모드 실패시
+            GameOverBackground.SetActive(true);
+            GameOverBack.SetActive(true);
+        }
 
 
         if (currentMode == 0 || currentMode == 3)
@@ -496,7 +509,8 @@ private void Awake()
             }
             else
             {
-                ChallengeButtonforSimilarity.SetActive(true);
+                if (isCleared) ChallengeButtonforSimilarity.SetActive(true);
+                else RestartButton.SetActive(true);
             }
             
             RankingButton.SetActive(true);            
@@ -504,7 +518,8 @@ private void Awake()
         else
         {
             // 스토리모드 버튼구성
-            NextStageButton.SetActive(true);
+            if (isCleared) NextStageButton.SetActive(true);
+            else RestartButton.SetActive(true);
             ChallengeButton.SetActive(true);
         }
         return;

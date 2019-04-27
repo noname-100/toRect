@@ -3698,7 +3698,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334d5389288cc7a45be6afe5649329b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementStatus: 0
   GC: {fileID: 271237295}
   isPlay: 0
   EC: {fileID: 1008905277}
