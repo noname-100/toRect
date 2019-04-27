@@ -21,7 +21,7 @@ public class EventController : MonoBehaviour {
     private int currentMode;
 
     // 게임 요소
-    public int movementStatus; // 이동모드 상태(전체모드 0, 회전모드 1, 이동모드 2)
+    public static int movementStatus; // 이동모드 상태(전체모드 0, 회전모드 1, 이동모드 2)
     public GameObject GC;
     private GameController gc;
     public int isPlay; // 0 : 게임 정지 1 : 게임 시작 시그널 2 : 게임 실행중
@@ -553,11 +553,13 @@ private void Awake()
     public void SetFormulaBonus(bool given)
     {
         formulaBonus = given;
+        return;
     }
 
     public void Debug_KillAnswerCheck()
     {
         killAnswerCheck = true;
+        return;
     }
 }
 

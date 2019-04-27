@@ -114,6 +114,7 @@ public class Dots : MonoBehaviour
 
     private void OnMouseDrag()
     {
+        if (EventController.movementStatus == 2) return;
         if(isVertice){
             Vector3 sum = Vector3.zero;
             foreach (Vector3 vertice in this.transform.parent.GetComponent<Polygon>().vertices3D)
