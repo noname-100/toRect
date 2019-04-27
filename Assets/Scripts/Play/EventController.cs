@@ -307,36 +307,94 @@ private void Awake()
         return;
     }
 
+    /*
+     * 
+     * 
+     *  문제풀이별 시간제한 조절메소드
+     * 
+     */
+
     private void ResetTimeManager()
     {
-
-        float timeBonus = UnityEngine.Random.Range(0f, 2f);
-
         if(currentMode == 0)
         {
-            // 이부분이랑 콤보 풀리는 부분 조절하는게 게임성 핵심이다
-            // 콤보 잃어서 제한시간이 너무 늘어지면 안된다
-            // 점수나 콤보때문에 0초가 되면 안된다. 초반에 선형적이되 0으로 수렴하는 함수로
-            solveTime = 45; // (float) Math.Floor(30 - 2 * combo - 0.05 * score);
+            float halftime = 250f;
+            float norm = 0.2f;
+            float mintime = 20f;
+
+            solveTime = 1 / (1 + Mathf.Exp(norm * (score - halftime))) + mintime;
+
+            // 최소시간 문제별 세부조정
+            switch (currentGame)
+            {
+                case 0: // 예각
+                    solveTime += 0;
+                    break;
+                case 1: // 예각2
+                    solveTime += 0;
+                    break;
+                case 2: // 직각
+                    solveTime += 0;
+                    break;
+                case 3: // 둔각
+                    solveTime += 10;
+                    break;
+                case 4: // 사다리꼴
+                    solveTime += 15;
+                    break;
+                case 5: // 임의사각형
+                    solveTime += 25;
+                    break;
+                case 6: // 오각형
+                    solveTime += 45;
+                    break;
+                case 7: // 육각형
+                    solveTime += 40;
+                    break;
+                case 8: // 칠각형
+                    solveTime += 60;
+                    break;
+                case 9: // 팔각형
+                    solveTime += 50;
+                    break;
+                case 10: // 직투정
+                    solveTime += 10;
+                    break;
+                case 11: // 직투정2
+                    solveTime += 10;
+                    break;
+                case 12: // 합동삼각형1
+                    solveTime += 5;
+                    break;
+                case 13: // 함동삼각형2
+                    solveTime += 5;
+                    break;
+            }
+
             // 보너스 타임에만 랜덤요소를 넣는다.
+            float timeBonus = UnityEngine.Random.Range(0f, 2f);
             bonusTimeLimit = (float) Math.Floor(solveTime * 0.85 - timeBonus);
         }
         else if(currentMode == 1)
         {   // Biscuit Story Mode
             bonusTimeLimit = 45; // not used
-            if (currentGame == 0) solveTime = 5;
-            else if (currentGame == 1) solveTime = 50;
-            else if (currentGame == 2) solveTime = 40;
-            else if (currentGame == 3) solveTime = 45;
-            else solveTime = 45;
+            if (currentGame == 0) solveTime = 120; // 직각삼각형
+            else if (currentGame == 2) solveTime = 120; // 직각삼각형
+            else if (currentGame == 3) solveTime = 180; // 둔각삼각형
+            else if (currentGame == 4) solveTime = 130; // 사다리꼴
+            else if (currentGame == 5) solveTime = 240; // 사각형
+            else if (currentGame == 6) solveTime = 300; // 오각형
+            else if (currentGame == 7) solveTime = 300; // 육각형
+            else if (currentGame == 8) solveTime = 360; // 칠각형
+            else if (currentGame == 9) solveTime = 300; // 팔각형
+            else solveTime = 5; // 에러
         }else if(currentMode == 2)
         {   // Rec2Square Story Mode
-            solveTime = 60;
+            solveTime = 300;
         }else if(currentMode == 3)
         {   // Similarity Story Mode
-            solveTime = 60;
+            solveTime = 70;
         }
-
         current_Time = solveTime;
         return;
     }

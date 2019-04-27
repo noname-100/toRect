@@ -37,7 +37,7 @@ public class GameController : MonoBehaviour
     // 중요 : 출제 변경시 여기에서 범위 변경 필수!!!
     private int biscuitProblems = 9;
     private int rec2squareProblems = 11;
-    private int similarityProblems = 13;
+    private int similarityProblems = 14;
     // 공식출제종류변수
     private int formulaProblems = 5;
     private int formulaAnswer = 0;
