@@ -236,20 +236,19 @@ public class GameController : MonoBehaviour
     {
         Vector2 ret = new Vector2();
 
-        float radiusFrypan = 1.912f;
+        float radiusFrypan = 1.612f - Mathf.Pow(2, 0.5f) * Polygon.jiktojunglength / 2f;
         float angle = UnityEngine.Random.Range(0f, 360f);
         float r = 0;
 
         // TODO : r 산정할때 정사각형 조각의 최대반경 고려해줘야함
         if (angle <= 32 && angle >= 360 - 32)
         {
-            r = UnityEngine.Random.Range(0f, (1.6f / (float) Mathf.Cos(angle)));
+            r = UnityEngine.Random.Range(0f, (1.6f / (float) Mathf.Cos(angle)) - Mathf.Pow(2, 0.5f) * Polygon.jiktojunglength / 2f);
         }
         else
         {
             r = UnityEngine.Random.Range(0f, radiusFrypan);
         }
-        r -= Mathf.Pow(2, 0.5f) * Polygon.jiktojunglength / 2f;
 
         ret.x = r * Mathf.Cos(angle) + 6.36f;
         ret.y = r * Mathf.Sin(angle) - 2.26f;
@@ -272,7 +271,7 @@ public class GameController : MonoBehaviour
 
     public void GenerateSquares()
     {
-        int howMany = (int) UnityEngine.Random.Range(3f, 6f);
+        int howMany = (int) UnityEngine.Random.Range(3f, 5f);
         List<Vector2[]> Squares = new List<Vector2[]>();
         List<Vector3> Collisions = new List<Vector3>();
                 
@@ -394,26 +393,26 @@ public class GameController : MonoBehaviour
 
     public bool isSolvedSimilarity()
     {
-        Debug.Log("Checking Similarity Answer Candidancy");
+        // Debug.Log("Checking Similarity Answer Candidancy");
         if(polygonList.Count != 1)
         {
-            Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
+            // Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
             return false;
         }
 
         Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
         if (reference == null)
         {
-            Debug.Log("similarity reference not read properly. returns null");
+            // Debug.Log("similarity reference not read properly. returns null");
             return false;
         }
 
         if (reference.Length != 4)
         {
-             Debug.Log("edge not four, instead : " + reference.Length);
+            // Debug.Log("edge not four, instead : " + reference.Length);
             for (int i = 0; i < reference.Length; i++)
             {
-                Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
+                // Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
             }
             return false;
         }
@@ -432,7 +431,7 @@ public class GameController : MonoBehaviour
             {
                 if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
                 {
-                   Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                   // Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                     return false;
                 }
             }
@@ -442,17 +441,17 @@ public class GameController : MonoBehaviour
         // 여기에서 판 위에 직사각형이 있는지 체크한다.
         if((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.6)
         {
-            Debug.Log("Pie not on plate dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
+            // Debug.Log("Pie not on plate dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
             return false;
         }
 
         if(!(polygonList[0].transform.eulerAngles.z >= 10 && polygonList[0].transform.rotation.eulerAngles.z <= 50) && !(polygonList[0].transform.rotation.eulerAngles.z <= -130 && polygonList[0].transform.rotation.eulerAngles.z >= -170))
         {
-            Debug.Log("Pie not in right angle, curr : " + polygonList[0].transform.rotation.eulerAngles.z);
+            // Debug.Log("Pie not in right angle, curr : " + polygonList[0].transform.rotation.eulerAngles.z);
             return false;
         }
 
-        Debug.Log("Similarity : final answer met");
+        // Debug.Log("Similarity : final answer met");
         return true;
     }
 

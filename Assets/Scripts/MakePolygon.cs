@@ -109,7 +109,7 @@ public class MakePolygon : MonoBehaviour
         vertices[0].x = -t/2;
         vertices[0].y = 0;
         vertices[1].x = -t/2;
-        vertices[1].y = Random.Range(0, t);
+        vertices[1].y = Random.Range(t - 1.2f, t - 0.6f);
         vertices[2].x = -t/2 + vertices[1].y;
         vertices[2].y = vertices[1].y;
         vertices[3].x = t/2;
@@ -118,7 +118,8 @@ public class MakePolygon : MonoBehaviour
         vertices[4].y = 0;
         vertices[5].x = -t/2 + vertices[1].y;
         vertices[5].y = 0;
-        Polygon.jiktojunglength = 0.5f * (t - vertices[1].y);
+        Polygon.jiktojunglength = 0.5f * (t - vertices[1].y) / Mathf.Pow(2,0.5f);
+        Debug.Log(t + " " + Polygon.jiktojunglength);
         return vertices;
     }
 

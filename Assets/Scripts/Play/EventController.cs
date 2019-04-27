@@ -361,7 +361,7 @@ private void Awake()
          * 
          */
 
-        currentGame = 13; // TEST 값
+        currentGame = 10; // TEST 값
          
 
         // 배경화면 및 게임아이템 설정
