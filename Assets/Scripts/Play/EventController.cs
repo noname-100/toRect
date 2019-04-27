@@ -36,6 +36,7 @@ public class EventController : MonoBehaviour {
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
     public Text GameResultText;
     public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground, ScoreBackground;
+    public GameObject ScoreSign;
 
     // Clear 화면 게임요소
     public GameObject RankingMain, RankingSub1, RankingSub2, GameOverBackground, Chapter1ClearBackground, Chapter2ClearBackground, Chapter3ClearBackground;
@@ -168,6 +169,7 @@ private void Awake()
             if(currentMode == 0)
             {
                 winflag = 1;
+                StartCoroutine(ScorePopup());
             }
             else
             {
@@ -191,6 +193,7 @@ private void Awake()
             if(currentMode == 0)
             {
                 winflag = 1;
+                StartCoroutine(ScorePopup());
             }
             else
             {
@@ -213,6 +216,7 @@ private void Awake()
             if (currentMode == 0)
             {
                 winflag = 1;
+                StartCoroutine(ScorePopup());
             }
             else
             {
@@ -357,7 +361,7 @@ private void Awake()
          * 
          */
 
-        // currentGame = 10; // TEST 값
+        currentGame = 13; // TEST 값
          
 
         // 배경화면 및 게임아이템 설정
@@ -391,6 +395,15 @@ private void Awake()
      * 
      * 
      */
+
+    // 주의 : 이거는 문제해결시 팝업, 공식선택시 보너스팝업은 ButtonColler_Play에 있음
+    IEnumerator ScorePopup()
+    {
+        Debug.Log("ScorePopup Called");
+        ScoreSign.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        ScoreSign.SetActive(false);
+    }
 
     IEnumerator Timer() // 0.01초 단위로 시간을 측정
     {

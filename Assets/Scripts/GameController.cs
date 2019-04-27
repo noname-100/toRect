@@ -394,25 +394,26 @@ public class GameController : MonoBehaviour
 
     public bool isSolvedSimilarity()
     {
+        Debug.Log("Checking Similarity Answer Candidancy");
         if(polygonList.Count != 1)
         {
-            // Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
+            Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
             return false;
         }
 
         Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
         if (reference == null)
         {
-            // Debug.Log("similarity reference not read properly. returns null");
+            Debug.Log("similarity reference not read properly. returns null");
             return false;
         }
 
         if (reference.Length != 4)
         {
-             // Debug.Log("edge not four, instead : " + reference.Length);
+             Debug.Log("edge not four, instead : " + reference.Length);
             for (int i = 0; i < reference.Length; i++)
             {
-                // Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
+                Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
             }
             return false;
         }
@@ -431,7 +432,7 @@ public class GameController : MonoBehaviour
             {
                 if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
                 {
-                   // Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                   Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                     return false;
                 }
             }
@@ -441,18 +442,17 @@ public class GameController : MonoBehaviour
         // 여기에서 판 위에 직사각형이 있는지 체크한다.
         if((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.6)
         {
-            // Debug.Log("Pie not on plate dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
+            Debug.Log("Pie not on plate dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
             return false;
         }
 
         if(!(polygonList[0].transform.eulerAngles.z >= 10 && polygonList[0].transform.rotation.eulerAngles.z <= 50) && !(polygonList[0].transform.rotation.eulerAngles.z <= -130 && polygonList[0].transform.rotation.eulerAngles.z >= -170))
         {
-            // Debug.Log("Pie not in right angle, curr : " + polygonList[0].transform.rotation.eulerAngles.z);
+            Debug.Log("Pie not in right angle, curr : " + polygonList[0].transform.rotation.eulerAngles.z);
             return false;
         }
 
-        // Debug.Log("Similarity : final answer met");
-        if(PlayerPrefs.GetInt("Mode")==0) StartCoroutine(ScorePopup());
+        Debug.Log("Similarity : final answer met");
         return true;
     }
 
@@ -466,15 +466,6 @@ public class GameController : MonoBehaviour
         {
             return true;
         }
-    }
-
-    // 주의 : 이거는 문제해결시 팝업, 공식선택시 보너스팝업은 ButtonColler_Play에 있음
-    IEnumerator ScorePopup()
-    {
-        Debug.Log("ScorePopup Called");
-        ScoreSign.SetActive(true);
-        yield return new WaitForSeconds(1f);
-        ScoreSign.SetActive(false);
     }
 
     public bool isSolvedRec2Square()
@@ -531,7 +522,6 @@ public class GameController : MonoBehaviour
         }
 
         // Debug.Log("All remainders are square");
-        if (PlayerPrefs.GetInt("Mode") == 0) StartCoroutine(ScorePopup());
         return true;
     }
 
@@ -581,7 +571,6 @@ public class GameController : MonoBehaviour
         }
 
         // Debug.Log("Biscuit this is rectangle");
-        if (PlayerPrefs.GetInt("Mode") == 0) StartCoroutine(ScorePopup());
         return true;
     }
 

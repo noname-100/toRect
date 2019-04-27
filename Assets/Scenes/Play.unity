@@ -3716,6 +3716,7 @@ MonoBehaviour:
   Rec2SquareBackground: {fileID: 512297777}
   SimilarityBackground: {fileID: 1006986675}
   ScoreBackground: {fileID: 447551190}
+  ScoreSign: {fileID: 701234067}
   RankingMain: {fileID: 1913306961}
   RankingSub1: {fileID: 798795888}
   RankingSub2: {fileID: 1697707830}
