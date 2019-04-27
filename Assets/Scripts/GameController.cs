@@ -249,6 +249,7 @@ public class GameController : MonoBehaviour
         {
             r = UnityEngine.Random.Range(0f, radiusFrypan);
         }
+        r -= Mathf.Pow(2, 0.5f) * Polygon.jiktojunglength / 2f;
 
         ret.x = r * Mathf.Cos(angle) + 6.36f;
         ret.y = r * Mathf.Sin(angle) - 2.26f;
@@ -284,12 +285,16 @@ public class GameController : MonoBehaviour
                 {
                     collided:
                     dummyVariable++;
-                    if (dummyVariable == 10000) throw new Exception(); // to prevent infinite loop
+                    if (dummyVariable == 500000) throw new Exception(); // to prevent infinite loop
                     Vector2 candidate = APointOnFryPan();
                     float length;
                     float answerLength = Polygon.jiktojunglength;
                     if (i == 0) length = answerLength; // answer square size
-                    else length = UnityEngine.Random.Range(answerLength - 0.5f, answerLength + 0.5f); // TODO : 정답 정사각형과 구분되는 사이즈 생성 필요
+                    else
+                    {
+                        if (UnityEngine.Random.Range(0f, 2f) >= 1 && Polygon.jiktojunglength >= 0.5) length = UnityEngine.Random.Range(0.2f, Polygon.jiktojunglength - 0.2f);
+                        else length = UnityEngine.Random.Range(Polygon.jiktojunglength + 0.1f, 0.8f);
+                    }
 
                     // check for collision
                     for (int j = 0; j < Squares.Count; j++)
@@ -304,6 +309,7 @@ public class GameController : MonoBehaviour
             }catch(Exception e)
             {
                 Debug.Log("Failed to find proper point on Frypan : Too many tries");
+                howMany = Squares.Count;
             }
         }
         
