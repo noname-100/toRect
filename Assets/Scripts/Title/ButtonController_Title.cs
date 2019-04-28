@@ -210,4 +210,18 @@ public class ButtonController_Title : MonoBehaviour {
         AudioListener.volume = 0f;
         return;
     }
+
+    public void CloseModeSelect()
+    {
+        ModeSelect.SetActive(false);
+        return;
+    }
+
+    public void CloseStoryModeSelect()
+    {
+        StoryModeSelect.SetActive(false);
+        ModeSelect.SetActive(true);
+        return;
+    }
+
 }

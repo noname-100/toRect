@@ -455,12 +455,15 @@ private void Awake()
             int coeff = 10;
             for(int i = 0; i < difficulty.Length; i++)
             {
-                int howMany = coeff * ((int)(1 / Mathf.Exp(-(difficulty[i] - 10))) + (int)(1 / Mathf.Exp(difficulty[i] + 10)));
+                int howMany = coeff * (int) (1f / (1f + Mathf.Exp((score - 200) * difficulty[i] - 10)));
+                for(int j = 0; j < howMany; i++)
+                {
+                    pool.Add(i);
+                }
             }
 
-            pool = ShuffleArray(pool);
-
-            currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, (float)gc.getSimilarityProblems()));
+            pool = ShuffleArray(pool);            
+            currentGame = pool[(int)UnityEngine.Random.Range(0, pool.Count)];
             PlayerPrefs.SetInt("Game", currentGame);
         }
         else
@@ -474,8 +477,8 @@ private void Awake()
          * 
          */
 
-        // currentGame = 10; // TEST 값
-         
+        currentGame = 10; // TEST 값
+        
         ClearBackground();
         if(currentGame >= 0 && currentGame <= gc.getBiscuitProblems())
         {
