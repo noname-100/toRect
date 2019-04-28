@@ -560,10 +560,18 @@ public class Polygon : MonoBehaviour
     public void flip()
     {
         Vector2[] newVertices = new Vector2[vertices3D.Count()];
+        float centerX=0;
+        float centerY=0;
         for (int i = 0; i < vertices3D.Count(); i++)
         {
-            newVertices[i].x = -vertices3D[vertices3D.Count() - 1 - i].x;
-            newVertices[i].y = vertices3D[vertices3D.Count() - 1 - i].y;
+            centerX += transform.TransformPoint(vertices3D[i]).x;
+        }   
+        centerX/=vertices3D.Count();
+        centerY/=vertices3D.Count();
+        for (int i = 0; i < vertices3D.Count(); i++)
+        {
+            newVertices[i].x = 2*centerX-transform.TransformPoint(vertices3D[vertices3D.Count() - 1 - i]).x;
+            newVertices[i].y = transform.TransformPoint(vertices3D[vertices3D.Count() - 1 - i]).y;
         }
         GameObject controller = GameObject.Find("GameControllerObject");
         controller.GetComponent<GameController>().polygonList.Remove(gameObject);
