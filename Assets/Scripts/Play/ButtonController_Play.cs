@@ -23,13 +23,17 @@ public class ButtonController_Play : MonoBehaviour
     public GameObject RankPage;
     public GameObject EC;
     private EventController ec;
+    private StoryScript ss;
     public GameObject GC;
     private GameController gc;
     public GameObject FormulaBoard;
     public GameObject ScoreSign;
+    public GameObject HintButton;
+    public GameObject[] HintList = new GameObject[4];
     
     private bool formulaBoardState;
     private bool isFormulaBoardSelectable;
+    private int currentGame, currentMode;
 
     public void Awake()
     {
@@ -43,9 +47,25 @@ public class ButtonController_Play : MonoBehaviour
         RankPage.SetActive(false);
         ec = EC.GetComponent<EventController>();
         gc = GC.GetComponent<GameController>();
+        ss = EC.GetComponent<StoryScript>();
 
-        int currentMode = PlayerPrefs.GetInt("Mode");
+        currentMode = PlayerPrefs.GetInt("Mode");
+        currentGame = PlayerPrefs.GetInt("Game");
 
+    }
+
+    public void hintClick()
+    {
+        if(ss.GetisHintAvailable()) StartCoroutine(HintButtonClick());
+        ss.SetisHintAvailable(false);
+        return;
+    }
+
+    IEnumerator HintButtonClick()
+    {
+        HintList[PlayerPrefs.GetInt("Game") - 6].SetActive(true);
+        yield return new WaitForSeconds(5f);
+        HintList[PlayerPrefs.GetInt("Game") - 6].SetActive(false);
     }
 
     public void Totitle()

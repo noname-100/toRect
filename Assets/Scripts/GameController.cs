@@ -37,7 +37,7 @@ public class GameController : MonoBehaviour
     // 중요 : 출제 변경시 여기에서 범위 변경 필수!!!
     private int biscuitProblems = 9;
     private int rec2squareProblems = 11;
-    private int similarityProblems = 13;
+    private int similarityProblems = 14;
     // 공식출제종류변수
     private int formulaProblems = 5;
     private int formulaAnswer = 0;
@@ -236,20 +236,19 @@ public class GameController : MonoBehaviour
     {
         Vector2 ret = new Vector2();
 
-        float radiusFrypan = 1.912f;
+        float radiusFrypan = 1.612f - Mathf.Pow(2, 0.5f) * Polygon.jiktojunglength / 2f;
         float angle = UnityEngine.Random.Range(0f, 360f);
         float r = 0;
 
         // TODO : r 산정할때 정사각형 조각의 최대반경 고려해줘야함
         if (angle <= 32 && angle >= 360 - 32)
         {
-            r = UnityEngine.Random.Range(0f, (1.6f / (float) Mathf.Cos(angle)));
+            r = UnityEngine.Random.Range(0f, (1.6f / (float) Mathf.Cos(angle)) - Mathf.Pow(2, 0.5f) * Polygon.jiktojunglength / 2f);
         }
         else
         {
             r = UnityEngine.Random.Range(0f, radiusFrypan);
         }
-        r -= Mathf.Pow(2, 0.5f) * Polygon.jiktojunglength / 2f;
 
         ret.x = r * Mathf.Cos(angle) + 6.36f;
         ret.y = r * Mathf.Sin(angle) - 2.26f;
@@ -272,7 +271,7 @@ public class GameController : MonoBehaviour
 
     public void GenerateSquares()
     {
-        int howMany = (int) UnityEngine.Random.Range(3f, 6f);
+        int howMany = (int) UnityEngine.Random.Range(3f, 5f);
         List<Vector2[]> Squares = new List<Vector2[]>();
         List<Vector3> Collisions = new List<Vector3>();
                 
@@ -394,6 +393,7 @@ public class GameController : MonoBehaviour
 
     public bool isSolvedSimilarity()
     {
+        // Debug.Log("Checking Similarity Answer Candidancy");
         if(polygonList.Count != 1)
         {
             // Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
@@ -409,7 +409,7 @@ public class GameController : MonoBehaviour
 
         if (reference.Length != 4)
         {
-             // Debug.Log("edge not four, instead : " + reference.Length);
+            // Debug.Log("edge not four, instead : " + reference.Length);
             for (int i = 0; i < reference.Length; i++)
             {
                 // Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
@@ -452,7 +452,6 @@ public class GameController : MonoBehaviour
         }
 
         // Debug.Log("Similarity : final answer met");
-        if(PlayerPrefs.GetInt("Mode")==0) StartCoroutine(ScorePopup());
         return true;
     }
 
@@ -466,15 +465,6 @@ public class GameController : MonoBehaviour
         {
             return true;
         }
-    }
-
-    // 주의 : 이거는 문제해결시 팝업, 공식선택시 보너스팝업은 ButtonColler_Play에 있음
-    IEnumerator ScorePopup()
-    {
-        Debug.Log("ScorePopup Called");
-        ScoreSign.SetActive(true);
-        yield return new WaitForSeconds(1f);
-        ScoreSign.SetActive(false);
     }
 
     public bool isSolvedRec2Square()
@@ -531,7 +521,6 @@ public class GameController : MonoBehaviour
         }
 
         // Debug.Log("All remainders are square");
-        if (PlayerPrefs.GetInt("Mode") == 0) StartCoroutine(ScorePopup());
         return true;
     }
 
@@ -581,7 +570,6 @@ public class GameController : MonoBehaviour
         }
 
         // Debug.Log("Biscuit this is rectangle");
-        if (PlayerPrefs.GetInt("Mode") == 0) StartCoroutine(ScorePopup());
         return true;
     }
 

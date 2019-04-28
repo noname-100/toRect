@@ -21,7 +21,7 @@ public class EventController : MonoBehaviour {
     private int currentMode;
 
     // 게임 요소
-    public int movementStatus; // 이동모드 상태(전체모드 0, 회전모드 1, 이동모드 2)
+    public static int movementStatus; // 이동모드 상태(전체모드 0, 회전모드 1, 이동모드 2)
     public GameObject GC;
     private GameController gc;
     public int isPlay; // 0 : 게임 정지 1 : 게임 시작 시그널 2 : 게임 실행중
@@ -36,6 +36,7 @@ public class EventController : MonoBehaviour {
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
     public Text GameResultText;
     public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground, ScoreBackground;
+    public GameObject ScoreSign;
 
     // Clear 화면 게임요소
     public GameObject RankingMain, RankingSub1, RankingSub2, GameOverBackground, Chapter1ClearBackground, Chapter2ClearBackground, Chapter3ClearBackground;
@@ -142,6 +143,11 @@ private void Awake()
         // 시간종료
         if (current_Time < 0)
         {
+            if(currentMode != 0)
+            {
+                GameOver(false);
+                return;
+            }
             plate.transform.localScale = new Vector3(1f, 1f, 0);
             LostLife();
             ResetTimeManager();
@@ -163,13 +169,14 @@ private void Awake()
             if(currentMode == 0)
             {
                 winflag = 1;
+                StartCoroutine(ScorePopup());
             }
             else
             {
                 // move to storyscript state machine
-                if (ss.GetstoryProgress() == 11)
+                if (ss.GetstoryProgress() == 12)
                 {
-                    Debug.Log("here");
+                    // Debug.Log("here");
                     GameOver(true);
                 }
                 isPlay = 0;
@@ -186,10 +193,11 @@ private void Awake()
             if(currentMode == 0)
             {
                 winflag = 1;
+                StartCoroutine(ScorePopup());
             }
             else
             {
-                if (ss.GetstoryProgress() == 2)
+                if (ss.GetstoryProgress() == 4)
                 {
                     //Debug.Log("here2");
                     GameOver(true);
@@ -208,10 +216,11 @@ private void Awake()
             if (currentMode == 0)
             {
                 winflag = 1;
+                StartCoroutine(ScorePopup());
             }
             else
             {
-                if (ss.GetstoryProgress() == 2)
+                if (ss.GetstoryProgress() == 3)
                 {
                     Debug.Log("here3");
                     GameOver(true);
@@ -239,105 +248,218 @@ private void Awake()
 
     private void FormulaBonusGift()
     {
-        score += 20;
+        score += 5;
         return;
     }
 
     private void BonusGift()
     {
         combo += 2;
-        score += 5;
+        score += 2;
         return;
     }
 
+    /*
+     * 
+     * 
+     *  점수체계 결정하는 메소드
+     * 
+     * 
+     */
+
     private void AddPointManager()
     {
+        // 콤보, 제한시간(점수)로 추가점수
+        score += 2 * combo + (int) 0.01 * score;
+
+        // 문제종류별 추가점수
+        switch (currentGame)
+        {
+            case 0: // 예각1
+                score += 0;
+                break;
+            case 1: // 예각2
+                score += 0;
+                break;
+            case 2: // 직각
+                score += 0;
+                break;
+            case 3: // 둔각
+                score += 1;
+                break;
+            case 4: // 사다리꼴
+                score += 2;
+                break;
+            case 5: // 임의사각형
+                score += 3;
+                break;
+            case 6: // 오각형
+                score += 5;
+                break;
+            case 7: // 육각형
+                score += 5;
+                break;
+            case 8: // 칠각형
+                score += 7;
+                break;
+            case 9: // 팔각형
+                score += 5;
+                break;
+            case 10: // 직투정1
+                score += 0;
+                break;
+            case 11: // 직투정2
+                score += 0;
+                break;
+            case 12: // 합동삼각형1
+                score += 0;
+                break;
+            case 13: // 함동삼각형2
+                score += 0;
+                break;
+        }
+
+        // 직투정 공식 맞췄을때 추가점수
         if (formulaBonus == true)
         {
             FormulaBonusGift();
             formulaBonus = false;
         }
 
-        // 게임종류, 여기는 중간로직이 많아질수도 있으니까 if문으로썼다!!
-        if (currentGame == 0)
-        {
-            score += 10;
-        }
-        else if (currentGame == 1)
-        {
-            score += 13;
-        }
-        else if (currentGame == 2)
-        {
-            score += 16;
-        }
-        else if (currentGame == 3)
-        {
-            score += 20;
-        }
-        else if (currentGame == 4)
-        {
-            score += 24;
-
-        }
-        else if (currentGame == 5)
-        {
-            score += 16;
-        }
-        else
-        {
-            score += 10;
-        }
-
-        // 총시간, 콤보로 추가점수
-        score += (int)Math.Floor(0.3 * (60 - solveTime) + combo * 3.5d);
-        float norm = 0.4f;
-        score = (int)Math.Floor(norm * score);
-
         ScoreText.text = score.ToString() + " 점";
         return;
     }
 
+    /*
+     * 
+     * 
+     *  문제풀이별 시간제한 조절메소드
+     * 
+     */
+
     private void ResetTimeManager()
     {
-
-        float timeBonus = UnityEngine.Random.Range(0f, 2f);
-
         if(currentMode == 0)
         {
-            // 이부분이랑 콤보 풀리는 부분 조절하는게 게임성 핵심이다
-            // 콤보 잃어서 제한시간이 너무 늘어지면 안된다
-            // 점수나 콤보때문에 0초가 되면 안된다. 초반에 선형적이되 0으로 수렴하는 함수로
-            solveTime = 45; // (float) Math.Floor(30 - 2 * combo - 0.05 * score);
+            float halftime = 250f;
+            float norm = 0.2f;
+            float mintime = 20f;
+
+            solveTime = 1 / (1 + Mathf.Exp(norm * ((10 * combo + score) - halftime))) + mintime;
+
+            // 최소시간 문제별 세부조정
+            switch (currentGame)
+            {
+                case 0: // 예각
+                    solveTime += 0;
+                    break;
+                case 1: // 예각2
+                    solveTime += 0;
+                    break;
+                case 2: // 직각
+                    solveTime += 0;
+                    break;
+                case 3: // 둔각
+                    solveTime += 10;
+                    break;
+                case 4: // 사다리꼴
+                    solveTime += 15;
+                    break;
+                case 5: // 임의사각형
+                    solveTime += 25;
+                    break;
+                case 6: // 오각형
+                    solveTime += 45;
+                    break;
+                case 7: // 육각형
+                    solveTime += 40;
+                    break;
+                case 8: // 칠각형
+                    solveTime += 60;
+                    break;
+                case 9: // 팔각형
+                    solveTime += 50;
+                    break;
+                case 10: // 직투정
+                    solveTime += 10;
+                    break;
+                case 11: // 직투정2
+                    solveTime += 10;
+                    break;
+                case 12: // 합동삼각형1
+                    solveTime += 5;
+                    break;
+                case 13: // 함동삼각형2
+                    solveTime += 5;
+                    break;
+            }
+
             // 보너스 타임에만 랜덤요소를 넣는다.
+            float timeBonus = UnityEngine.Random.Range(0f, 2f);
             bonusTimeLimit = (float) Math.Floor(solveTime * 0.85 - timeBonus);
         }
         else if(currentMode == 1)
         {   // Biscuit Story Mode
             bonusTimeLimit = 45; // not used
-            if (currentGame == 0) solveTime = 60;
-            else if (currentGame == 1) solveTime = 50;
-            else if (currentGame == 2) solveTime = 40;
-            else if (currentGame == 3) solveTime = 45;
-            else solveTime = 45;
+            if (currentGame == 0) solveTime = 120; // 직각삼각형
+            else if (currentGame == 2) solveTime = 120; // 직각삼각형
+            else if (currentGame == 3) solveTime = 180; // 둔각삼각형
+            else if (currentGame == 4) solveTime = 130; // 사다리꼴
+            else if (currentGame == 5) solveTime = 240; // 사각형
+            else if (currentGame == 6) solveTime = 300; // 오각형
+            else if (currentGame == 7) solveTime = 300; // 육각형
+            else if (currentGame == 8) solveTime = 360; // 칠각형
+            else if (currentGame == 9) solveTime = 300; // 팔각형
+            else solveTime = 5; // 에러
         }else if(currentMode == 2)
         {   // Rec2Square Story Mode
-            solveTime = 60;
+            solveTime = 300;
         }else if(currentMode == 3)
         {   // Similarity Story Mode
-            solveTime = 60;
+            solveTime = 70;
         }
-
         current_Time = solveTime;
         return;
     }
 
+    /*
+     * 
+     * 순위모드 새로운 게임 분포확률 결정하는 메소드
+     *  
+     * 
+     */
+    
     private void MakeNewGame()
     {
         
         if (currentMode == 0)
         {
-            // 문제랜덤생성, TODO : 점수 및 콤보증가에 따라 난이도 높은 문제 증가할 확률 증가
+            // 문제랜덤생성
+            List<int> pool = new List<int>();
+            int[] difficulty = new int[gc.getSimilarityProblems()];
+            difficulty[0] = 10; // 예각
+            difficulty[1] = 10; // 예각2
+            difficulty[2] = 9; // 직각
+            difficulty[3] = 13; // 둔각
+            difficulty[4] = 14; // 사다리꼴
+            difficulty[5] = 20; // 임의사각형
+            difficulty[6] = 30; // 오각형
+            difficulty[7] = 30; // 육각형
+            difficulty[8] = 40; // 칠각형
+            difficulty[9] = 37; // 팔각형
+            difficulty[10] = 25; // 직투정1 - (주) 공식선택 연습 및 점수주기 문제를 포함시키기 위함
+            difficulty[11] = 25; // 직투정2
+            difficulty[12] = 14; // 합동1
+            difficulty[13] = 14; // 합동2
+
+            int coeff = 10;
+            for(int i = 0; i < difficulty.Length; i++)
+            {
+                int howMany = coeff * ((int)(1 / Mathf.Exp(-(difficulty[i] - 10))) + (int)(1 / Mathf.Exp(difficulty[i] + 10)));
+            }
+
+            pool = ShuffleArray(pool);
+
             currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, (float)gc.getSimilarityProblems()));
             PlayerPrefs.SetInt("Game", currentGame);
         }
@@ -352,22 +474,18 @@ private void Awake()
          * 
          */
 
-        currentGame = 10; // TEST 값
+        // currentGame = 10; // TEST 값
          
-
-        // 배경화면 및 게임아이템 설정
-        // TODO : 프라이팬 등의 도구 세트 변경 작업도 여기서 수행한다.
         ClearBackground();
-
         if(currentGame >= 0 && currentGame <= gc.getBiscuitProblems())
         {
             // 투렉트
             RectangleBiscuitBackground.SetActive(true);
-        }else if(currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
+        }
+        else if(currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
             // 직투정
             Rec2SquareBackground.SetActive(true);
-
         }
         else
         {
@@ -386,6 +504,15 @@ private void Awake()
      * 
      * 
      */
+
+    // 주의 : 이거는 문제해결시 팝업, 공식선택시 보너스팝업은 ButtonColler_Play에 있음
+    IEnumerator ScorePopup()
+    {
+        Debug.Log("ScorePopup Called");
+        ScoreSign.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        ScoreSign.SetActive(false);
+    }
 
     IEnumerator Timer() // 0.01초 단위로 시간을 측정
     {
@@ -465,23 +592,31 @@ private void Awake()
         Chapter2ClearBackground.SetActive(false);
         Chapter3ClearBackground.SetActive(false);
 
-        switch (currentMode)
+        if (isCleared)
         {
-            case 0:
-                GameOverBackground.SetActive(true);
-                GameOverBack.SetActive(true);
-                break;
-            case 1:
-                Chapter1ClearBackground.SetActive(true);
-                break;
-            case 2:
-                Chapter2ClearBackground.SetActive(true);
-                break;
-            case 3:
-                Chapter3ClearBackground.SetActive(true);
-                break;
+            switch (currentMode)
+            {
+                case 0: // 순위모드 실패시
+                    GameOverBackground.SetActive(true);
+                    GameOverBack.SetActive(true);
+                    break;
+                case 1: // 스토리모드 성공시
+                    Chapter1ClearBackground.SetActive(true);
+                    break;
+                case 2:
+                    Chapter2ClearBackground.SetActive(true);
+                    break;
+                case 3:
+                    Chapter3ClearBackground.SetActive(true);
+                    break;
+            }
         }
-
+        else
+        {
+            // 스토리모드 실패시
+            GameOverBackground.SetActive(true);
+            GameOverBack.SetActive(true);
+        }
 
 
         if (currentMode == 0 || currentMode == 3)
@@ -496,7 +631,8 @@ private void Awake()
             }
             else
             {
-                ChallengeButtonforSimilarity.SetActive(true);
+                if (isCleared) ChallengeButtonforSimilarity.SetActive(true);
+                else RestartButton.SetActive(true);
             }
             
             RankingButton.SetActive(true);            
@@ -504,7 +640,8 @@ private void Awake()
         else
         {
             // 스토리모드 버튼구성
-            NextStageButton.SetActive(true);
+            if (isCleared) NextStageButton.SetActive(true);
+            else RestartButton.SetActive(true);
             ChallengeButton.SetActive(true);
         }
         return;
@@ -553,11 +690,25 @@ private void Awake()
     public void SetFormulaBonus(bool given)
     {
         formulaBonus = given;
+        return;
     }
 
     public void Debug_KillAnswerCheck()
     {
         killAnswerCheck = true;
+        return;
+    }
+
+    private List<int> ShuffleArray(List<int> given)
+    {
+        for(int i = 0; i < given.Count-1; i++)
+        {
+            int r = UnityEngine.Random.Range(i, given.Count);
+            int tmp = given[i];
+            given[i] = given[r];
+            given[r] = tmp;
+        }
+        return given;        
     }
 }
 
