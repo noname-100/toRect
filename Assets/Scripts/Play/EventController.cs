@@ -455,8 +455,8 @@ private void Awake()
             int coeff = 10;
             for(int i = 0; i < difficulty.Length; i++)
             {
-                int howMany = coeff * (int) (1f / (1f + Mathf.Exp((score - 200) * difficulty[i] - 10)));
-                for(int j = 0; j < howMany; i++)
+                int howMany = 3; // coeff * (int) (1f / (1f + Mathf.Exp((score - 200) * difficulty[i] - 10)));
+                for(int j = 0; j < howMany; j++)
                 {
                     pool.Add(i);
                 }

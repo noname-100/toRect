@@ -92,13 +92,18 @@ public class GameController : MonoBehaviour
          * 
          */
         
-        /*GameObject square = new GameObject("Polygon");
-        square.AddComponent(System.Type.GetType("Polygon"));
+        GameObject polygon = new GameObject("Polygon");
+        polygon.AddComponent(System.Type.GetType("Polygon"));
         Vector2[] v = MakePolygon.MakeJig();
-        square.GetComponent<Polygon>().render(v);
-        polygonList.Add(square);
+        polygon.GetComponent<Polygon>().render(v);
+        polygonList.Add(polygon);
+        Vector2[] s = MakePolygon.MakeSquare(Polygon.jiktojunglength,0,0,0);
+        GameObject polygon2 = new GameObject("Polygon");
+        polygon2.AddComponent(System.Type.GetType("Polygon"));
+        polygon2.GetComponent<Polygon>().render(s);
+        polygonList.Add(polygon2);
         ec.Debug_KillAnswerCheck();
-        return;*/
+        return;
         
 
         // 출제변경시 여기의 biscuitProblems 등 변수 전환 + buttoncontroller_title 변수 전환, 
@@ -175,6 +180,7 @@ public class GameController : MonoBehaviour
             }
             float tomatch = UnityEngine.Random.Range(0.6f * maxLength[gameType <= biscuitProblems ? 0 : 1], 0.67f * maxLength[gameType <= biscuitProblems ? 0 : 1]);
             float proportion = 1.5f * tomatch / Mathf.Pow(maxlength,0.5f);
+            Polygon.jiktojunglength *= proportion;
 
             Vector2[] result = new Vector2[vertexes.Length];
             for (int i = 0; i < result.Length; i++)
@@ -291,7 +297,7 @@ public class GameController : MonoBehaviour
                     if (i == 0) length = answerLength; // answer square size
                     else
                     {
-                        if (UnityEngine.Random.Range(0f, 2f) >= 1 && Polygon.jiktojunglength >= 0.5) length = UnityEngine.Random.Range(0.2f, Polygon.jiktojunglength - 0.2f);
+                        if (UnityEngine.Random.Range(0f, 2f) >= 1 && Polygon.jiktojunglength >= 0.5) length = UnityEngine.Random.Range(0.35f, Polygon.jiktojunglength - 0.14f);
                         else length = UnityEngine.Random.Range(Polygon.jiktojunglength + 0.1f, 0.8f);
                     }
 
