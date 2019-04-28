@@ -19,6 +19,7 @@ public class Polygon : MonoBehaviour
     public bool mergeable = false;
     public static bool jiktojung = false;
     public static float jiktojunglength = 0f;
+    private bool rendered;
     public int merger;
     private List<GameObject> dots = new List<GameObject>();
     // Start is called before the first frame update
@@ -49,6 +50,13 @@ public class Polygon : MonoBehaviour
             }
         }
 
+        for(int i = 0 ; i < vertices3D.Count() ; i++){
+            GameObject child = transform.GetChild(i).gameObject;
+            LineRenderer lineRenderer = child.GetComponent<LineRenderer>();
+            lineRenderer.SetPositions(new Vector3[] { transform.TransformPoint(vertices3D[i])-0.5f*Vector3.forward, transform.TransformPoint(vertices3D[(i+1)%vertices3D.Count()])-0.5f*Vector3.forward }); //**
+        }
+        
+        
         /*Mesh mesh = gameObject.GetComponent<MeshFilter>().mesh;
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
@@ -98,7 +106,7 @@ public class Polygon : MonoBehaviour
 
         // Generate a color for each vertex
         var colors = Enumerable.Range(0, vertices3D.Length)
-            .Select(i => Random.ColorHSV())
+            .Select(i => new Color(1f, 237f/255f, 213f/255f, 1))
             .ToArray();
 
         // Create the mesh
@@ -116,9 +124,19 @@ public class Polygon : MonoBehaviour
         var meshRenderer = gameObject.AddComponent<MeshRenderer>();
         meshRenderer.material = new Material(Shader.Find("Sprites/Default"));
         meshRenderer.sortingLayerName = "ModeBackground";
-
         var filter = gameObject.AddComponent<MeshFilter>();
         filter.mesh = mesh;
+        for(int i=0; i<vertices3D.Count(); i++){
+            GameObject line = new GameObject("line");
+            line.transform.SetParent(transform);
+            LineRenderer lineRenderer = line.AddComponent<LineRenderer>();
+            lineRenderer.positionCount = 2;
+            lineRenderer.startWidth=0.07f;
+            lineRenderer.endWidth=0.07f;
+            //lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            lineRenderer.material.color = new Color(1, 119f/255f, 51f/255f, 1);
+        }
+        rendered = true;
         return;
     }
     public void OnMouseEnter()
@@ -126,7 +144,7 @@ public class Polygon : MonoBehaviour
         //if (dots.Count() == 0) { createDots(); }
         if (!isSelected)
         {
-            this.GetComponent<Renderer>().material.color = Color.yellow;
+            //this.GetComponent<Renderer>().material.color = Color.yellow;
         }
 
     }
@@ -144,7 +162,7 @@ public class Polygon : MonoBehaviour
         dotSelected = false;
         dots.Clear();
         this.isSelected = false;
-        this.GetComponent<Renderer>().material.color = Color.green;
+        //this.GetComponent<Renderer>().material.color = Color.green;
         return;
     }
     public void createDots()
@@ -299,14 +317,14 @@ public class Polygon : MonoBehaviour
                 }
             }
             this.isSelected = true;
-            this.GetComponent<Renderer>().material.color = Color.gray;
+            //this.GetComponent<Renderer>().material.color = Color.gray;
             createDots();
         }
         else
         {
             this.isSelected = false;
             unActivate();
-            this.GetComponent<Renderer>().material.color = Color.green;
+            //this.GetComponent<Renderer>().material.color = Color.green;
         }
         findMerge();
 
