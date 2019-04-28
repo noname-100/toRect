@@ -248,60 +248,83 @@ private void Awake()
 
     private void FormulaBonusGift()
     {
-        score += 20;
+        score += 5;
         return;
     }
 
     private void BonusGift()
     {
         combo += 2;
-        score += 5;
+        score += 2;
         return;
     }
 
+    /*
+     * 
+     * 
+     *  점수체계 결정하는 메소드
+     * 
+     * 
+     */
+
     private void AddPointManager()
     {
+        // 콤보, 제한시간(점수)로 추가점수
+        score += 2 * combo + (int) 0.01 * score;
+
+        // 문제종류별 추가점수
+        switch (currentGame)
+        {
+            case 0: // 예각1
+                score += 0;
+                break;
+            case 1: // 예각2
+                score += 0;
+                break;
+            case 2: // 직각
+                score += 0;
+                break;
+            case 3: // 둔각
+                score += 1;
+                break;
+            case 4: // 사다리꼴
+                score += 2;
+                break;
+            case 5: // 임의사각형
+                score += 3;
+                break;
+            case 6: // 오각형
+                score += 5;
+                break;
+            case 7: // 육각형
+                score += 5;
+                break;
+            case 8: // 칠각형
+                score += 7;
+                break;
+            case 9: // 팔각형
+                score += 5;
+                break;
+            case 10: // 직투정1
+                score += 0;
+                break;
+            case 11: // 직투정2
+                score += 0;
+                break;
+            case 12: // 합동삼각형1
+                score += 0;
+                break;
+            case 13: // 함동삼각형2
+                score += 0;
+                break;
+        }
+
+        // 직투정 공식 맞췄을때 추가점수
         if (formulaBonus == true)
         {
             FormulaBonusGift();
             formulaBonus = false;
         }
-
-        // 게임종류, 여기는 중간로직이 많아질수도 있으니까 if문으로썼다!!
-        if (currentGame == 0)
-        {
-            score += 10;
-        }
-        else if (currentGame == 1)
-        {
-            score += 13;
-        }
-        else if (currentGame == 2)
-        {
-            score += 16;
-        }
-        else if (currentGame == 3)
-        {
-            score += 20;
-        }
-        else if (currentGame == 4)
-        {
-            score += 24;
-
-        }
-        else if (currentGame == 5)
-        {
-            score += 16;
-        }
-        else
-        {
-            score += 10;
-        }
-
-        // 총시간, 콤보로 추가점수
-        score += (int)Math.Floor(0.3 * (60 - solveTime) + combo * 3.5d);
-        float norm = 0.4f;
-        score = (int)Math.Floor(norm * score);
 
         ScoreText.text = score.ToString() + " 점";
         return;
@@ -322,7 +345,7 @@ private void Awake()
             float norm = 0.2f;
             float mintime = 20f;
 
-            solveTime = 1 / (1 + Mathf.Exp(norm * (score - halftime))) + mintime;
+            solveTime = 1 / (1 + Mathf.Exp(norm * ((10 * combo + score) - halftime))) + mintime;
 
             // 최소시간 문제별 세부조정
             switch (currentGame)
@@ -399,12 +422,44 @@ private void Awake()
         return;
     }
 
+    /*
+     * 
+     * 순위모드 새로운 게임 분포확률 결정하는 메소드
+     *  
+     * 
+     */
+    
     private void MakeNewGame()
     {
         
         if (currentMode == 0)
         {
-            // 문제랜덤생성, TODO : 점수 및 콤보증가에 따라 난이도 높은 문제 증가할 확률 증가
+            // 문제랜덤생성
+            List<int> pool = new List<int>();
+            int[] difficulty = new int[gc.getSimilarityProblems()];
+            difficulty[0] = 10; // 예각
+            difficulty[1] = 10; // 예각2
+            difficulty[2] = 9; // 직각
+            difficulty[3] = 13; // 둔각
+            difficulty[4] = 14; // 사다리꼴
+            difficulty[5] = 20; // 임의사각형
+            difficulty[6] = 30; // 오각형
+            difficulty[7] = 30; // 육각형
+            difficulty[8] = 40; // 칠각형
+            difficulty[9] = 37; // 팔각형
+            difficulty[10] = 25; // 직투정1 - (주) 공식선택 연습 및 점수주기 문제를 포함시키기 위함
+            difficulty[11] = 25; // 직투정2
+            difficulty[12] = 14; // 합동1
+            difficulty[13] = 14; // 합동2
+
+            int coeff = 10;
+            for(int i = 0; i < difficulty.Length; i++)
+            {
+                int howMany = coeff * ((int)(1 / Mathf.Exp(-(difficulty[i] - 10))) + (int)(1 / Mathf.Exp(difficulty[i] + 10)));
+            }
+
+            pool = ShuffleArray(pool);
+
             currentGame = (int)Math.Floor(UnityEngine.Random.Range(0f, (float)gc.getSimilarityProblems()));
             PlayerPrefs.SetInt("Game", currentGame);
         }
@@ -421,20 +476,16 @@ private void Awake()
 
         // currentGame = 10; // TEST 값
          
-
-        // 배경화면 및 게임아이템 설정
-        // TODO : 프라이팬 등의 도구 세트 변경 작업도 여기서 수행한다.
         ClearBackground();
-
         if(currentGame >= 0 && currentGame <= gc.getBiscuitProblems())
         {
             // 투렉트
             RectangleBiscuitBackground.SetActive(true);
-        }else if(currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
+        }
+        else if(currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
             // 직투정
             Rec2SquareBackground.SetActive(true);
-
         }
         else
         {
@@ -646,6 +697,18 @@ private void Awake()
     {
         killAnswerCheck = true;
         return;
+    }
+
+    private List<int> ShuffleArray(List<int> given)
+    {
+        for(int i = 0; i < given.Count-1; i++)
+        {
+            int r = UnityEngine.Random.Range(i, given.Count);
+            int tmp = given[i];
+            given[i] = given[r];
+            given[r] = tmp;
+        }
+        return given;        
     }
 }
 
