@@ -149,15 +149,14 @@ public class ButtonController_Play : MonoBehaviour
     {
         if(which == gc.getFormulaAnswer())
         {
-            ec.SetFormulaBonus(true);
+            ec.FormulaBonusGift();
+            ec.RefreshScore();
             Debug.Log("answer formula selected");
             StartCoroutine(FormulaBonusPopup());
         }
         else
         {
-            Debug.Log("wrong formula selected");
-            ec.SetFormulaBonus(false);
-            
+            Debug.Log("wrong formula selected");            
         }
         isFormulaBoardSelectable = false;
         FormulaBoard.SetActive(false);
@@ -194,4 +193,13 @@ public class ButtonController_Play : MonoBehaviour
         return;
     }
 
+    public bool getisFormulaButtonSelectable()
+    {
+        return isFormulaBoardSelectable;
+    }
+
+    public void setisFormulaButtonSelectable(bool given)
+    {
+        isFormulaBoardSelectable = given;
+    }
 }

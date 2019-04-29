@@ -18,7 +18,7 @@ public class Polygon : MonoBehaviour
     public bool dotSelected = false;
     public bool mergeable = false;
     public static bool jiktojung = false;
-    public static float jiktojunglength = 0f;
+    public static float jiktojunglength = -1f;
     private bool rendered;
     public int merger;
     private List<GameObject> dots = new List<GameObject>();
@@ -131,8 +131,9 @@ public class Polygon : MonoBehaviour
             line.transform.SetParent(transform);
             LineRenderer lineRenderer = line.AddComponent<LineRenderer>();
             lineRenderer.positionCount = 2;
-            lineRenderer.startWidth=0.07f;
-            lineRenderer.endWidth=0.07f;
+            lineRenderer.startWidth=0.03f;
+            lineRenderer.endWidth=0.03f;
+            lineRenderer.sortingLayerName = "ModeBackground";
             //lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
             lineRenderer.material.color = new Color(1, 119f/255f, 51f/255f, 1);
         }

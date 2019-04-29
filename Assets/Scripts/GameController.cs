@@ -92,11 +92,16 @@ public class GameController : MonoBehaviour
          * 
          */
         
-        /*GameObject square = new GameObject("Polygon");
-        square.AddComponent(System.Type.GetType("Polygon"));
+        /*GameObject polygon = new GameObject("Polygon");
+        polygon.AddComponent(System.Type.GetType("Polygon"));
         Vector2[] v = MakePolygon.MakeJig();
-        square.GetComponent<Polygon>().render(v);
-        polygonList.Add(square);
+        polygon.GetComponent<Polygon>().render(v);
+        polygonList.Add(polygon);
+        Vector2[] s = MakePolygon.MakeSquare(Polygon.jiktojunglength,0,0,0);
+        GameObject polygon2 = new GameObject("Polygon");
+        polygon2.AddComponent(System.Type.GetType("Polygon"));
+        polygon2.GetComponent<Polygon>().render(s);
+        polygonList.Add(polygon2);
         ec.Debug_KillAnswerCheck();
         return;*/
         
@@ -136,13 +141,9 @@ public class GameController : MonoBehaviour
                 break;
             case 10: // 직투정
                 vertexes = MakePolygon.MakeJig();
-                GenerateSquares(); // 초코칩 생성함수
-                MakeFormulas(); // 수식 생성함수
                 break;
             case 11: // 직투정2
                 vertexes = MakePolygon.MakeJig();
-                GenerateSquares();
-                MakeFormulas();
                 break;
         }
 
@@ -175,6 +176,7 @@ public class GameController : MonoBehaviour
             }
             float tomatch = UnityEngine.Random.Range(0.6f * maxLength[gameType <= biscuitProblems ? 0 : 1], 0.67f * maxLength[gameType <= biscuitProblems ? 0 : 1]);
             float proportion = 1.5f * tomatch / Mathf.Pow(maxlength,0.5f);
+            Polygon.jiktojunglength *= proportion;
 
             Vector2[] result = new Vector2[vertexes.Length];
             for (int i = 0; i < result.Length; i++)
@@ -182,9 +184,13 @@ public class GameController : MonoBehaviour
                 result[i].x = backgroundMidPointx + proportion * vectors[i].x;
                 result[i].y = backgroundMidPointy + proportion * vectors[i].y;
             }
-
+            /*
+            float tmpx = Mathf.Pow(Mathf.Pow(vertexes[0].x - vertexes[1].x, 2), 0.5f) + Mathf.Pow(Mathf.Pow(vertexes[0].y - vertexes[1].y, 2), 0.5f);
+            float tmpy = Mathf.Pow(Mathf.Pow(result[0].x - result[1].x, 2), 0.5f) + Mathf.Pow(Mathf.Pow(result[0].y - result[1].y, 2), 0.5f);
+            Debug.Log("proportion : " + proportion);
+            Debug.Log("before : " + tmpx + " after : " + tmpy);
+            */
             firstTriangle.GetComponent<Polygon>().render(result);
-            // firstTriangle.transform.position = new Vector3(backgroundMidPointx, backgroundMidPointy, 0);
             polygonList.Add(firstTriangle);
 
             // rotate here
@@ -210,6 +216,13 @@ public class GameController : MonoBehaviour
                 polygonList.RemoveAt(polygonList.Count - 1);
                 makeNew(gameType);
             }
+
+            if (Polygon.jiktojung)
+            {
+                GenerateSquares(); // 초코칩 생성함수
+                MakeFormulas(); // 수식 생성함수
+            }
+
         }
         else
         {
@@ -282,7 +295,6 @@ public class GameController : MonoBehaviour
                 int dummyVariable = 0;
                 do
                 {
-                    collided:
                     dummyVariable++;
                     if (dummyVariable == 500000) throw new Exception(); // to prevent infinite loop
                     Vector2 candidate = APointOnFryPan();
@@ -291,15 +303,21 @@ public class GameController : MonoBehaviour
                     if (i == 0) length = answerLength; // answer square size
                     else
                     {
-                        if (UnityEngine.Random.Range(0f, 2f) >= 1 && Polygon.jiktojunglength >= 0.5) length = UnityEngine.Random.Range(0.2f, Polygon.jiktojunglength - 0.2f);
+                        if (UnityEngine.Random.Range(0f, 2f) >= 1 && Polygon.jiktojunglength >= 0.5) length = UnityEngine.Random.Range(0.35f, Polygon.jiktojunglength - 0.14f);
                         else length = UnityEngine.Random.Range(Polygon.jiktojunglength + 0.1f, 0.8f);
                     }
 
                     // check for collision
+                    bool loopContinue = false;
                     for (int j = 0; j < Squares.Count; j++)
                     {
-                        if (isColliding(candidate, length * Mathf.Pow(2, 0.5f), Collisions)) goto collided;
+                        if (isColliding(candidate, length * Mathf.Pow(2, 0.5f), Collisions))
+                        {
+                            loopContinue = true;
+                            break;
+                        }
                     }
+                    if (loopContinue) continue;
                     Collisions.Add(new Vector3(length * (float)Mathf.Pow(2, 0.5f), candidate.x, candidate.y));
                     Squares.Add(MakePolygon.MakeSquare(length, candidate.x, candidate.y, UnityEngine.Random.Range(0f, 360f)));
                     break;
