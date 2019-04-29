@@ -185,13 +185,6 @@ public class ButtonController_Title : MonoBehaviour {
         return;
     }
 
-    public void CloseButton()
-    {
-        clearAll();
-        HelpWindow.SetActive(false);
-        isCommonHelpStatus = true;
-    }
-
     public void QuitGame()
     {
 
@@ -224,4 +217,17 @@ public class ButtonController_Title : MonoBehaviour {
         return;
     }
 
+    public void CloseButton()
+    {
+        clearAll();
+        HelpWindow.SetActive(false);
+        isCommonHelpStatus = true;
+        return;
+    }
+
+    public void CloseHelpSelectButton()
+    {
+        StoryModeHelp.SetActive(false);
+        return;
+    }
 }

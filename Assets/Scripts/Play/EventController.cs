@@ -474,7 +474,7 @@ private void Awake()
          * 
          */
 
-        currentGame = 10; // TEST 값
+        // currentGame = 10; // TEST 값
         
         ClearBackground();
         if(currentGame >= 0 && currentGame <= gc.getBiscuitProblems())
