@@ -27,9 +27,9 @@ public class EventController : MonoBehaviour {
     public int isPlay; // 0 : 게임 정지 1 : 게임 시작 시그널 2 : 게임 실행중
     public GameObject EC;
     private StoryScript ss;
+    private ButtonController_Play bp;
     public GameObject plate;
     private SpriteRenderer sr;
-    private bool formulaBonus = false;
     private bool killAnswerCheck = false;
 
     // UI요소
@@ -68,9 +68,9 @@ private void Awake()
         Debug.Log("current Game Mode is : " + currentMode);
         gc = GC.GetComponent<GameController>();
         ss = EC.GetComponent<StoryScript>();
+        bp = EC.GetComponent<ButtonController_Play>();
         sr = plate.GetComponent<SpriteRenderer>();
-
-        formulaBonus = false;
+        
         hints = 3;
         score = 0;
         combo = 0;
@@ -249,7 +249,8 @@ private void Awake()
         return;
     }
 
-    private void FormulaBonusGift()
+    // ButtonController_Play에서 조작한다. 점수 부여 일관성을 위해 함수는 여기에 둔다.
+    public void FormulaBonusGift()
     {
         score += 5;
         return;
@@ -273,7 +274,7 @@ private void Awake()
     private void AddPointManager()
     {
         // 콤보, 제한시간(점수)로 추가점수
-        score += 2 * combo + (int) 0.01 * score;
+        score += 3 + 2 * combo + (int) 0.01 * score;
 
         // 문제종류별 추가점수
         switch (currentGame)
@@ -320,13 +321,6 @@ private void Awake()
             case 13: // 함동삼각형2
                 score += 0;
                 break;
-        }
-
-        // 직투정 공식 맞췄을때 추가점수
-        if (formulaBonus == true)
-        {
-            FormulaBonusGift();
-            formulaBonus = false;
         }
 
         ScoreText.text = score.ToString() + " 점";
@@ -434,7 +428,7 @@ private void Awake()
     
     private void MakeNewGame()
     {
-        
+        bp.setisFormulaButtonSelectable(true);
         if (currentMode == 0)
         {
             // 문제랜덤생성
@@ -480,7 +474,7 @@ private void Awake()
          * 
          */
 
-        // currentGame = 10; // TEST 값
+        currentGame = 10; // TEST 값
         
         ClearBackground();
         if(currentGame >= 0 && currentGame <= gc.getBiscuitProblems())
@@ -668,6 +662,11 @@ private void Awake()
         return;
     }
 
+    public void RefreshScore()
+    {
+        ScoreText.text = score.ToString() + " 점";
+    }
+
     public int GetisPlay()
     {
         return isPlay;
@@ -683,20 +682,15 @@ private void Awake()
         return score;
     }
 
+    public void SetScore(int given)
+    {
+        score = given;
+        return;
+    }
+
     public int GetCombo()
     {
         return combo;
-    }
-
-    public bool GetFormulaBonus()
-    {
-        return formulaBonus;
-    }
-
-    public void SetFormulaBonus(bool given)
-    {
-        formulaBonus = given;
-        return;
     }
 
     public void Debug_KillAnswerCheck()
