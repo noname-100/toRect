@@ -119,7 +119,7 @@ public class MakePolygon : MonoBehaviour
         vertices[5].x = -t/2 + vertices[1].y;
         vertices[5].y = 0;
         Polygon.jiktojunglength = 0.5f * (t - vertices[1].y);
-        Debug.Log(t + " " + Polygon.jiktojunglength);
+        // Debug.Log(t + " " + Polygon.jiktojunglength);
         return vertices;
     }
 

@@ -92,7 +92,7 @@ public class GameController : MonoBehaviour
          * 
          */
         
-        GameObject polygon = new GameObject("Polygon");
+        /*GameObject polygon = new GameObject("Polygon");
         polygon.AddComponent(System.Type.GetType("Polygon"));
         Vector2[] v = MakePolygon.MakeJig();
         polygon.GetComponent<Polygon>().render(v);
@@ -103,7 +103,7 @@ public class GameController : MonoBehaviour
         polygon2.GetComponent<Polygon>().render(s);
         polygonList.Add(polygon2);
         ec.Debug_KillAnswerCheck();
-        return;
+        return;*/
         
 
         // 출제변경시 여기의 biscuitProblems 등 변수 전환 + buttoncontroller_title 변수 전환, 
@@ -141,13 +141,9 @@ public class GameController : MonoBehaviour
                 break;
             case 10: // 직투정
                 vertexes = MakePolygon.MakeJig();
-                GenerateSquares(); // 초코칩 생성함수
-                MakeFormulas(); // 수식 생성함수
                 break;
             case 11: // 직투정2
                 vertexes = MakePolygon.MakeJig();
-                GenerateSquares();
-                MakeFormulas();
                 break;
         }
 
@@ -188,9 +184,13 @@ public class GameController : MonoBehaviour
                 result[i].x = backgroundMidPointx + proportion * vectors[i].x;
                 result[i].y = backgroundMidPointy + proportion * vectors[i].y;
             }
-
+            /*
+            float tmpx = Mathf.Pow(Mathf.Pow(vertexes[0].x - vertexes[1].x, 2), 0.5f) + Mathf.Pow(Mathf.Pow(vertexes[0].y - vertexes[1].y, 2), 0.5f);
+            float tmpy = Mathf.Pow(Mathf.Pow(result[0].x - result[1].x, 2), 0.5f) + Mathf.Pow(Mathf.Pow(result[0].y - result[1].y, 2), 0.5f);
+            Debug.Log("proportion : " + proportion);
+            Debug.Log("before : " + tmpx + " after : " + tmpy);
+            */
             firstTriangle.GetComponent<Polygon>().render(result);
-            // firstTriangle.transform.position = new Vector3(backgroundMidPointx, backgroundMidPointy, 0);
             polygonList.Add(firstTriangle);
 
             // rotate here
@@ -216,6 +216,13 @@ public class GameController : MonoBehaviour
                 polygonList.RemoveAt(polygonList.Count - 1);
                 makeNew(gameType);
             }
+
+            if (Polygon.jiktojung)
+            {
+                GenerateSquares(); // 초코칩 생성함수
+                MakeFormulas(); // 수식 생성함수
+            }
+
         }
         else
         {
@@ -288,7 +295,6 @@ public class GameController : MonoBehaviour
                 int dummyVariable = 0;
                 do
                 {
-                    collided:
                     dummyVariable++;
                     if (dummyVariable == 500000) throw new Exception(); // to prevent infinite loop
                     Vector2 candidate = APointOnFryPan();
@@ -302,10 +308,16 @@ public class GameController : MonoBehaviour
                     }
 
                     // check for collision
+                    bool loopContinue = false;
                     for (int j = 0; j < Squares.Count; j++)
                     {
-                        if (isColliding(candidate, length * Mathf.Pow(2, 0.5f), Collisions)) goto collided;
+                        if (isColliding(candidate, length * Mathf.Pow(2, 0.5f), Collisions))
+                        {
+                            loopContinue = true;
+                            break;
+                        }
                     }
+                    if (loopContinue) continue;
                     Collisions.Add(new Vector3(length * (float)Mathf.Pow(2, 0.5f), candidate.x, candidate.y));
                     Squares.Add(MakePolygon.MakeSquare(length, candidate.x, candidate.y, UnityEngine.Random.Range(0f, 360f)));
                     break;
