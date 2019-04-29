@@ -100,7 +100,7 @@ public class Dots : MonoBehaviour
                     this.transform.parent.GetComponent<Polygon>().selectableDots();
                     LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
                     lineRenderer.positionCount = 2;
-                    lineRenderer.alignment = LineAlignment.Local;
+                    lineRenderer.alignment = LineAlignment.TransformZ;
                     lineRenderer.SetWidth(0.2f, 0.2f);
                 }
             }

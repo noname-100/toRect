@@ -18,6 +18,7 @@ public class ButtonController_Title : MonoBehaviour {
     public GameObject RightButton;
     public GameObject SoundOnButton;
     public GameObject SoundOffButton;
+
     private int page;
     private int helpGameModeIndex;
     private int helpLength;
@@ -54,6 +55,7 @@ public class ButtonController_Title : MonoBehaviour {
             SoundOffButton.SetActive(true);
         }
     }
+
 
     public void toRectStoryModeStart()
     {
