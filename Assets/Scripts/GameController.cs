@@ -284,7 +284,7 @@ public class GameController : MonoBehaviour
 
     public void GenerateSquares()
     {
-        int howMany = 1; // (int) UnityEngine.Random.Range(3f, 5f);
+        int howMany = (int) UnityEngine.Random.Range(3f, 5f);
         List<Vector2[]> Squares = new List<Vector2[]>();
         List<Vector3> Collisions = new List<Vector3>();
                 
