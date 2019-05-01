@@ -13,6 +13,10 @@ using UnityEngine.UI;
 
 public class EventController : MonoBehaviour {
 
+    // 테스트 요소
+    private int testGameMode = 10;
+    private int testGameTime = -1;
+
     // 난이도요소
     private int combo;
     private float solveTime;
@@ -415,6 +419,7 @@ private void Awake()
         {   // Similarity Story Mode
             solveTime = 70;
         }
+
         current_Time = solveTime;
         return;
     }
@@ -468,13 +473,7 @@ private void Awake()
             currentGame = PlayerPrefs.GetInt("Game");
         }
 
-        /*
-         * 
-         *  TEST CODE : 새로운 문제 출제시 여기에 있는 currentGame 바꿔서 테스트(MakePolygon 아닌 실제 게임 전체를 뜻함).
-         * 
-         */
-
-        // currentGame = 10; // TEST 값
+        if(testGameMode != -1) currentGame = testGameMode; // TEST 값
         
         ClearBackground();
         if(currentGame >= 0 && currentGame <= gc.getBiscuitProblems())
