@@ -41,7 +41,7 @@ public class EventController : MonoBehaviour {
     public Text GameResultText;
     public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground, ScoreBackground;
     public GameObject ScoreSign;
-
+    public GameObject ProgressBar;
     // Clear 화면 게임요소
     public GameObject RankingMain, RankingSub1, RankingSub2, GameOverBackground, Chapter1ClearBackground, Chapter2ClearBackground, Chapter3ClearBackground;
 
@@ -519,6 +519,7 @@ private void Awake()
         yield return new WaitForSeconds(0.01f);
         current_Time -= 0.01f;
         TimeText.text = current_Time.ToString("##0.00") + " sec";
+        ProgressBar.transform.localScale = new Vector3(1.75f*current_Time/solveTime,1,1);
         StartCoroutine("Timer");
     }
 

@@ -38,14 +38,14 @@ public class MakePolygon : MonoBehaviour
         vertices = new Vector2[4];
         float radius = (length / Mathf.Pow(2, 0.5f));
         Polygon.jiktojung = true;
-        vertices[0].x = radius * Mathf.Cos((45 + angle)/180 * Mathf.PI) + x;
-        vertices[0].y = radius * Mathf.Sin((45 + angle)/180 * Mathf.PI) + y;
-        vertices[1].x = radius * Mathf.Cos((135 + angle) / 180 * Mathf.PI) + x;
-        vertices[1].y = radius * Mathf.Sin((135 + angle) / 180 * Mathf.PI) + y;
-        vertices[2].x = radius * Mathf.Cos((225 + angle) / 180 * Mathf.PI) + x;
-        vertices[2].y = radius * Mathf.Sin((225 + angle) / 180 * Mathf.PI) + y;
-        vertices[3].x = radius * Mathf.Cos((315 + angle) / 180 * Mathf.PI) + x;
-        vertices[3].y = radius * Mathf.Sin((315 + angle) / 180 * Mathf.PI) + y;
+        vertices[0].x = 0 + x;
+        vertices[0].y = 0 + y;
+        vertices[1].x = 0 + x;
+        vertices[1].y = length + y;
+        vertices[2].x = length + x;
+        vertices[2].y = length + y;
+        vertices[3].x = length + x;
+        vertices[3].y = 0 + y;
 
         return vertices;
 
@@ -103,7 +103,7 @@ public class MakePolygon : MonoBehaviour
     // 직투정
     public static Vector2[] MakeJig()
     {
-        vertices = new Vector2[6];
+        vertices = new Vector2[8];
         Polygon.jiktojung = true;
         float t = Random.Range(3f,5f);
         vertices[0].x = -t/2;
@@ -112,17 +112,43 @@ public class MakePolygon : MonoBehaviour
         vertices[1].y = Random.Range(t - 1.2f, t - 0.6f);
         vertices[2].x = -t/2 + vertices[1].y;
         vertices[2].y = vertices[1].y;
-        vertices[3].x = t/2;
+        vertices[3].x = -t/2 + vertices[1].y + (t-vertices[1].y)/2;
         vertices[3].y = vertices[1].y;
         vertices[4].x = t/2;
-        vertices[4].y = 0;
-        vertices[5].x = -t/2 + vertices[1].y;
+        vertices[4].y = vertices[1].y;
+        vertices[5].x = t/2;
         vertices[5].y = 0;
+        vertices[6].x = -t/2 + vertices[1].y + (t-vertices[1].y)/2;;
+        vertices[6].y = 0;
+        vertices[7].x = -t/2 + vertices[1].y;
+        vertices[7].y = 0;
         Polygon.jiktojunglength = 0.5f * (t - vertices[1].y);
         // Debug.Log(t + " " + Polygon.jiktojunglength);
         return vertices;
     }
-
+    //정투직
+    
+    public static Vector2[] MakeJung()
+    {
+        vertices = new Vector2[6];
+        Polygon.jiktojung = false;
+        float t = Random.Range(3f,5f);
+        float k = Random.Range(0.3f, 0.6f);
+        vertices[0].x = -t/2;
+        vertices[0].y = t/2;
+        vertices[1].x = t/2;
+        vertices[1].y = t/2;
+        vertices[2].x = t/2;
+        vertices[2].y = -t/2+k;
+        vertices[3].x = t/2-k;
+        vertices[3].y = -t/2+k;
+        vertices[4].x = t/2-k;
+        vertices[4].y = -t/2;
+        vertices[5].x = -t/2;
+        vertices[5].y = -t/2;
+        return vertices;
+    }
+    
     // 사다리꼴
     public static Vector2[] MakeTrapezoid()
     {
