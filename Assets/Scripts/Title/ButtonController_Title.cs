@@ -201,8 +201,8 @@ public class ButtonController_Title : MonoBehaviour {
 
     public void SoundOn()
     {
-        PlayerPrefs.SetFloat("isSoundOn", 1f);
-        AudioListener.volume = 1f;
+        PlayerPrefs.SetFloat("isSoundOn", 0.5f);
+        AudioListener.volume = 0.5f;
         return;
     }
 

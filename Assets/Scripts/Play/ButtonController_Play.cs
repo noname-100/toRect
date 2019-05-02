@@ -19,6 +19,7 @@ public class ButtonController_Play : MonoBehaviour
     public GameObject AllChangeModeButton;
     public GameObject RotateChangeModeButton;
     public GameObject SlideChangeModeButton;
+    public GameObject BackgroundFilter;
     public GameObject RankingButton;
     public GameObject RankPage;
     public GameObject EC;
@@ -88,8 +89,8 @@ public class ButtonController_Play : MonoBehaviour
 
     public void SoundOn()
     {
-        PlayerPrefs.SetFloat("isSoundOn", 1f);
-        AudioListener.volume = 1f;
+        PlayerPrefs.SetFloat("isSoundOn", 0.5f);
+        AudioListener.volume = 0.5f;
         return;
     }
 
@@ -116,6 +117,7 @@ public class ButtonController_Play : MonoBehaviour
     public void FormulaBoardOn()
     {
         FormulaBoard.SetActive(true);
+        BackgroundFilter.SetActive(true);
         formulaBoardState = true;
         isFormulaBoardSelected = 1;
         return;
@@ -134,6 +136,7 @@ public class ButtonController_Play : MonoBehaviour
             isFormulaBoardSelected = 4;
         }
         FormulaBoard.SetActive(false);
+        BackgroundFilter.SetActive(false);
         formulaBoardState = false;
         return;
     }
