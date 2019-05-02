@@ -420,7 +420,7 @@ private void Awake()
             solveTime = 70;
         }
 
-        current_Time = solveTime;
+        current_Time = 60; // solveTime;
         return;
     }
 
@@ -517,9 +517,9 @@ private void Awake()
     {
         //if (isPlay == 0) yield return null;
         yield return new WaitForSeconds(0.01f);
-        current_Time -= 0.01f;
+        current_Time -= 0.017f;
         TimeText.text = current_Time.ToString("##0.00") + " sec";
-        ProgressBar.transform.localScale = new Vector3(1.75f*current_Time/solveTime,1,1);
+        // ProgressBar.transform.localScale = new Vector3(1.75f*current_Time/solveTime,1,1);
         StartCoroutine("Timer");
     }
 
