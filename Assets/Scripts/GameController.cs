@@ -343,70 +343,36 @@ public class GameController : MonoBehaviour
     public void MakeFormulas()
     {
 
-        List<string> candidates = new List<string>();
-        candidates.Add(FormulaPool(0));
-        candidates.Add(FormulaPool((int)Mathf.Ceil(UnityEngine.Random.Range(0f, 5f))));
-        candidates.Add(FormulaPool((int)Mathf.Ceil(UnityEngine.Random.Range(0f, 5f))));
-        bool answerInserted = false;
+        List<string> candidates = FormulaPool();
+        formula1.text = candidates[0];
+        formula2.text = candidates[1];
+        formula3.text = candidates[2];
 
-        int curr = (int) UnityEngine.Random.Range(0f, 3f);
-        if (curr == 0)
-        {
-            formulaAnswer = 0;
-            answerInserted = true;
-        }
-        formula1.text = candidates[curr];
-        candidates.RemoveAt(curr);
-
-        curr = (int)UnityEngine.Random.Range(0f, 2f);
-        if (curr == 0)
-        {
-            formulaAnswer = 1;
-            answerInserted = true;
-        }
-        formula2.text = candidates[curr];
-        candidates.RemoveAt(curr);
-
-        if (!answerInserted) formulaAnswer = 2;
-        formula3.text = candidates[0];
 
     }
 
     // TODO : X 대신 a, b, c 사용해서 공식 섞어줘야 한다.
-    public string FormulaPool(int kind)
+    public List<string> FormulaPool()
     {
-        string ret;
-
-        // TODO : need shuffle here
-        char x = 'a';
-        char y = 'b';
-        char z = 'c';
-
-        if(kind == 0) // TODO : ANSWER FOMULA, might differ. Logic comes here
-        {
-            ret = "ANSWER FORMULA COMES HERE";
-        }else if(kind == 1) // (x+A)(x+B) = (x+C)^2 - D
-        {
-            ret = "("+x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + )" + "+y+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
+        String[] syms = {"★", "■", "♥", "●"};
+        List<String> symbols = new List<String>(syms);
+        List<String> pool = new List<String>();
+        string first=symbols[UnityEngine.Random.Range(0,4)];
+        symbols.Remove(first);
+        string second = symbols[UnityEngine.Random.Range(0,4)];
+        string ans = String.Format("{0} x ({0} + 2 x {1}) = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
+        String[] wrong = new String[3]; 
+        wrong[0] = String.Format("({0}-{1}) x ({0}-{1}) + 2 x {1} x {0} = {0} x {0} - {1} x {1}", first, second);
+        wrong[1] = String.Format("({0}-{1}) x ({0}+{1}) = ({0}-{1}) x ({0}-{1}) +2 x {1} x {0}", first, second);
+        wrong[2] = String.Format("{0} x {0} = ({0}+{1}) x ({0}+{1}) - {1} x {1}");
+        pool.Add(ans);
+        int exclude = UnityEngine.Random.Range(0,3);
+        for(int i=0 ; i < 3 ; i++){
+            if(i!=exclude){
+                pool.Add(wrong[i]);
+            }
         }
-        else if(kind == 2) // x^2 + A = (x+B)(x+C)
-        {
-            ret = "("+x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + )" + "+z+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
-        }
-        else if(kind ==3) // TBD
-        {
-            ret = "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
-        }
-        else if (kind == 4) // TBD
-        {
-            ret = "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
-        }
-        else // TBD
-        {
-            ret = "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
-        }
-
-        return ret;
+        return pool;
     }
 
     public bool isSolvedSimilarity()

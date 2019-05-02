@@ -68,7 +68,7 @@ public class MakePolygon : MonoBehaviour
             vertices[0].x = -t/2;
             vertices[0].y = 0;
             vertices[1].x = Random.Range(-t/2,t/2);
-            vertices[1].y = Mathf.Sqrt(Mathf.Pow(t,2)/4-Mathf.Pow(vertices[1].x,2))+Random.Range(0,3f);
+            vertices[1].y = Mathf.Sqrt(Mathf.Pow(t,2)/4-Mathf.Pow(vertices[1].x,2))+Random.Range(1f,3f);
             vertices[2].x = t/2;
             vertices[2].y = 0;
         }else{//둔각
@@ -76,7 +76,7 @@ public class MakePolygon : MonoBehaviour
             vertices[0].x = -t/2;
             vertices[0].y = 0;
             vertices[1].x = Random.Range(-t/2,t/2);
-            vertices[1].y = Random.Range(Mathf.Sqrt(Mathf.Pow(t,2)/4-Mathf.Pow(vertices[1].x,2))/2,Mathf.Sqrt(Mathf.Pow(t,2)/4-Mathf.Pow(vertices[1].x,2)));
+            vertices[1].y = Random.Range(Mathf.Sqrt(Mathf.Pow(t,2)/4-Mathf.Pow(vertices[1].x,2))/2,0.8f*Mathf.Sqrt(Mathf.Pow(t,2)/4-Mathf.Pow(vertices[1].x,2)));
             vertices[2].x = t/2;
             vertices[2].y = 0;
         }
@@ -91,7 +91,7 @@ public class MakePolygon : MonoBehaviour
         float t = Random.Range(3f,5f);
         vertices[0].x = -t/2;
         vertices[0].y = 0;
-        vertices[1].x = Random.Range(-t/2, t);
+        vertices[1].x = Random.Range(-t/2+1, t);
         vertices[1].y = Random.Range(3f, 5f);
         vertices[2].x = vertices[1].x + t;
         vertices[2].y = vertices[1].y;
