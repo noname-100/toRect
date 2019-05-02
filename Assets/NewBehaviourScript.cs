@@ -23,6 +23,7 @@ public class NewBehaviourScript : MonoBehaviour {
     private void OnMouseDown()
     {
         Debug.Log("Click");
-        ec.GameManager(2);
+        ec.isHelp = 2;
+        ec.GameManager();
     }
 }

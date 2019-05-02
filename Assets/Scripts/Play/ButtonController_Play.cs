@@ -109,7 +109,7 @@ public class ButtonController_Play : MonoBehaviour
     // Temp - Solve 디버깅용 즉시클리어 버튼
     public void ImmediateWin()
     {
-        ec.GameManager(2);
+        ec.isHelp = 2;
         return;
     }
 

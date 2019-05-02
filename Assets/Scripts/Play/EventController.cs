@@ -13,9 +13,14 @@ using UnityEngine.UI;
 
 public class EventController : MonoBehaviour {
 
-    // 테스트 요소
-    private int testGameMode = 10;
-    private int testGameTime = -1;
+    /* 
+     * 
+     *  테스트 변수들, 테스트 옵션과 테스트 시간 (사용하지 않음 : -1)
+     *  
+     */
+    
+    private int testGameMode = -1;
+    private float testGameTime = -1;
 
     // 난이도요소
     private int combo;
@@ -35,6 +40,8 @@ public class EventController : MonoBehaviour {
     public GameObject plate;
     private SpriteRenderer sr;
     private bool killAnswerCheck = false;
+    private int gamePause = 0;
+    public int isHelp = 0;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
@@ -42,6 +49,7 @@ public class EventController : MonoBehaviour {
     public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground, ScoreBackground;
     public GameObject ScoreSign;
     public GameObject ProgressBar;
+    public GameObject NextProblemButton;
     // Clear 화면 게임요소
     public GameObject RankingMain, RankingSub1, RankingSub2, GameOverBackground, Chapter1ClearBackground, Chapter2ClearBackground, Chapter3ClearBackground;
 
@@ -128,19 +136,17 @@ private void Awake()
     {
         //Debug.Log("Storyprogress " + ss.storyprogress);
         // check for game end ( different for different levels/modes ) comes here.
-        if(isPlay != 0) GameManager(0);
+        if(isPlay != 0) GameManager();
 
     }
 
-    public void GameManager(int isHelp)
+    public void GameManager()
     {
         int winflag = 0;
 
-        if (isHelp == 2) winflag = 1;
-
         // 목숨이 없는 경우
         if (lifes == 0) {
-            Debug.Log("here4");
+            Debug.Log("Ran out of lives");
             GameOver(false);
         }
 
@@ -167,88 +173,112 @@ private void Awake()
             StartCoroutine("Timer");
         }
 
+        if (killAnswerCheck) goto SkipAnswerCheck;
+
         // 필요한 모든 검증장치를 여기에 추가한다.
         if ((gc.isSolvedRect() || isHelp==2 )&& currentGame<=gc.getBiscuitProblems())
         {
-            if(currentMode == 0)
+            if (gamePause == 0)
             {
-                winflag = 1;
+                NextGameButton();
                 StartCoroutine(ScorePopup());
                 StopCoroutine(ScorePopup());
             }
             else
             {
-                // move to storyscript state machine
-                if (ss.GetstoryProgress() == 12)
+                if (gamePause == 1) return;
+                if(currentMode !=0)
                 {
-                    // Debug.Log("here");
-                    GameOver(true);
+                    // move to storyscript state machine
+                    if (ss.GetstoryProgress() == 12)
+                    {
+                        // Debug.Log("here");
+                        GameOver(true);
+                    }
+                    isPlay = 0;
+                    ss.SetstoryProgress(ss.GetstoryProgress() + 1);
+                    ss.StoryManager();
+                    return;
+                }else{
+                    winflag = 1;
                 }
-                isPlay = 0;
-                ss.SetstoryProgress(ss.GetstoryProgress()+1);
-                ss.StoryManager();
-                return;
-            }
-        }
 
-        if (killAnswerCheck) goto SkipAnswerCheck;
+            }
+        }        
 
         if ((gc.isSolvedRec2Square() || isHelp==2) && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
-            if(currentMode == 0)
+            if (gamePause == 0)
             {
-                winflag = 1;
+                NextGameButton();
                 StartCoroutine(ScorePopup());
                 StopCoroutine(ScorePopup());
             }
             else
             {
-                if (ss.GetstoryProgress() == 4)
+                if (gamePause == 1) return;
+                if(currentMode != 0)
                 {
-                    //Debug.Log("here2");
-                    GameOver(true);
+                    if (ss.GetstoryProgress() == 4)
+                    {
+                        //Debug.Log("here2");
+                        GameOver(true);
+                    }
+                    isPlay = 0;
+                    ss.SetstoryProgress(ss.GetstoryProgress() + 1);
+                    ss.StoryManager();
+                    return;
                 }
-                isPlay = 0;
-                ss.SetstoryProgress(ss.GetstoryProgress()+1);
-                ss.StoryManager();
-                return;
+                else
+                {
+                    winflag = 1;
+                }
             }
         }
 
         if ((gc.isSolvedSimilarity() || isHelp==2) && currentGame >= gc.getRec2SquareProblems()+1 && currentGame <= gc.getSimilarityProblems())
         {
-            //Debug.Log("called");
-            plate.transform.localScale = new Vector3(1f, 1f, 0);
-            if (currentMode == 0)
+            if (gamePause == 0)
             {
-                winflag = 1;
+                NextGameButton();
                 StartCoroutine(ScorePopup());
                 StopCoroutine(ScorePopup());
             }
             else
             {
-                if (ss.GetstoryProgress() == 3)
+                if (gamePause == 1) return;
+                if(currentMode !=0)
                 {
-                    Debug.Log("here3");
-                    GameOver(true);
+                    if (ss.GetstoryProgress() == 3)
+                    {
+                        Debug.Log("here3");
+                        GameOver(true);
+                    }
+                    isPlay = 0;
+                    ss.SetstoryProgress(ss.GetstoryProgress() + 1);
+                    ss.StoryManager();
+                    return;
                 }
-                isPlay = 0;
-                ss.SetstoryProgress(ss.GetstoryProgress()+1);
-                ss.StoryManager();
-                return;
+                else
+                {
+                    winflag = 1;
+                }
+                plate.transform.localScale = new Vector3(1f, 1f, 0);
             }
         }
 
         SkipAnswerCheck:
             
 
-        if(winflag == 1)
+        if(winflag == 1 && gamePause == 2)
         {
             combo++;
             if (current_Time >= bonusTimeLimit) BonusGift();
             AddPointManager();
             ResetTimeManager();
             MakeNewGame();
+            gamePause = 0;
+            isHelp = 0;
         }
         return;
     }
@@ -340,6 +370,12 @@ private void Awake()
 
     private void ResetTimeManager()
     {
+        if (testGameTime != -1)
+        {
+            current_Time = testGameTime;
+            return;
+        }
+
         if(currentMode == 0)
         {
             float halftime = 250f;
@@ -420,7 +456,7 @@ private void Awake()
             solveTime = 70;
         }
 
-        current_Time = 60; // solveTime;
+        current_Time = solveTime;
         return;
     }
 
@@ -503,6 +539,22 @@ private void Awake()
      * 
      * 
      */
+
+    public void NextGameButton()
+    {
+        StopCoroutine("Timer");
+        gamePause = 1;
+        NextProblemButton.SetActive(true);
+        return;
+    }
+
+    public void NextGameButtonPress()
+    {
+        StartCoroutine("Timer");
+        NextProblemButton.SetActive(false);
+        gamePause = 2;
+        return;
+    }
 
     // 주의 : 이거는 문제해결시 팝업, 공식선택시 보너스팝업은 ButtonColler_Play에 있음
     IEnumerator ScorePopup()
