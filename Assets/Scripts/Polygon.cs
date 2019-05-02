@@ -14,6 +14,7 @@ public class Polygon : MonoBehaviour
     public Vector2[] VerticesPublic2D;
     public Vector3[] vertices3D;
     private PolygonCollider2D _polygonCollider2D;
+    public GameObject audioManager;
     private bool isSelected = false;
     public bool dotSelected = false;
     public bool mergeable = false;
@@ -23,8 +24,9 @@ public class Polygon : MonoBehaviour
     public int merger;
     private List<GameObject> dots = new List<GameObject>();
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        audioManager = GameObject.Find("AudioManager");
     }
 
     // Update is called once per frame
@@ -63,6 +65,7 @@ public class Polygon : MonoBehaviour
         vertices3D = mesh.vertices;*/
         //Debug.Log("vert3dlength : " + vertices3D.Length);
     }
+    
     void OnDestroy()
     {
         foreach (GameObject dot in dots)
@@ -435,6 +438,8 @@ public class Polygon : MonoBehaviour
         Vector3 dir = vector - Vector3.Project(vector, onNormal);
         Vector2[] testVector = firstHalf.ToArray();
         Vector2[] testVector2 = secondHalf.ToArray();
+        //audioSource.PlayOneShot(splitSound, 1f);
+        audioManager.GetComponent<SoundEffects>().playSplit();
         var firstPolygon = new GameObject("Polygon");
         firstPolygon.AddComponent(System.Type.GetType("Polygon"));
         firstPolygon.GetComponent<Polygon>().render(testVector);
@@ -582,7 +587,7 @@ public class Polygon : MonoBehaviour
                         var newPolygon = new GameObject("Polygon");
                         newPolygon.AddComponent(System.Type.GetType("Polygon"));
                         newPolygon.GetComponent<Polygon>().render(newPol.ToArray());
-
+                        
                         /*
                          *  mesh의 position을 보정해주는 코드 추가함
                          */ 
@@ -591,6 +596,8 @@ public class Polygon : MonoBehaviour
                         controller.GetComponent<GameController>().polygonList.Add(newPolygon);
                         controller.GetComponent<GameController>().polygonList.Remove(pol);
                         controller.GetComponent<GameController>().polygonList.Remove(gameObject);
+                        //audioSource.PlayOneShot(mergeSound, 1f);
+                        audioManager.GetComponent<SoundEffects>().playMerge();
                         Destroy(gameObject);
                         Destroy(pol);
                         break;
@@ -607,6 +614,8 @@ public class Polygon : MonoBehaviour
                     Debug.Log(90*i);
                     Debug.Log(Mathf.Abs(gameObject.transform.eulerAngles.z-90*i));
                     gameObject.transform.eulerAngles=new Vector3(0,0,90*i);
+                    //audioSource.PlayOneShot(snapSound, 1f);
+                    audioManager.GetComponent<SoundEffects>().playSnap();
                 }
             }
         }
