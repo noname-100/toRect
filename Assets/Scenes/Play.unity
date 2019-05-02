@@ -1978,7 +1978,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 71.015, y: -104.54}
+  m_AnchoredPosition: {x: 0, y: 0.0000076293945}
   m_SizeDelta: {x: 337.1, y: 228.92}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &527586863
@@ -2810,8 +2810,6 @@ GameObject:
   m_Component:
   - component: {fileID: 832577252}
   - component: {fileID: 832577253}
-  - component: {fileID: 832577255}
-  - component: {fileID: 832577254}
   m_Layer: 0
   m_Name: chocochipplate
   m_TagString: Untagged
@@ -2876,51 +2874,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
---- !u!114 &832577254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 832577251}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1008905278}
-          m_MethodName: FormulaBoardToggle
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  delegates: []
---- !u!58 &832577255
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 832577251}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.00000023841858, y: 0}
-  serializedVersion: 2
-  m_Radius: 1.0150001
 --- !u!1 &837898868
 GameObject:
   m_ObjectHideFlags: 0
@@ -3819,6 +3772,7 @@ MonoBehaviour:
   isPlay: 0
   EC: {fileID: 1008905277}
   plate: {fileID: 1019486343}
+  isHelp: 0
   GameOverWindow: {fileID: 1753825162}
   TotitleButton: {fileID: 368370865}
   RankingButton: {fileID: 1175452553}
@@ -9122,7 +9076,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2094041691
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9138,8 +9092,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -280.99997, y: -184.9}
-  m_SizeDelta: {x: 103.5, y: 45.8}
+  m_AnchoredPosition: {x: 42, y: -241.90001}
+  m_SizeDelta: {x: 109.37, y: 45.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2094041692
 MonoBehaviour:

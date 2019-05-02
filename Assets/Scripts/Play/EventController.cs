@@ -208,31 +208,54 @@ private void Awake()
 
         if ((gc.isSolvedRec2Square() || isHelp==2) && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
-            if (gamePause == 0)
+            if (bp.getisFormulaBoardSelected()==0)
             {
-                NextGameButton();
-                StartCoroutine(ScorePopup());
-                StopCoroutine(ScorePopup());
+                bp.FormulaBoardOn();
+                return;
+            }else if(bp.getisFormulaBoardSelected() == 1)
+            { // waiting for choice
+                return;
             }
-            else
-            {
-                if (gamePause == 1) return;
-                if(currentMode != 0)
+            else if(bp.getisFormulaBoardSelected() == 3)
+            { // win
+                if (gamePause == 0)
                 {
-                    if (ss.GetstoryProgress() == 4)
-                    {
-                        //Debug.Log("here2");
-                        GameOver(true);
-                    }
-                    isPlay = 0;
-                    ss.SetstoryProgress(ss.GetstoryProgress() + 1);
-                    ss.StoryManager();
-                    return;
+                    NextGameButton();
+                    StartCoroutine(ScorePopup());
+                    StopCoroutine(ScorePopup());
                 }
                 else
                 {
-                    winflag = 1;
+                    if (gamePause == 1) return;
+                    if (currentMode != 0)
+                    {
+                        if (ss.GetstoryProgress() == 4)
+                        {
+                            //Debug.Log("here2");
+                            GameOver(true);
+                        }
+                        isPlay = 0;
+                        ss.SetstoryProgress(ss.GetstoryProgress() + 1);
+                        ss.StoryManager();
+                        return;
+                    }
+                    else
+                    {
+                        winflag = 1;
+                    }
                 }
+            }
+            else
+            {
+                // lose
+                if (currentMode != 0)
+                {
+                    GameOver(false);
+                    return;
+                }
+                LostLife();
+                ResetTimeManager();
+                MakeNewGame();
             }
         }
 
@@ -277,8 +300,6 @@ private void Awake()
             AddPointManager();
             ResetTimeManager();
             MakeNewGame();
-            gamePause = 0;
-            isHelp = 0;
         }
         return;
     }
@@ -469,7 +490,9 @@ private void Awake()
     
     private void MakeNewGame()
     {
-        bp.setisFormulaButtonSelectable(true);
+        gamePause = 0;
+        isHelp = 0;
+        bp.setisFormulaButtonSelectable(0);
         if (currentMode == 0)
         {
             // 문제랜덤생성

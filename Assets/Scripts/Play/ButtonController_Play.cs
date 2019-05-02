@@ -32,12 +32,12 @@ public class ButtonController_Play : MonoBehaviour
     public GameObject[] HintList = new GameObject[4];
     
     private bool formulaBoardState;
-    private bool isFormulaBoardSelectable;
+    private int isFormulaBoardSelected;
     private int currentGame, currentMode;
 
     public void Awake()
     {
-        isFormulaBoardSelectable = true;
+        isFormulaBoardSelected = 0;
         formulaBoardState = false;
         SoundOnButton.SetActive(false);
         SoundOffButton.SetActive(true);
@@ -113,52 +113,26 @@ public class ButtonController_Play : MonoBehaviour
         return;
     }
 
-    public void FormulaBoardToggle()
+    public void FormulaBoardOn()
     {
-        Debug.Log("FormulaBoardToggle called");
-        if (!isFormulaBoardSelectable)
-        {
-            FormulaBoard.SetActive(false);
-            formulaBoardState = false;
-            return;
-        }
-
-        if(formulaBoardState == false)
-        {
-            FormulaBoard.SetActive(true);
-            formulaBoardState = true;
-        }
-        else
-        {
-            FormulaBoard.SetActive(false);
-            formulaBoardState = false;
-        }
+        FormulaBoard.SetActive(true);
+        formulaBoardState = true;
+        isFormulaBoardSelected = 1;
         return;
-    }
-
-    // 주의 : 문제해결시 팝업은 GameController에 있음
-    IEnumerator FormulaBonusPopup()
-    {
-        Debug.Log("ScorePopup Called");
-        ScoreSign.SetActive(true);
-        yield return new WaitForSeconds(1f);
-        ScoreSign.SetActive(false);
     }
 
     public void FormulaSelect(int which)
     {
         if(which == gc.getFormulaAnswer())
         {
-            ec.FormulaBonusGift();
-            ec.RefreshScore();
             Debug.Log("answer formula selected");
-            StartCoroutine(FormulaBonusPopup());
+            isFormulaBoardSelected = 3;
         }
         else
         {
-            Debug.Log("wrong formula selected");            
+            Debug.Log("wrong formula selected");
+            isFormulaBoardSelected = 4;
         }
-        isFormulaBoardSelectable = false;
         FormulaBoard.SetActive(false);
         formulaBoardState = false;
         return;
@@ -193,13 +167,14 @@ public class ButtonController_Play : MonoBehaviour
         return;
     }
 
-    public bool getisFormulaButtonSelectable()
+    public int getisFormulaBoardSelected()
     {
-        return isFormulaBoardSelectable;
+        return isFormulaBoardSelected;
     }
 
-    public void setisFormulaButtonSelectable(bool given)
+    public void setisFormulaButtonSelectable(int given)
     {
-        isFormulaBoardSelectable = given;
+        isFormulaBoardSelected = given;
+        return;
     }
 }
