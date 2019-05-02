@@ -49,13 +49,13 @@ public class Polygon : MonoBehaviour
                 dot.GetComponent<Dots>().selectable = false; // **
             }
         }
-
+        /*
         for(int i = 0 ; i < vertices3D.Count() ; i++){
             GameObject child = transform.GetChild(i).gameObject;
             LineRenderer lineRenderer = child.GetComponent<LineRenderer>();
             lineRenderer.SetPositions(new Vector3[] { transform.TransformPoint(vertices3D[i])-0.5f*Vector3.forward, transform.TransformPoint(vertices3D[(i+1)%vertices3D.Count()])-0.5f*Vector3.forward }); //**
         }
-        
+        */
         
         /*Mesh mesh = gameObject.GetComponent<MeshFilter>().mesh;
         mesh.RecalculateNormals();
@@ -105,8 +105,12 @@ public class Polygon : MonoBehaviour
         var indices = triangulator.Triangulate();
 
         // Generate a color for each vertex
+        Color color = Color.HSVToRGB(34f/360f, 0.165f, 1);
+        if(gameObject.name=="Square"){
+            color = new Color(234f/255f, 82f/255f, 61f/255f, 1);
+        }
         var colors = Enumerable.Range(0, vertices3D.Length)
-            .Select(i => new Color(1f, 237f/255f, 213f/255f, 1))
+            .Select(i => color)
             .ToArray();
 
         // Create the mesh
@@ -126,6 +130,7 @@ public class Polygon : MonoBehaviour
         meshRenderer.sortingLayerName = "ModeBackground";
         var filter = gameObject.AddComponent<MeshFilter>();
         filter.mesh = mesh;
+        /*
         for(int i=0; i<vertices3D.Count(); i++){
             GameObject line = new GameObject("line");
             line.transform.SetParent(transform);
@@ -137,6 +142,7 @@ public class Polygon : MonoBehaviour
             //lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
             lineRenderer.material.color = new Color(1, 119f/255f, 51f/255f, 1);
         }
+        */
         rendered = true;
         return;
     }
@@ -168,6 +174,7 @@ public class Polygon : MonoBehaviour
     }
     public void createDots()
     {
+        
         Mesh mesh = gameObject.GetComponent<MeshFilter>().mesh;
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
@@ -182,49 +189,50 @@ public class Polygon : MonoBehaviour
             dot.AddComponent(System.Type.GetType("Dots"));
             dot.GetComponent<Dots>().isVertice = true;
             dots.Add(dot);
-
-            // Find mid dot
-            List<Vector3> midDots = new List<Vector3>();       
-            midDots.Add(transform.TransformPoint((vertices3D[i] + vertices3D[(i + 1) % c]) / 2) + new Vector3(0, 0, -3));
-            
-            // Find perpendicular dot
-            for (int j = 0; j < c - 2; j++)
-            {
-                Vector3 vector = vertices3D[(i + j + 2) % c] - vertices3D[i];
-                Vector3 onNormal = vertices3D[(i + 1) % c] - vertices3D[i];
-                Vector3 perpDot = transform.TransformPoint(Vector3.Project(vector, onNormal) + vertices3D[i]);
-                if ((perpDot.x - transform.TransformPoint(vertices3D[i]).x) * (perpDot.x - transform.TransformPoint(vertices3D[(i + 1) % c]).x) < 0)
+            if(!jiktojung){
+                // Find mid dot
+                List<Vector3> midDots = new List<Vector3>();       
+                midDots.Add(transform.TransformPoint((vertices3D[i] + vertices3D[(i + 1) % c]) / 2) + new Vector3(0, 0, -3));
+                
+                // Find perpendicular dot
+                for (int j = 0; j < c - 2; j++)
                 {
-                        midDots.Add(perpDot + new Vector3(0, 0, -1));                              
+                    Vector3 vector = vertices3D[(i + j + 2) % c] - vertices3D[i];
+                    Vector3 onNormal = vertices3D[(i + 1) % c] - vertices3D[i];
+                    Vector3 perpDot = transform.TransformPoint(Vector3.Project(vector, onNormal) + vertices3D[i]);
+                    if ((perpDot.x - transform.TransformPoint(vertices3D[i]).x) * (perpDot.x - transform.TransformPoint(vertices3D[(i + 1) % c]).x) < 0)
+                    {
+                            midDots.Add(perpDot + new Vector3(0, 0, -1));                              
+                    }
                 }
-            }
 
-            midDots = midDots.OrderBy(o => (Mathf.Abs(o.x - transform.TransformPoint(vertices3D[i]).x))).ToList();
-            
+                midDots = midDots.OrderBy(o => (Mathf.Abs(o.x - transform.TransformPoint(vertices3D[i]).x))).ToList();
+                
 
-            // create dot instances
-            foreach (Vector3 dotVector in midDots)
-            {
-                if (Vector3.Distance(transform.TransformPoint(vertices3D[i]), dotVector) > 1.001 && Vector3.Distance(transform.TransformPoint(vertices3D[(i + 1) % c]), dotVector) > 1.001 && Vector3.Distance(dots[dots.Count - 1].transform.position, dotVector) > 0.001)
+                // create dot instances
+                foreach (Vector3 dotVector in midDots)
                 {
-                    GameObject midDot = Instantiate(Resources.Load("Prefabs/Circle"), dotVector, transform.rotation) as GameObject;
-                    midDot.name = "dotmid" + i;
-                    midDot.transform.parent = gameObject.transform;
-                    midDot.AddComponent(System.Type.GetType("Dots"));
+                    if (Vector3.Distance(transform.TransformPoint(vertices3D[i]), dotVector) > 1.001 && Vector3.Distance(transform.TransformPoint(vertices3D[(i + 1) % c]), dotVector) > 1.001 && Vector3.Distance(dots[dots.Count - 1].transform.position, dotVector) > 0.001)
+                    {
+                        GameObject midDot = Instantiate(Resources.Load("Prefabs/Circle"), dotVector, transform.rotation) as GameObject;
+                        midDot.name = "dotmid" + i;
+                        midDot.transform.parent = gameObject.transform;
+                        midDot.AddComponent(System.Type.GetType("Dots"));
 
-                    // sort if mid or perp point
-                    if (midDot.transform.position.z == -3)
-                    {
-                        midDot.GetComponent<Dots>().ismid = true;
-                        Vector3 tmp = midDot.transform.position;
-                        tmp.z = -1;
-                        midDot.transform.position = tmp;
+                        // sort if mid or perp point
+                        if (midDot.transform.position.z == -3)
+                        {
+                            midDot.GetComponent<Dots>().ismid = true;
+                            Vector3 tmp = midDot.transform.position;
+                            tmp.z = -1;
+                            midDot.transform.position = tmp;
+                        }
+                        else
+                        {
+                            midDot.GetComponent<Dots>().isperp = true;
+                        }
+                        dots.Add(midDot);
                     }
-                    else
-                    {
-                        midDot.GetComponent<Dots>().isperp = true;
-                    }
-                    dots.Add(midDot);
                 }
             }
 
@@ -307,6 +315,7 @@ public class Polygon : MonoBehaviour
 
     void OnMouseUp()
     {
+        
         if (!this.isSelected)
         {
             GameObject controller = GameObject.Find("GameControllerObject");
@@ -328,7 +337,7 @@ public class Polygon : MonoBehaviour
             //this.GetComponent<Renderer>().material.color = Color.green;
         }
         findMerge();
-
+        
     }
     public void selectableDots()
     {
@@ -390,14 +399,21 @@ public class Polygon : MonoBehaviour
                 break;
             }
         }
+        var midX= 0f;
+        var midY= 0f;
         List<Vector2> firstHalf = new List<Vector2>();
         for (int i = index1; i < index2 + 1; i++)
         {
             if (i == index1 || i == index2 || dots[i].GetComponent<Dots>().isVertice)
             {
                 firstHalf.Add(new Vector2(dots[i].transform.position.x, dots[i].transform.position.y));
+                midX += dots[i].transform.position.x;
+                midY += dots[i].transform.position.y;
             }
         }
+        midX /= firstHalf.Count;
+        midY /= firstHalf.Count;
+        
         List<Vector2> secondHalf = new List<Vector2>();
         for (int i = index2; i < dots.Count(); i++)
         {
@@ -413,14 +429,20 @@ public class Polygon : MonoBehaviour
                 secondHalf.Add(new Vector2(dots[i].transform.position.x, dots[i].transform.position.y));
             }
         }
+        Vector3 onNormal = new Vector3(dots[index1].transform.position.x, dots[index1].transform.position.y, 0)-new Vector3(dots[index2].transform.position.x, dots[index2].transform.position.y,0);
+        Vector3 vector = new Vector3(midX,midY,0)-new Vector3(dots[index2].transform.position.x, dots[index2].transform.position.y,0);
+        
+        Vector3 dir = vector - Vector3.Project(vector, onNormal);
         Vector2[] testVector = firstHalf.ToArray();
         Vector2[] testVector2 = secondHalf.ToArray();
         var firstPolygon = new GameObject("Polygon");
         firstPolygon.AddComponent(System.Type.GetType("Polygon"));
         firstPolygon.GetComponent<Polygon>().render(testVector);
+        firstPolygon.transform.position += 0.1f*dir.normalized;
         var secondPolygon = new GameObject("Polygon");
         secondPolygon.AddComponent(System.Type.GetType("Polygon"));
         secondPolygon.GetComponent<Polygon>().render(testVector2);
+        secondPolygon.transform.position -= 0.1f*dir.normalized;
         GameObject controller = GameObject.Find("GameControllerObject");
         controller.GetComponent<GameController>().polygonList.Add(firstPolygon);
         controller.GetComponent<GameController>().polygonList.Add(secondPolygon);
@@ -505,6 +527,9 @@ public class Polygon : MonoBehaviour
                 {
                     if (pol.GetComponent<Polygon>().mergeable)
                     {
+                        if(pol.name=="Square" || gameObject.name=="Square"){
+                            jiktojung=false;
+                        }
                         //Debug.Log(merger + "," + pol.GetComponent<Polygon>().merger);
                         List<Vector2> newPol = new List<Vector2>();
                         for (int i = 0; i < vertices3D.Count(); i++)
@@ -535,7 +560,25 @@ public class Polygon : MonoBehaviour
                         {
                             newPol[i] = new Vector2(newPol[i].x - newmidx, newPol[i].y - newmidy);
                         }
-
+                        if(pol.name=="Square" || gameObject.name=="Square"){
+                            List<Vector2> newPol2 = new List<Vector2>();
+                            for(int i = 0; i < newPol.Count; i++)
+                            {
+                                double incline1z = newPol[(i + 1) % newPol.Count][0] -newPol[i][0];
+                                double incline1m = newPol[(i + 1) % newPol.Count][1] - newPol[i][1];
+                                double incline2z = newPol[i][0] - newPol[(i + newPol.Count - 1) % newPol.Count][0];
+                                double incline2m = newPol[i][1] - newPol[(i + newPol.Count - 1) % newPol.Count][1];
+                                if (incline1z * incline2m - incline1m * incline2z < -0.01 || incline1z * incline2m - incline1m * incline2z > 0.01)
+                                {
+                                    newPol2.Add(newPol[i]);
+                //Debug.Log(((i + initVertices.Length-1) % initVertices.Length )+ "th vector: " + "X1 is:" + initVertices[(i + initVertices.Length - 1) % initVertices.Length][0] + "Y1 is:" + initVertices[(i + initVertices.Length - 1) % initVertices.Length][1]);
+                //Debug.Log(i + "th vector: " + "X2 is:" + initVertices[i][0] + "Y2 is:" + initVertices[i][1]);
+                //Debug.Log(((i+1)%initVertices.Length) + "th vector: X3 is:" + initVertices[(i + 1) % initVertices.Length][0] + "Y3 is:" + initVertices[(i + 1) % initVertices.Length][1]);
+                //Debug.Log("----------------------------------");
+            }
+                            }
+                            newPol = newPol2;
+                        }
                         var newPolygon = new GameObject("Polygon");
                         newPolygon.AddComponent(System.Type.GetType("Polygon"));
                         newPolygon.GetComponent<Polygon>().render(newPol.ToArray());
@@ -557,7 +600,17 @@ public class Polygon : MonoBehaviour
         }
         return;
     }
-
+    public void snap(){
+        if(jiktojung){
+            for(int i=0; i < 5; i++){
+                if(Mathf.Abs(gameObject.transform.eulerAngles.z-90*i)<10){
+                    Debug.Log(90*i);
+                    Debug.Log(Mathf.Abs(gameObject.transform.eulerAngles.z-90*i));
+                    gameObject.transform.eulerAngles=new Vector3(0,0,90*i);
+                }
+            }
+        }
+    }
     public void flip()
     {
         Vector2[] newVertices = new Vector2[vertices3D.Count()];

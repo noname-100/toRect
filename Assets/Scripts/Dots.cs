@@ -83,7 +83,7 @@ public class Dots : MonoBehaviour
     }
     void OnMouseUp()
     {
-        if( Time.time - pushTime < 0.5f) { 
+        if( Time.time - pushTime < 0.2f) { 
             if (this.isSelected)
             {
                 this.isSelected = false;
@@ -110,6 +110,7 @@ public class Dots : MonoBehaviour
                 this.transform.parent.GetComponent<Polygon>().cutMyself();
             }
         }
+        this.transform.parent.GetComponent<Polygon>().snap();
     }
 
     private void OnMouseDrag()
