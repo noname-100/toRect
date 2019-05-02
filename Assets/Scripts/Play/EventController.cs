@@ -308,31 +308,31 @@ private void Awake()
     private void AddPointManager()
     {
         // 콤보, 제한시간(점수)로 추가점수
-        score += 3 + 2 * combo + (int) 0.01 * score;
+        score = (int)(score + score * 0.1 * combo);
 
         // 문제종류별 추가점수
         switch (currentGame)
         {
             case 0: // 예각1
-                score += 0;
+                score += 5;
                 break;
             case 1: // 예각2
-                score += 0;
+                score += 5;
                 break;
             case 2: // 직각
-                score += 0;
+                score += 4;
                 break;
             case 3: // 둔각
-                score += 1;
+                score += 5;
                 break;
             case 4: // 사다리꼴
-                score += 2;
+                score += 8;
                 break;
             case 5: // 임의사각형
-                score += 3;
+                score += 9;
                 break;
             case 6: // 오각형
-                score += 5;
+                score += 12;
                 break;
             case 7: // 육각형
                 score += 5;
@@ -344,16 +344,16 @@ private void Awake()
                 score += 5;
                 break;
             case 10: // 직투정1
-                score += 0;
+                score += 3;
                 break;
             case 11: // 직투정2
-                score += 0;
+                score += 15;
                 break;
             case 12: // 합동삼각형1
-                score += 0;
+                score += 12;
                 break;
             case 13: // 함동삼각형2
-                score += 0;
+                score += 12;
                 break;
         }
 
@@ -440,8 +440,8 @@ private void Awake()
             bonusTimeLimit = 45; // not used
             if (currentGame == 0) solveTime = 120; // 직각삼각형
             else if (currentGame == 2) solveTime = 120; // 직각삼각형
-            else if (currentGame == 3) solveTime = 180; // 둔각삼각형
-            else if (currentGame == 4) solveTime = 130; // 사다리꼴
+            else if (currentGame == 3) solveTime = 130; // 둔각삼각형
+            else if (currentGame == 4) solveTime = 180; // 사다리꼴
             else if (currentGame == 5) solveTime = 240; // 사각형
             else if (currentGame == 6) solveTime = 300; // 오각형
             else if (currentGame == 7) solveTime = 300; // 육각형
@@ -453,7 +453,7 @@ private void Awake()
             solveTime = 300;
         }else if(currentMode == 3)
         {   // Similarity Story Mode
-            solveTime = 70;
+            solveTime = 100;
         }
 
         current_Time = solveTime;
