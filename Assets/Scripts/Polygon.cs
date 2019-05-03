@@ -610,7 +610,7 @@ public class Polygon : MonoBehaviour
     public void snap(){
         if(jiktojung){
             for(int i=0; i < 5; i++){
-                if(Mathf.Abs(gameObject.transform.eulerAngles.z-90*i)<10){
+                if(Mathf.Abs(gameObject.transform.eulerAngles.z-90*i)<10 && gameObject.transform.eulerAngles.z!=90*i){
                     Debug.Log(90*i);
                     Debug.Log(Mathf.Abs(gameObject.transform.eulerAngles.z-90*i));
                     gameObject.transform.eulerAngles=new Vector3(0,0,90*i);
