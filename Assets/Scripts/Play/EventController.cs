@@ -19,8 +19,8 @@ public class EventController : MonoBehaviour {
      *  
      */
     
-    private int testGameMode = 12;
-    private float testGameTime = 5;
+    private int testGameMode = -1;
+    private float testGameTime = 3;
 
     // 난이도요소
     private int combo;
@@ -47,7 +47,7 @@ public class EventController : MonoBehaviour {
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
     public Text GameResultText;
     public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground, ScoreBackground;
-    public GameObject ScoreSign;
+    public GameObject ScoreSign, GameOverBackStory;
     public GameObject ProgressBar;
     public GameObject NextProblemButton;
     // Clear 화면 게임요소
@@ -692,18 +692,18 @@ private void Awake()
         {
             // 스토리모드 실패시
             GameOverBackground.SetActive(true);
-            GameOverBack.SetActive(true);
+            GameOverBackStory.SetActive(true);
         }
+        
 
-
-        RankingMain.SetActive(true); // temp, 나중에 스토리모드 게임오버창 별도 이미지 받으면 변경
-        RankingSub1.SetActive(true);
-        RankingSub2.SetActive(true);
         if (currentMode == 0 || currentMode == 3)
         {
             // 순위전 버튼구성
             if (currentMode == 0)
             {
+                RankingMain.SetActive(true); // temp, 나중에 스토리모드 게임오버창 별도 이미지 받으면 변경
+                RankingSub1.SetActive(true);
+                RankingSub2.SetActive(true);
                 RestartButton.SetActive(true);
             }
             else

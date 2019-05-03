@@ -457,24 +457,27 @@ public class GameController : MonoBehaviour
         // Debug.Log("this is rectangle");
 
         // 여기에서 판 위에 직사각형이 있는지 체크한다.
+        /*
         Vector3 worldPosition = new Vector3(0, 0, 0);
         for (int i = 0; i < polygonList[0].GetComponent<Polygon>().vertices3D.Length; i++)
         {
-            worldPosition += polygonList[0].GetComponent<Polygon>().vertices3D[i];
+            worldPosition += transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i]);
         }
-        worldPosition /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
-        worldPosition = transform.TransformPoint(worldPosition);
+        worldPosition = transform.TransformPoint(polygonList[0].transform.position); /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
         Debug.Log("position : " + worldPosition.x + " " + worldPosition.y + " " + worldPosition.z);
+        */
 
+        Debug.Log("dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
+        Debug.Log("angle : " + polygonList[0].transform.rotation.eulerAngles.z);
         if ((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.6)
         {
-            // Debug.Log("Pie not on plate dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
+            Debug.Log("pie not on plate");
             return false;
         }
 
         if(!(polygonList[0].transform.eulerAngles.z >= 10 && polygonList[0].transform.rotation.eulerAngles.z <= 50) && !(polygonList[0].transform.rotation.eulerAngles.z <= -130 && polygonList[0].transform.rotation.eulerAngles.z >= -170))
         {
-            // Debug.Log("Pie not in right angle, curr : " + polygonList[0].transform.rotation.eulerAngles.z);
+            Debug.Log("pie not in right angle");
             return false;
         }
 
