@@ -47,7 +47,7 @@ public class EventController : MonoBehaviour {
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
     public Text GameResultText;
     public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground, ScoreBackground;
-    public GameObject ScoreSign;
+    public GameObject ScoreSign, GameOverBackStory;
     public GameObject ProgressBar;
     public GameObject NextProblemButton;
     // Clear 화면 게임요소
@@ -159,6 +159,10 @@ private void Awake()
                 return;
             }
             plate.transform.localScale = new Vector3(1f, 1f, 0);
+            gamePause = 0;
+            isHelp = 0;
+            bp.setisFormulaButtonSelectable(0);
+            bp.FormulaSelect(4);
             LostLife();
             ResetTimeManager();
             MakeNewGame();
@@ -208,31 +212,54 @@ private void Awake()
 
         if ((gc.isSolvedRec2Square() || isHelp==2) && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
-            if (gamePause == 0)
+            if (bp.getisFormulaBoardSelected()==0)
             {
-                NextGameButton();
-                StartCoroutine(ScorePopup());
-                StopCoroutine(ScorePopup());
+                bp.FormulaBoardOn();
+                return;
+            }else if(bp.getisFormulaBoardSelected() == 1)
+            { // waiting for choice
+                return;
             }
-            else
-            {
-                if (gamePause == 1) return;
-                if(currentMode != 0)
+            else if(bp.getisFormulaBoardSelected() == 3)
+            { // win
+                if (gamePause == 0)
                 {
-                    if (ss.GetstoryProgress() == 4)
-                    {
-                        //Debug.Log("here2");
-                        GameOver(true);
-                    }
-                    isPlay = 0;
-                    ss.SetstoryProgress(ss.GetstoryProgress() + 1);
-                    ss.StoryManager();
-                    return;
+                    NextGameButton();
+                    StartCoroutine(ScorePopup());
+                    StopCoroutine(ScorePopup());
                 }
                 else
                 {
-                    winflag = 1;
+                    if (gamePause == 1) return;
+                    if (currentMode != 0)
+                    {
+                        if (ss.GetstoryProgress() == 4)
+                        {
+                            //Debug.Log("here2");
+                            GameOver(true);
+                        }
+                        isPlay = 0;
+                        ss.SetstoryProgress(ss.GetstoryProgress() + 1);
+                        ss.StoryManager();
+                        return;
+                    }
+                    else
+                    {
+                        winflag = 1;
+                    }
                 }
+            }
+            else
+            {
+                // lose
+                if (currentMode != 0)
+                {
+                    GameOver(false);
+                    return;
+                }
+                LostLife();
+                ResetTimeManager();
+                MakeNewGame();
             }
         }
 
@@ -277,8 +304,6 @@ private void Awake()
             AddPointManager();
             ResetTimeManager();
             MakeNewGame();
-            gamePause = 0;
-            isHelp = 0;
         }
         return;
     }
@@ -469,7 +494,9 @@ private void Awake()
     
     private void MakeNewGame()
     {
-        bp.setisFormulaButtonSelectable(true);
+        gamePause = 0;
+        isHelp = 0;
+        bp.setisFormulaButtonSelectable(0);
         if (currentMode == 0)
         {
             // 문제랜덤생성
@@ -635,9 +662,11 @@ private void Awake()
     
     public void GameOver(bool isCleared) // life==0일때 gamemanager에서 호출하는 모달 팝업 매니징 함수
     {                                    // isCleared면 Clear, 아니면 GameOver
-        current_Time = 0;
+        
         StopCoroutine("Timer");
         GameOverWindow.SetActive(true);
+        current_Time = 0;
+        TimeText.text = "0 sec";
 
         GameOverBackground.SetActive(false);
         Chapter1ClearBackground.SetActive(false);
@@ -667,16 +696,17 @@ private void Awake()
         {
             // 스토리모드 실패시
             GameOverBackground.SetActive(true);
-            GameOverBack.SetActive(true);
+            if (currentMode != 0) GameOverBackStory.SetActive(true);
+            else GameOverBack.SetActive(true);
         }
-
+        
 
         if (currentMode == 0 || currentMode == 3)
         {
             // 순위전 버튼구성
             if (currentMode == 0)
             {
-                RankingMain.SetActive(true);
+                RankingMain.SetActive(true); // temp, 나중에 스토리모드 게임오버창 별도 이미지 받으면 변경
                 RankingSub1.SetActive(true);
                 RankingSub2.SetActive(true);
                 RestartButton.SetActive(true);

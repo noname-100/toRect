@@ -186,6 +186,13 @@ public class ButtonController_Title : MonoBehaviour {
         RightButton.SetActive(false);
         return;
     }
+    
+    public void MoveToHelpSelect()
+    {
+        HelpWindow.SetActive(false);
+        StoryModeHelp.SetActive(true);
+        return;
+    }
 
     public void QuitGame()
     {
@@ -194,8 +201,8 @@ public class ButtonController_Title : MonoBehaviour {
 
     public void SoundOn()
     {
-        PlayerPrefs.SetFloat("isSoundOn", 1f);
-        AudioListener.volume = 1f;
+        PlayerPrefs.SetFloat("isSoundOn", 0.5f);
+        AudioListener.volume = 0.5f;
         return;
     }
 
@@ -230,6 +237,7 @@ public class ButtonController_Title : MonoBehaviour {
     public void CloseHelpSelectButton()
     {
         StoryModeHelp.SetActive(false);
+        isCommonHelpStatus = true;
         return;
     }
 }

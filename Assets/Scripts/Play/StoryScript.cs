@@ -16,6 +16,7 @@ public class StoryScript : MonoBehaviour {
     public GameObject EC;
     private EventController ec;
     public GameObject HintButton;
+    public GameObject BackGroundFilter;
 
     // Story mode internal variables
     private int currentMode;
@@ -178,36 +179,42 @@ public class StoryScript : MonoBehaviour {
 
     void Start_TextBox_B(int num)
     {
+        BackGroundFilter.SetActive(true);
         tutorials[0][num].SetActive(true);
         return;
     }
 
     void Start_TextBox_R(int num)
     {
+        BackGroundFilter.SetActive(true);
         tutorials[1][num].SetActive(true);
         return;
     }
 
     void Start_TextBox_S(int num)
     {
+        BackGroundFilter.SetActive(true);
         tutorials[2][num].SetActive(true);
         return;
     }
 
     void Stop_TextBox_B(int num)
     {
+        BackGroundFilter.SetActive(false);
         tutorials[0][num].SetActive(false);
         return;
     }
 
     void Stop_TextBox_R(int num)
     {
+        BackGroundFilter.SetActive(false);
         tutorials[1][num].SetActive(false);
         return;
     }
 
     void Stop_TextBox_S(int num)
     {
+        BackGroundFilter.SetActive(false);
         tutorials[2][num].SetActive(false);
         return;
     }
