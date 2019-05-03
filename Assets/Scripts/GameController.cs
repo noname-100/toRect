@@ -457,7 +457,16 @@ public class GameController : MonoBehaviour
         // Debug.Log("this is rectangle");
 
         // 여기에서 판 위에 직사각형이 있는지 체크한다.
-        if((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.6)
+        Vector3 worldPosition = new Vector3(0, 0, 0);
+        for (int i = 0; i < polygonList[0].GetComponent<Polygon>().vertices3D.Length; i++)
+        {
+            worldPosition += polygonList[0].GetComponent<Polygon>().vertices3D[i];
+        }
+        worldPosition /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
+        worldPosition = transform.TransformPoint(worldPosition);
+        Debug.Log("position : " + worldPosition.x + " " + worldPosition.y + " " + worldPosition.z);
+
+        if ((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.6)
         {
             // Debug.Log("Pie not on plate dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
             return false;

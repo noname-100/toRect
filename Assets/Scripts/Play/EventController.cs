@@ -19,8 +19,8 @@ public class EventController : MonoBehaviour {
      *  
      */
     
-    private int testGameMode = -1;
-    private float testGameTime = -1;
+    private int testGameMode = 12;
+    private float testGameTime = 5;
 
     // 난이도요소
     private int combo;
@@ -658,9 +658,11 @@ private void Awake()
     
     public void GameOver(bool isCleared) // life==0일때 gamemanager에서 호출하는 모달 팝업 매니징 함수
     {                                    // isCleared면 Clear, 아니면 GameOver
-        current_Time = 0;
+        
         StopCoroutine("Timer");
         GameOverWindow.SetActive(true);
+        current_Time = 0;
+        TimeText.text = "0 sec";
 
         GameOverBackground.SetActive(false);
         Chapter1ClearBackground.SetActive(false);
@@ -694,14 +696,14 @@ private void Awake()
         }
 
 
+        RankingMain.SetActive(true); // temp, 나중에 스토리모드 게임오버창 별도 이미지 받으면 변경
+        RankingSub1.SetActive(true);
+        RankingSub2.SetActive(true);
         if (currentMode == 0 || currentMode == 3)
         {
             // 순위전 버튼구성
             if (currentMode == 0)
             {
-                RankingMain.SetActive(true);
-                RankingSub1.SetActive(true);
-                RankingSub2.SetActive(true);
                 RestartButton.SetActive(true);
             }
             else
