@@ -469,13 +469,13 @@ public class GameController : MonoBehaviour
 
         Debug.Log("dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
         Debug.Log("angle : " + polygonList[0].transform.rotation.eulerAngles.z);
-        if ((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.6)
+        if ((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.1)
         {
             Debug.Log("pie not on plate");
             return false;
         }
 
-        if(!(polygonList[0].transform.eulerAngles.z >= 10 && polygonList[0].transform.rotation.eulerAngles.z <= 50) && !(polygonList[0].transform.rotation.eulerAngles.z <= -130 && polygonList[0].transform.rotation.eulerAngles.z >= -170))
+        if(!(polygonList[0].transform.eulerAngles.z >= 8 && polygonList[0].transform.rotation.eulerAngles.z <= 53) && !(polygonList[0].transform.rotation.eulerAngles.z <= -120 && polygonList[0].transform.rotation.eulerAngles.z >= -165))
         {
             Debug.Log("pie not in right angle");
             return false;

@@ -20,7 +20,7 @@ public class EventController : MonoBehaviour {
      */
     
     private int testGameMode = -1;
-    private float testGameTime = 3;
+    private float testGameTime = -1;
 
     // 난이도요소
     private int combo;
@@ -159,6 +159,10 @@ private void Awake()
                 return;
             }
             plate.transform.localScale = new Vector3(1f, 1f, 0);
+            gamePause = 0;
+            isHelp = 0;
+            bp.setisFormulaButtonSelectable(0);
+            bp.FormulaSelect(4);
             LostLife();
             ResetTimeManager();
             MakeNewGame();
@@ -692,7 +696,8 @@ private void Awake()
         {
             // 스토리모드 실패시
             GameOverBackground.SetActive(true);
-            GameOverBackStory.SetActive(true);
+            if (currentMode != 0) GameOverBackStory.SetActive(true);
+            else GameOverBack.SetActive(true);
         }
         
 
