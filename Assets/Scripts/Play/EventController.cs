@@ -20,7 +20,7 @@ public class EventController : MonoBehaviour {
      */
     
     private int testGameMode = -1;
-    private float testGameTime = -1;
+    private float testGameTime = 300;
 
     // 난이도요소
     private int combo;
