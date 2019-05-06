@@ -161,19 +161,20 @@ private void Awake()
             plate.transform.localScale = new Vector3(1f, 1f, 0);
             gamePause = 0;
             isHelp = 0;
+            combo = 0;
             bp.setisFormulaButtonSelectable(0);
             bp.FormulaSelect(4);
             LostLife();
-            ResetTimeManager();
             MakeNewGame();
+            ResetTimeManager();
         }
 
         // 게임시작
         if (isPlay == 1)
         {
             isPlay = 2;
-            ResetTimeManager();
             MakeNewGame();
+            ResetTimeManager();
             StartCoroutine("Timer");
         }
 
@@ -206,7 +207,6 @@ private void Awake()
                 }else{
                     winflag = 1;
                 }
-
             }
         }        
 
@@ -258,8 +258,9 @@ private void Awake()
                     return;
                 }
                 LostLife();
-                ResetTimeManager();
+                combo = 0;
                 MakeNewGame();
+                ResetTimeManager();
             }
         }
 
@@ -301,9 +302,9 @@ private void Awake()
         {
             combo++;
             if (current_Time >= bonusTimeLimit) BonusGift();
-            AddPointManager();
-            ResetTimeManager();
+            AddPointManager();            
             MakeNewGame();
+            ResetTimeManager();
         }
         return;
     }
@@ -311,7 +312,7 @@ private void Awake()
     // ButtonController_Play에서 조작한다. 점수 부여 일관성을 위해 함수는 여기에 둔다.
     public void FormulaBonusGift() // legacy code
     {
-        score += 5;
+        score += 0;
         return;
     }
 
@@ -332,7 +333,8 @@ private void Awake()
     private void AddPointManager()
     {
         // 콤보, 제한시간(점수)로 추가점수
-        score += 3 + (int) 0.3 * combo + (int) 0.005 * score;
+        score += 3 + (int) Mathf.Floor(0.6f * (float)combo) + (int) Mathf.Floor(0.005f * (float) score);
+        // Debug.Log((int)Mathf.Floor(0.4f * (float)combo));
 
         // 문제종류별 추가점수
         switch (currentGame)
@@ -353,19 +355,19 @@ private void Awake()
                 score += 1;
                 break;
             case 5: // 임의사각형
-                score += 2;
-                break;
-            case 6: // 오각형
-                score += 3;
-                break;
-            case 7: // 육각형
-                score += 3;
-                break;
-            case 8: // 칠각형
                 score += 4;
                 break;
+            case 6: // 오각형
+                score += 5;
+                break;
+            case 7: // 육각형
+                score += 5;
+                break;
+            case 8: // 칠각형
+                score += 6;
+                break;
             case 9: // 팔각형
-                score += 3;
+                score += 5;
                 break;
             case 10: // 직투정1
                 score += 1;
@@ -380,7 +382,6 @@ private void Awake()
                 score += 0;
                 break;
         }
-
         ScoreText.text = score.ToString() + " 점";
         return;
     }
@@ -409,27 +410,27 @@ private void Awake()
             switch (currentGame)
             {
                 case 0: // 예각
-                    maxtime = 60;
+                    maxtime = 80;
                     mintime = 20;
                     break;
                 case 1: // 예각2
-                    maxtime = 60;
+                    maxtime = 80;
                     mintime = 20;
                     break;
                 case 2: // 직각
-                    maxtime = 60;
+                    maxtime = 80;
                     mintime = 20;
                     break;
                 case 3: // 둔각
-                    maxtime = 60;
+                    maxtime = 80;
                     mintime = 20;
                     break;
                 case 4: // 사다리꼴
-                    maxtime = 70;
+                    maxtime = 90;
                     mintime = 20;
                     break;
                 case 5: // 임의사각형
-                    maxtime = 200;
+                    maxtime = 240;
                     mintime = 30;
                     break;
                 case 6: // 오각형
@@ -441,7 +442,7 @@ private void Awake()
                     mintime = 30;
                     break;
                 case 8: // 칠각형
-                    maxtime = 300;
+                    maxtime = 360;
                     mintime = 30;
                     break;
                 case 9: // 팔각형
@@ -449,19 +450,19 @@ private void Awake()
                     mintime = 30;
                     break;
                 case 10: // 직투정
-                    maxtime = 110;
+                    maxtime = 130;
                     mintime = 30;
                     break;
                 case 11: // 직투정2
-                    maxtime = 110;
+                    maxtime = 130;
                     mintime = 30;
                     break;
                 case 12: // 합동삼각형1
-                    maxtime = 80;
+                    maxtime = 90;
                     mintime = 25;
                     break;
                 case 13: // 함동삼각형2
-                    maxtime = 80;
+                    maxtime = 90;
                     mintime = 25;
                     break;
             }
@@ -469,7 +470,7 @@ private void Awake()
             float halftime = 1000f;
             float norm = 0.006f;
             solveTime = ((maxtime-mintime) / (1 + Mathf.Exp(norm * ((10 * combo + score) - halftime)))) + mintime;
-
+            // Debug.Log(solveTime);
             // 보너스 타임에만 랜덤요소를 넣는다.
             float timeBonus = UnityEngine.Random.Range(0f, 2f);
             bonusTimeLimit = (float) Math.Floor(solveTime * 0.7 - timeBonus);
@@ -494,7 +495,6 @@ private void Awake()
         {   // Similarity Story Mode
             solveTime = 90;
         }
-
         current_Time = solveTime;
         return;
     }
@@ -540,7 +540,6 @@ private void Awake()
                     pool.Add(i);
                 }
             }
-
             pool = ShuffleArray(pool);            
             currentGame = pool[(int)UnityEngine.Random.Range(0, pool.Count)];
             PlayerPrefs.SetInt("Game", currentGame);
@@ -567,8 +566,7 @@ private void Awake()
         {
             // 합동삼각형
             SimilarityBackground.SetActive(true);
-        }        
-
+        }
         gc.makeNew(currentGame);
         return;
     }

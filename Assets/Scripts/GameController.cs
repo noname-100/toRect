@@ -257,7 +257,7 @@ public class GameController : MonoBehaviour
         // TODO : r 산정할때 정사각형 조각의 최대반경 고려해줘야함
         if (angle <= 32 && angle >= 360 - 32)
         {
-            r = UnityEngine.Random.Range(0f, (1.6f / (float) Mathf.Cos(angle)) - Mathf.Pow(2, 0.5f) * Polygon.jiktojunglength / 2f);
+            r = UnityEngine.Random.Range(0f, (1.6f / (float) Mathf.Cos(angle)) - Mathf.Pow(2, 0.5f) * (Polygon.jiktojunglength / 2f));
         }
         else
         {
@@ -401,7 +401,7 @@ public class GameController : MonoBehaviour
         }
         midx /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
         midy /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
-        Debug.Log("centrum : " + midx + " " + midy);
+        // Debug.Log("centrum : " + midx + " " + midy);
 
         if (reference == null)
         {
@@ -451,8 +451,8 @@ public class GameController : MonoBehaviour
         Debug.Log("position : " + worldPosition.x + " " + worldPosition.y + " " + worldPosition.z);
         */
 
-        Debug.Log("dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
-        Debug.Log("angle : " + polygonList[0].transform.rotation.eulerAngles.z);
+        // Debug.Log("dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
+        // Debug.Log("angle : " + polygonList[0].transform.rotation.eulerAngles.z);
         if ((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.1)
         {
             Debug.Log("pie not on plate");
