@@ -20,7 +20,7 @@ public class EventController : MonoBehaviour {
      */
     
     private int testGameMode = -1;
-    private float testGameTime = 300;
+    private float testGameTime = -1;
 
     // 난이도요소
     private int combo;
@@ -309,7 +309,7 @@ private void Awake()
     }
 
     // ButtonController_Play에서 조작한다. 점수 부여 일관성을 위해 함수는 여기에 둔다.
-    public void FormulaBonusGift()
+    public void FormulaBonusGift() // legacy code
     {
         score += 5;
         return;
@@ -317,7 +317,6 @@ private void Awake()
 
     private void BonusGift()
     {
-        combo += 2;
         score += 2;
         return;
     }
@@ -333,7 +332,7 @@ private void Awake()
     private void AddPointManager()
     {
         // 콤보, 제한시간(점수)로 추가점수
-        score += 3 + 2 * combo + (int) 0.01 * score;
+        score += 3 + (int) 0.3 * combo + (int) 0.005 * score;
 
         // 문제종류별 추가점수
         switch (currentGame)
@@ -348,31 +347,31 @@ private void Awake()
                 score += 0;
                 break;
             case 3: // 둔각
-                score += 1;
+                score += 0;
                 break;
             case 4: // 사다리꼴
-                score += 2;
+                score += 1;
                 break;
             case 5: // 임의사각형
-                score += 3;
+                score += 2;
                 break;
             case 6: // 오각형
-                score += 5;
+                score += 3;
                 break;
             case 7: // 육각형
-                score += 5;
+                score += 3;
                 break;
             case 8: // 칠각형
-                score += 7;
+                score += 4;
                 break;
             case 9: // 팔각형
-                score += 5;
+                score += 3;
                 break;
             case 10: // 직투정1
-                score += 0;
+                score += 1;
                 break;
             case 11: // 직투정2
-                score += 0;
+                score += 1;
                 break;
             case 12: // 합동삼각형1
                 score += 0;
@@ -403,62 +402,77 @@ private void Awake()
 
         if(currentMode == 0)
         {
-            float halftime = 250f;
-            float norm = 0.2f;
+            float maxtime = 20f;
             float mintime = 20f;
-
-            solveTime = 1 / (1 + Mathf.Exp(norm * ((10 * combo + score) - halftime))) + mintime;
 
             // 최소시간 문제별 세부조정
             switch (currentGame)
             {
                 case 0: // 예각
-                    solveTime += 0;
+                    maxtime = 60;
+                    mintime = 20;
                     break;
                 case 1: // 예각2
-                    solveTime += 0;
+                    maxtime = 60;
+                    mintime = 20;
                     break;
                 case 2: // 직각
-                    solveTime += 0;
+                    maxtime = 60;
+                    mintime = 20;
                     break;
                 case 3: // 둔각
-                    solveTime += 10;
+                    maxtime = 60;
+                    mintime = 20;
                     break;
                 case 4: // 사다리꼴
-                    solveTime += 15;
+                    maxtime = 70;
+                    mintime = 20;
                     break;
                 case 5: // 임의사각형
-                    solveTime += 25;
+                    maxtime = 200;
+                    mintime = 30;
                     break;
                 case 6: // 오각형
-                    solveTime += 45;
+                    maxtime = 300;
+                    mintime = 30;
                     break;
                 case 7: // 육각형
-                    solveTime += 40;
+                    maxtime = 300;
+                    mintime = 30;
                     break;
                 case 8: // 칠각형
-                    solveTime += 60;
+                    maxtime = 300;
+                    mintime = 30;
                     break;
                 case 9: // 팔각형
-                    solveTime += 50;
+                    maxtime = 300;
+                    mintime = 30;
                     break;
                 case 10: // 직투정
-                    solveTime += 10;
+                    maxtime = 110;
+                    mintime = 30;
                     break;
                 case 11: // 직투정2
-                    solveTime += 10;
+                    maxtime = 110;
+                    mintime = 30;
                     break;
                 case 12: // 합동삼각형1
-                    solveTime += 5;
+                    maxtime = 80;
+                    mintime = 25;
                     break;
                 case 13: // 함동삼각형2
-                    solveTime += 5;
+                    maxtime = 80;
+                    mintime = 25;
                     break;
             }
 
+            float halftime = 1000f;
+            float norm = 0.006f;
+            solveTime = ((maxtime-mintime) / (1 + Mathf.Exp(norm * ((10 * combo + score) - halftime)))) + mintime;
+
             // 보너스 타임에만 랜덤요소를 넣는다.
             float timeBonus = UnityEngine.Random.Range(0f, 2f);
-            bonusTimeLimit = (float) Math.Floor(solveTime * 0.85 - timeBonus);
+            bonusTimeLimit = (float) Math.Floor(solveTime * 0.7 - timeBonus);
         }
         else if(currentMode == 1)
         {   // Biscuit Story Mode
@@ -478,7 +492,7 @@ private void Awake()
             solveTime = 300;
         }else if(currentMode == 3)
         {   // Similarity Story Mode
-            solveTime = 70;
+            solveTime = 90;
         }
 
         current_Time = solveTime;
