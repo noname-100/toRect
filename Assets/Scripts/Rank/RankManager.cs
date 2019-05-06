@@ -11,6 +11,9 @@ public class RankManager : MonoBehaviour
     public const string gameName = "ToRect";
 
     private Vector3 RankDataDownPos, RankDataPos;
+    public GameObject RankDataWindow;
+    public GameObject[] RankBoxTop5 = new GameObject[5];
+    public GameObject WaitPlz;
 
     // UserData 저장용 구조체
     struct UserData {
@@ -135,6 +138,63 @@ public class RankManager : MonoBehaviour
                 //success
                 RankData r = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
                 
+            }
+        }
+    }
+    public void GetRankInfo() {
+        RankDataWindow.SetActive(false);
+        WaitPlz.SetActive(true);
+
+        
+        if (string.IsNullOrEmpty(user.token)) {
+            LoadData();
+            //not authorized
+            return;
+        }
+
+        StartCoroutine(GetRanking(user.token));
+    }
+
+
+    private IEnumerator GetRanking(string token) {
+        string url = user.host + "/user/v1/games/" + gameName;
+
+        using (UnityWebRequest w = UnityWebRequest.Get(url)) {
+            w.SetRequestHeader("Authorization", "Bearer " + token);
+            yield return w.SendWebRequest();
+
+            if (w.isHttpError || w.isNetworkError) {
+                //TODO handle error
+            }
+            else {
+                // Debug.Log(w.downloadHandler.text);
+                // success
+                Ranking r = JsonUtility.FromJson<Ranking>(w.downloadHandler.text);
+
+                MyRank = r.my;
+                MyRank.nickname = r.my.user.nickname;
+                MyRank.level = r.my.user.badges.winner.level;
+
+                WaitPlz.SetActive(false);
+                RankDataWindow.SetActive(true);
+
+                int size = Math.Min(r.ranking.Count, 5);
+                int i = 0;
+                for (i = 0; i < size; i++) {
+                    Top5[i] = r.ranking[i];
+                    Top5[i].nickname = r.ranking[i].user.nickname;
+                    Top5[i].level = r.ranking[i].user.badges.winner.level;
+                }
+
+                if (i < 5) {
+                    for (int j = i; j < 5; j++) {
+                        //TODO don't show empty data
+                        Top5[j] = new RankData();
+                    }
+                }
+
+                for (i = 0; i < 5; i++)
+                    RankBoxTop5[i].GetComponent<RankBox>().SetRankBox(Top5[i].score, Top5[i].nickname);
             }
         }
     }
