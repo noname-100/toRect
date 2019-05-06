@@ -3,17 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using System;
+using UnityEngine.UI;
 
-public class TitleRank : MonoBehaviour {
+public class RankManager : MonoBehaviour
+{
 
     public const string gameName = "ToRect";
-    public GameObject RankDataWindow;
-    public GameObject[] RankBoxTop5 = new GameObject[5];
-    public GameObject WaitPlz;
-
-    private const int INFINITY_PRAC = 1;
-    private const int INFINITY_REAL = 2;
-    private const int HELL = 3;
 
     private Vector3 RankDataDownPos, RankDataPos;
 
@@ -50,8 +45,10 @@ public class TitleRank : MonoBehaviour {
         LoadData();
     }
 
-    void LoadData() {
+    void LoadData()
+    {
         Application.ExternalCall("SetUserData");
+        // Debug.Log("Get: " + UserJsonData);
 
         // JSON Parsing
         user = JsonUtility.FromJson<UserData>(UserJsonData);
@@ -104,64 +101,42 @@ public class TitleRank : MonoBehaviour {
     RankData[] Top5 = new RankData[5];
     RankData MyRank;
 
-    // DB에서 Top5와 자신의 정보 받아온다.
-    // token은 (string) user.token에 저장되어 있다.
-    // 받아오는 데이터는 각각의 등수, 점수, 시간, 닉네임, 레벨
-    public void GetRankInfo() {
-        RankDataWindow.SetActive(false);
-        WaitPlz.SetActive(true);
-
-        
+    // DB에 정보 전송, 점수-시간-userid 를 보낸다
+    public void PutRankInfo(int score) {
         if (string.IsNullOrEmpty(user.token)) {
             LoadData();
             //not authorized
             return;
         }
 
-        StartCoroutine(GetRanking(user.token));
+        StartCoroutine(PutRanking(user.token, score));
     }
 
+    private IEnumerator PutRanking(string token, int score) {
+        string url = user.host + "/user/v1/games/" + gameName + "/users/" + user.userid;
+        string data = "{\"score\":" + score + "}";
 
-    private IEnumerator GetRanking(string token) {
-        string url = user.host + "/user/v1/games/" + gameName;
-
-        using (UnityWebRequest w = UnityWebRequest.Get(url)) {
+        using (UnityWebRequest w = UnityWebRequest.Put(url, data))
+        {
             w.SetRequestHeader("Authorization", "Bearer " + token);
+            w.SetRequestHeader("Content-Type", "application/json");
+            // Debug.Log(url + "\n\n" + data);
             yield return w.SendWebRequest();
 
-            if (w.isHttpError || w.isNetworkError) {
+            if (w.isHttpError || w.isNetworkError)
+            {
                 //TODO handle error
             }
-            else {
-                // Debug.Log(w.downloadHandler.text);
-                // success
-                Ranking r = JsonUtility.FromJson<Ranking>(w.downloadHandler.text);
-
-                MyRank = r.my;
-                MyRank.nickname = r.my.user.nickname;
-                MyRank.level = r.my.user.badges.winner.level;
-
-                WaitPlz.SetActive(false);
-                RankDataWindow.SetActive(true);
-
-                int size = Math.Min(r.ranking.Count, 5);
-                int i = 0;
-                for (i = 0; i < size; i++) {
-                    Top5[i] = r.ranking[i];
-                    Top5[i].nickname = r.ranking[i].user.nickname;
-                    Top5[i].level = r.ranking[i].user.badges.winner.level;
-                }
-
-                if (i < 5) {
-                    for (int j = i; j < 5; j++) {
-                        //TODO don't show empty data
-                        Top5[j] = new RankData();
-                    }
-                }
-
-                for (i = 0; i < 5; i++)
-                    RankBoxTop5[i].GetComponent<RankBox>().SetRankBox(Top5[i].score, Top5[i].nickname);
+            else
+            {
+                //sucess
+                MyRank = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
+                
+                //success
+                RankData r = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
+                
             }
         }
     }
+
 }

@@ -28,6 +28,7 @@ public class EventController : MonoBehaviour {
     private float bonusTimeLimit;
     private int currentGame;
     private int currentMode;
+    
 
     // 게임 요소
     public static int movementStatus; // 이동모드 상태(전체모드 0, 회전모드 1, 이동모드 2)
@@ -42,6 +43,7 @@ public class EventController : MonoBehaviour {
     private bool killAnswerCheck = false;
     private int gamePause = 0;
     public int isHelp = 0;
+    private RankManager RM;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
@@ -82,7 +84,7 @@ private void Awake()
         ss = EC.GetComponent<StoryScript>();
         bp = EC.GetComponent<ButtonController_Play>();
         sr = plate.GetComponent<SpriteRenderer>();
-        
+        RM = gameObject.GetComponent<RankManager>();
         hints = 3;
         score = 0;
         combo = 0;
@@ -128,6 +130,7 @@ private void Awake()
             ScoreBackground.SetActive(false);
             isPlay = 0;
         }
+
 
     }
 
@@ -680,6 +683,7 @@ private void Awake()
                 case 0: // 순위모드 실패시
                     GameOverBackground.SetActive(true);
                     GameOverBack.SetActive(true);
+                    RM.PutRankInfo(score);
                     break;
                 case 1: // 스토리모드 성공시
                     Chapter1ClearBackground.SetActive(true);
