@@ -185,7 +185,7 @@ private void Awake()
 
         if (killAnswerCheck) goto SkipAnswerCheck;
 
-        // 필요한 모든 검증장치를 여기에 추가한다.
+        // 비스킷 문제 정답체크 및 처리
         if ((gc.isSolvedRect() || isHelp==2 )&& currentGame<=gc.getBiscuitProblems())
         {
             if (gamePause == 0)
@@ -215,7 +215,8 @@ private void Awake()
             }
         }        
 
-        if ((gc.isSolvedRec2Square() || isHelp==2) && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
+        // 직투정 문제 정답처리 및 체크
+        if ((gc.isSolvedRec2Square() || isHelp==2) && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems()-1)
         {
             if (bp.getisFormulaBoardSelected()==0)
             {
@@ -269,6 +270,63 @@ private void Awake()
             }
         }
 
+        // 정투직 문제 정답체크 및 처리
+        if ((gc.isSolvedRect() || isHelp == 2) && currentGame == gc.getRec2SquareProblems())
+        {
+            if (bp.getisFormulaBoardSelected() == 0)
+            {
+                bp.FormulaBoardOn();
+                return;
+            }
+            else if (bp.getisFormulaBoardSelected() == 1)
+            { // waiting for choice
+                return;
+            }
+            else if (bp.getisFormulaBoardSelected() == 3)
+            { // win
+                if (gamePause == 0)
+                {
+                    NextGameButton();
+                    StartCoroutine(ScorePopup());
+                    StopCoroutine(ScorePopup());
+                }
+                else
+                {
+                    if (gamePause == 1) return;
+                    if (currentMode != 0)
+                    {
+                        if (ss.GetstoryProgress() == 4)
+                        {
+                            //Debug.Log("here2");
+                            GameOver(true);
+                        }
+                        isPlay = 0;
+                        ss.SetstoryProgress(ss.GetstoryProgress() + 1);
+                        ss.StoryManager();
+                        return;
+                    }
+                    else
+                    {
+                        winflag = 1;
+                    }
+                }
+            }
+            else
+            {
+                // lose
+                if (currentMode != 0)
+                {
+                    GameOver(false);
+                    return;
+                }
+                LostLife();
+                combo = 0;
+                MakeNewGame();
+                ResetTimeManager();
+            }
+        }
+
+        // 합동삼각형 문제 정답체크 및 처리
         if ((gc.isSolvedSimilarity() || isHelp==2) && currentGame >= gc.getRec2SquareProblems()+1 && currentGame <= gc.getSimilarityProblems())
         {
             if (gamePause == 0)
@@ -380,10 +438,13 @@ private void Awake()
             case 11: // 직투정2
                 score += 1;
                 break;
-            case 12: // 합동삼각형1
+            case 12: // 정투직
+                score += 0;
+                break;
+            case 13: // 합동삼각형1
                 score += 12;
                 break;
-            case 13: // 함동삼각형2
+            case 14: // 함동삼각형2
                 score += 12;
                 break;
         }
@@ -462,16 +523,19 @@ private void Awake()
                     maxtime = 130;
                     mintime = 30;
                     break;
-                case 12: // 합동삼각형1
+                case 12: // 정투직
+                    maxtime = 100;
+                    mintime = 25;
+                    break;
+                case 13: // 합동삼각형1
                     maxtime = 90;
                     mintime = 25;
                     break;
-                case 13: // 함동삼각형2
+                case 14: // 함동삼각형2
                     maxtime = 90;
                     mintime = 25;
                     break;
             }
-
             float halftime = 1000f;
             float norm = 0.006f;
             solveTime = ((maxtime-mintime) / (1 + Mathf.Exp(norm * ((10 * combo + score) - halftime)))) + mintime;
@@ -600,7 +664,7 @@ private void Awake()
         return;
     }
 
-    // 주의 : 이거는 문제해결시 팝업, 공식선택시 보너스팝업은 ButtonColler_Play에 있음
+    // 주의 : 이거는 문제해결시 팝업, 공식선택시 보너스팝업은 ButtonController_Play에 있음
     IEnumerator ScorePopup()
     {
         Debug.Log("ScorePopup Called");

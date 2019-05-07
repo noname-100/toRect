@@ -36,8 +36,8 @@ public class GameController : MonoBehaviour
 
     // 중요 : 출제 변경시 여기에서 범위 변경 필수!!!
     private int biscuitProblems = 9;
-    private int rec2squareProblems = 11;
-    private int similarityProblems = 14;
+    private int rec2squareProblems = 12;
+    private int similarityProblems = 15;
     // 공식출제종류변수
     private int formulaProblems = 5;
     private int formulaAnswer = 0;
@@ -124,19 +124,19 @@ public class GameController : MonoBehaviour
             case 4: // 다각형1(사다리꼴)
                 vertexes = MakePolygon.MakeTrapezoid();
                 break;
-            case 5: // 다각형2(사각형) TODO : 생성함수
+            case 5: // 다각형2(사각형) 
                 vertexes = MakePolygon.MakeQuadrangle();
                 break;
-            case 6: // 다각형2(오각형) TODO : 생성함수
+            case 6: // 다각형2(오각형)
                 vertexes = MakePolygon.MakePentagon();
                 break;
-            case 7: // 다각형3(육각형) TODO : 생성함수
+            case 7: // 다각형3(육각형)
                 vertexes = MakePolygon.MakeHexagon();
                 break;
-            case 8: // 다각형3(칠각형) TODO : 생성함수
+            case 8: // 다각형3(칠각형)
                 vertexes = MakePolygon.MakeHeptagon();
                 break;
-            case 9: // 다각형3(팔각형) TODO : 생성함수
+            case 9: // 다각형3(팔각형)
                 vertexes = MakePolygon.MakeOctagon();
                 break;
             case 10: // 직투정
@@ -145,12 +145,15 @@ public class GameController : MonoBehaviour
             case 11: // 직투정2
                 vertexes = MakePolygon.MakeJig();
                 break;
+            case 12: // 정투직
+                vertexes = MakePolygon.MakeJung();
+                break;
         }
 
         // normalize here
         // 가장 긴 변이 최대 범위의 60% ~ 67% 범위로 랜덤 비율적용되게 하고, 다른 변들도 그렇게 적용한다.
 
-        if (gameType <= 11) // GAME TYPE HARD CODED HERE : 투렉트 + 직투정 생성
+        if (gameType <= rec2squareProblems) // GAME TYPE HARD CODED HERE : 투렉트 + 직투정 생성
         {
             var firstTriangle = new GameObject("Polygon");
             firstTriangle.AddComponent(System.Type.GetType("Polygon"));
@@ -221,7 +224,14 @@ public class GameController : MonoBehaviour
             {
                 GenerateSquares(); // 초코칩 생성함수
                 // Debug.Log("am i not called?");
-                MakeFormulas(); // 수식 생성함수
+                if (gameType == 12)
+                {
+                    MakeFormulasJung();
+                }
+                else
+                {
+                    MakeFormulas(); // 수식 생성함수
+                }                    
             }
 
         }
@@ -339,6 +349,45 @@ public class GameController : MonoBehaviour
             polygonList.Add(Square);
         }        
         return;
+    }
+
+    public void MakeFormulasJung()
+    {
+        // Debug.Log("MakeFormulas");
+        List<string> candidates = FormulaPoolJung();
+        for (int i = 0; i < candidates.Count; i++)
+        {
+            // Debug.Log(candidates[i]);
+        }
+        formula1.text = candidates[0];
+        formula2.text = candidates[1];
+        formula3.text = candidates[2];
+        return;
+    }
+
+    public List<string> FormulaPoolJung()
+    {
+        String[] syms = { "★", "■", "♥", "●" };
+        List<String> symbols = new List<String>(syms);
+        List<String> pool = new List<String>();
+        string first = symbols[UnityEngine.Random.Range(0, 4)];
+        symbols.Remove(first);
+        string second = symbols[UnityEngine.Random.Range(0, 4)];
+        string ans = String.Format("999{0} x ({0} + 2 x {1}) = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
+        String[] wrong = new String[3];
+        wrong[0] = String.Format("999({0}-{1}) x ({0}-{1}) + 2 x {1} x {0} = {0} x {0} - {1} x {1}", first, second);
+        wrong[1] = String.Format("999({0}-{1}) x ({0}+{1}) = ({0}-{1}) x ({0}-{1}) +2 x {1} x {0}", first, second);
+        wrong[2] = String.Format("999{0} x {0} = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
+        pool.Add(ans);
+        int exclude = UnityEngine.Random.Range(0, 3);
+        for (int i = 0; i < 3; i++)
+        {
+            if (i != exclude)
+            {
+                pool.Add(wrong[i]);
+            }
+        }
+        return pool;
     }
 
     public void MakeFormulas() {

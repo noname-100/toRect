@@ -15,6 +15,8 @@ public class StoryScript : MonoBehaviour {
     // EventController
     public GameObject EC;
     private EventController ec;
+    public GameObject GC;
+    private GameController gc;
     public GameObject HintButton;
     public GameObject BackGroundFilter;
 
@@ -38,6 +40,7 @@ public class StoryScript : MonoBehaviour {
         // Sync with Event controller
 
         ec = EC.GetComponent<EventController>();
+        gc = GC.GetComponent<GameController>();
 
         // using "storyprogress" state variable
 
@@ -147,6 +150,10 @@ public class StoryScript : MonoBehaviour {
                     PlayerPrefs.SetInt("Game", 10);
                     ec.SetisPlay(1);
                     break;
+                case 5:
+                    PlayerPrefs.SetInt("Game", 12);
+                    ec.SetisPlay(1);
+                    break;
             }
 
         }
@@ -168,7 +175,7 @@ public class StoryScript : MonoBehaviour {
                     break;
                 case 3:
                     Stop_TextBox_S(2);
-                    PlayerPrefs.SetInt("Game", 12);
+                    PlayerPrefs.SetInt("Game", 13);
                     ec.SetisPlay(1);
                     break;
             }
