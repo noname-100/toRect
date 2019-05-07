@@ -45,7 +45,7 @@ public class RankManager : MonoBehaviour
 
     // 시작하면서 UserData 받아오고 저장
     void Start() {
-        LoadData();
+        // LoadData();
     }
 
     void LoadData()

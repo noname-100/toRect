@@ -39,8 +39,8 @@ public class GameController : MonoBehaviour
 
     // 중요 : 출제 변경시 여기에서 범위 변경 필수!!!
     private int biscuitProblems = 9;
-    private int rec2squareProblems = 11;
-    private int similarityProblems = 14;
+    private int rec2squareProblems = 12;
+    private int similarityProblems = 15;
     // 공식출제종류변수
     private int formulaProblems = 5;
     private int formulaAnswer = 0;
@@ -48,7 +48,7 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         // dish.transform.position = new Vector3(5.46f, 1.62f, 0);
-        counter++;
+        counter = 0;
         ss = EC.GetComponent<StoryScript>();
         ec = EC.GetComponent<EventController>();
         mp = gameObject.GetComponent<MakePolygon>();
@@ -75,13 +75,13 @@ public class GameController : MonoBehaviour
             }
             backgroundMidpoints.Add(new Vector2(midpointsTmpx / 4, midpointsTmpy / 4));
         }
-
+        if(ec.GetdebugMode()) Debug.Log("GameController Awake");
         return;
     }
 
     public void makeNew(int gameType)
     {
-        // Debug.Log(counter + " called " + gameType);
+        if (ec.GetdebugMode()) Debug.Log(counter + " makeNew : " + gameType);
         // counter++;
         foreach (GameObject p in polygonList)
         {
@@ -127,19 +127,19 @@ public class GameController : MonoBehaviour
             case 4: // 다각형1(사다리꼴)
                 vertexes = MakePolygon.MakeTrapezoid();
                 break;
-            case 5: // 다각형2(사각형) TODO : 생성함수
+            case 5: // 다각형2(사각형) 
                 vertexes = MakePolygon.MakeQuadrangle();
                 break;
-            case 6: // 다각형2(오각형) TODO : 생성함수
+            case 6: // 다각형2(오각형)
                 vertexes = MakePolygon.MakePentagon();
                 break;
-            case 7: // 다각형3(육각형) TODO : 생성함수
+            case 7: // 다각형3(육각형)
                 vertexes = MakePolygon.MakeHexagon();
                 break;
-            case 8: // 다각형3(칠각형) TODO : 생성함수
+            case 8: // 다각형3(칠각형)
                 vertexes = MakePolygon.MakeHeptagon();
                 break;
-            case 9: // 다각형3(팔각형) TODO : 생성함수
+            case 9: // 다각형3(팔각형)
                 vertexes = MakePolygon.MakeOctagon();
                 break;
             case 10: // 직투정
@@ -148,12 +148,17 @@ public class GameController : MonoBehaviour
             case 11: // 직투정2
                 vertexes = MakePolygon.MakeJig();
                 break;
+            case 12: // 정투직
+                vertexes = MakePolygon.MakeJung();
+                break;
         }
 
+        if (ec.GetdebugMode()) Debug.Log(counter + " vertexes done");
+        
         // normalize here
         // 가장 긴 변이 최대 범위의 60% ~ 67% 범위로 랜덤 비율적용되게 하고, 다른 변들도 그렇게 적용한다.
 
-        if (gameType <= 11) // GAME TYPE HARD CODED HERE : 투렉트 + 직투정 생성
+        if (gameType <= rec2squareProblems) // GAME TYPE HARD CODED HERE : 투렉트 + 직투정 생성
         {
             var firstTriangle = new GameObject("Polygon");
             firstTriangle.AddComponent(System.Type.GetType("Polygon"));
@@ -164,6 +169,7 @@ public class GameController : MonoBehaviour
                 currmidy += vertexes[i].y;
             }
             currmidx /= vertexes.Length; currmidy /= vertexes.Length;
+            if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 0");
             float backgroundMidPointx = backgroundMidpoints[gameType <= biscuitProblems ? 0 : 1].x;
             float backgroundMidPointy = backgroundMidpoints[gameType <= biscuitProblems ? 0 : 1].y;
             Vector2 diff = new Vector2(currmidx - backgroundMidPointx, currmidy - backgroundMidPointy);
@@ -177,6 +183,7 @@ public class GameController : MonoBehaviour
                 vectors[i].y = vertexes[i].y - backgroundMidPointy;
                 if (Mathf.Pow(vectors[i].x, 2) + Mathf.Pow(vectors[i].y, 2) > maxlength) maxlength = Mathf.Pow(vectors[i].x, 2) + Mathf.Pow(vectors[i].y, 2);
             }
+            if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 1");
             float tomatch = UnityEngine.Random.Range(0.6f * maxLength[gameType <= biscuitProblems ? 0 : 1], 0.67f * maxLength[gameType <= biscuitProblems ? 0 : 1]);
             float proportion = 1.5f * tomatch / Mathf.Pow(maxlength,0.5f);
             Polygon.jiktojunglength *= proportion;
@@ -187,6 +194,7 @@ public class GameController : MonoBehaviour
                 result[i].x = backgroundMidPointx + proportion * vectors[i].x;
                 result[i].y = backgroundMidPointy + proportion * vectors[i].y;
             }
+            if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 2");
             /*
             float tmpx = Mathf.Pow(Mathf.Pow(vertexes[0].x - vertexes[1].x, 2), 0.5f) + Mathf.Pow(Mathf.Pow(vertexes[0].y - vertexes[1].y, 2), 0.5f);
             float tmpy = Mathf.Pow(Mathf.Pow(result[0].x - result[1].x, 2), 0.5f) + Mathf.Pow(Mathf.Pow(result[0].y - result[1].y, 2), 0.5f);
@@ -202,7 +210,7 @@ public class GameController : MonoBehaviour
 
             rotateangle = UnityEngine.Random.Range(0f, 360f);
             firstTriangle.transform.RotateAround(new Vector3(backgroundMidPointx, backgroundMidPointy, 0), Vector3.forward, rotateangle);
-
+            if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 3");
             // 넓이를 검사해서 너무 작은 삼각형은 다시 한다.
             Mesh mesh = firstTriangle.GetComponent<MeshFilter>().mesh;
             Vector3[] meshVertices = mesh.vertices;
@@ -213,6 +221,7 @@ public class GameController : MonoBehaviour
             }
             area *= 0.5f;
             // Debug.Log("area " + area.magnitude);
+            if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 4");
             if (area.magnitude < 2.4f)
             {
                 // Debug.Log(counter + " remaking..");
@@ -220,14 +229,24 @@ public class GameController : MonoBehaviour
                 polygonList.RemoveAt(polygonList.Count - 1);
                 makeNew(gameType);
             }
-
+            if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 5");
             if (Polygon.jiktojung)
             {
-                GenerateSquares(); // 초코칩 생성함수
-                // Debug.Log("am i not called?");
-                MakeFormulas(); // 수식 생성함수
+                Debug.Log(counter + " jiktojung true");
+                GenerateSquares();
+                Debug.Log(counter + " GenerateSquares Done");
+                MakeFormulas();                
+            }
+            if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 6");
+            if (Polygon.jungtojik)
+            {
+                Debug.Log(counter + " jungtojik true");
+                MakeFormulasJung();
             }
 
+
+            if (ec.GetdebugMode()) Debug.Log("counter at : " + counter);
+            counter++;
         }
         else
         {
@@ -323,6 +342,7 @@ public class GameController : MonoBehaviour
 
     public void GenerateSquares()
     {
+        if (ec.GetdebugMode()) Debug.Log("GenerateSquares");
         int howMany = (int) UnityEngine.Random.Range(3f, 5f);
         List<Vector2[]> Squares = new List<Vector2[]>();
         List<Vector3> Collisions = new List<Vector3>();
@@ -364,7 +384,7 @@ public class GameController : MonoBehaviour
                 } while (true);
             }catch(Exception e)
             {
-                Debug.Log("Failed to find proper point on Frypan : Too many tries");
+                if (ec.GetdebugMode()) Debug.Log("Failed to find proper point on Frypan : Too many tries");
                 howMany = Squares.Count;
             }
         }
@@ -379,13 +399,58 @@ public class GameController : MonoBehaviour
         return;
     }
 
+    public void MakeFormulasJung()
+    {
+        if (ec.GetdebugMode()) Debug.Log("MakeFormulasJung");        
+        List<string> candidates = FormulaPoolJung();
+        candidates = ShuffleArray(candidates);
+        for (int i = 0; i < candidates.Count; i++)
+        {
+            if (ec.GetdebugMode()) Debug.Log(counter+"final " +candidates[i]);
+        }
+        if (ec.GetdebugMode()) Debug.Log(counter + "formulaandswer at : " + formulaAnswer);
+        formula1.text = candidates[0];
+        formula2.text = candidates[1];
+        formula3.text = candidates[2];
+        return;
+    }
+
+    public List<string> FormulaPoolJung()
+    {
+        if (ec.GetdebugMode()) Debug.Log("FormulaPoolJung");
+        String[] syms = { "★", "■", "♥", "●" };
+        List<String> symbols = new List<String>(syms);
+        List<String> pool = new List<String>();
+        string first = symbols[UnityEngine.Random.Range(0, 4)];
+        symbols.Remove(first);
+        string second = symbols[UnityEngine.Random.Range(0, 4)];
+        string ans = String.Format("{0} x {0} - {1} x {1} = ({0} - {1}) x ({0} + {1})", first, second);
+        String[] wrong = new String[3];
+        wrong[0] = String.Format("({0} - {1}) x ({0} - {1}) + 2 x {1} x {0} = {0} x {0} - {1} x {1}", first, second);
+        wrong[1] = String.Format("{0} x ({0} + 2 x {1}) = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
+        wrong[2] = String.Format("{0} x {0} = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
+        pool.Add(ans);
+        formulaAnswer = 0;
+        int exclude = UnityEngine.Random.Range(0, 3);
+        for (int i = 0; i < 3; i++)
+        {
+            if (i != exclude)
+            {
+                pool.Add(wrong[i]);
+            }
+        }
+        return pool;
+    }
+
     public void MakeFormulas() {
-        // Debug.Log("MakeFormulas");
+        if (ec.GetdebugMode()) Debug.Log("MakeFormulas");
         List<string> candidates = FormulaPool();
+        candidates = ShuffleArray(candidates);
         for(int i = 0; i < candidates.Count; i++)
         {
-            // Debug.Log(candidates[i]);
+            if (ec.GetdebugMode()) Debug.Log(counter + "final : " + candidates[i]);
         }
+        if (ec.GetdebugMode()) Debug.Log(counter + "formulaandswer at : " + formulaAnswer);
         formula1.text = candidates[0];
         formula2.text = candidates[1];
         formula3.text = candidates[2];
@@ -395,6 +460,7 @@ public class GameController : MonoBehaviour
     // TODO : X 대신 a, b, c 사용해서 공식 섞어줘야 한다.
     public List<string> FormulaPool()
     {
+        if (ec.GetdebugMode()) Debug.Log("FormulaPool");
         String[] syms = { "★", "■", "♥", "●" };
         List<String> symbols = new List<String>(syms);
         List<String> pool = new List<String>();
@@ -407,6 +473,7 @@ public class GameController : MonoBehaviour
         wrong[1] = String.Format("({0}-{1}) x ({0}+{1}) = ({0}-{1}) x ({0}-{1}) +2 x {1} x {0}", first, second);
         wrong[2] = String.Format("{0} x {0} = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
         pool.Add(ans);
+        formulaAnswer = 0;
         int exclude = UnityEngine.Random.Range(0, 3);
         for (int i = 0; i < 3; i++)
         {
@@ -420,10 +487,12 @@ public class GameController : MonoBehaviour
 
     public bool isSolvedSimilarity()
     {
-        // Debug.Log("Checking Similarity Answer Candidancy");
+        bool methoddebugger = false;
+
+        if (ec.GetdebugMode() && methoddebugger) Debug.Log("Checking Similarity Answer Candidancy");
         if(polygonList.Count != 1)
         {
-            // Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
+            if (ec.GetdebugMode() && methoddebugger) Debug.Log("similarity answer check : polygon more than 1 : " + polygonList.Count);
             return false;
         }
 
@@ -439,20 +508,20 @@ public class GameController : MonoBehaviour
         }
         midx /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
         midy /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
-        // Debug.Log("centrum : " + midx + " " + midy);
+        if (ec.GetdebugMode() && methoddebugger) Debug.Log("centrum : " + midx + " " + midy);
 
         if (reference == null)
         {
-            // Debug.Log("similarity reference not read properly. returns null");
+            if (ec.GetdebugMode() && methoddebugger) Debug.Log("similarity reference not read properly. returns null");
             return false;
         }
 
         if (reference.Length != 4)
         {
-            // Debug.Log("edge not four, instead : " + reference.Length);
+            if (ec.GetdebugMode() && methoddebugger) Debug.Log("edge not four, instead : " + reference.Length);
             for (int i = 0; i < reference.Length; i++)
             {
-                // Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
+                if (ec.GetdebugMode() && methoddebugger) Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
             }
             return false;
         }
@@ -471,12 +540,12 @@ public class GameController : MonoBehaviour
             {
                 if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
                 {
-                   // Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                    if (ec.GetdebugMode() && methoddebugger) Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                     return false;
                 }
             }
         }
-        // Debug.Log("this is rectangle");
+        if (ec.GetdebugMode() && methoddebugger) Debug.Log("this is rectangle");
 
         // 여기에서 판 위에 직사각형이 있는지 체크한다.
         /*
@@ -489,22 +558,22 @@ public class GameController : MonoBehaviour
         Debug.Log("position : " + worldPosition.x + " " + worldPosition.y + " " + worldPosition.z);
         */
 
-        // Debug.Log("dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
-        // Debug.Log("angle : " + polygonList[0].transform.rotation.eulerAngles.z);
+        if (ec.GetdebugMode() && methoddebugger) Debug.Log("dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
+        if (ec.GetdebugMode() && methoddebugger) Debug.Log("angle : " + polygonList[0].transform.rotation.eulerAngles.z);
         if ((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.1)
         {
-            //Debug.Log("pie not on plate");
+            if (ec.GetdebugMode() && methoddebugger) Debug.Log("pie not on plate");
             return false;
         }
         /*
         if(!(polygonList[0].transform.eulerAngles.z >= 8 && polygonList[0].transform.rotation.eulerAngles.z <= 53) && !(polygonList[0].transform.rotation.eulerAngles.z <= -120 && polygonList[0].transform.rotation.eulerAngles.z >= -165))
         {
-            //Debug.Log("pie not in right angle");
+            if (ec.GetdebugMode() && methoddebugger) Debug.Log("pie not in right angle");
             return false;
         }
         */
 
-        // Debug.Log("Similarity : final answer met");
+        if (ec.GetdebugMode() && methoddebugger) Debug.Log("Similarity : final answer met");
         return true;
     }
 
@@ -522,22 +591,24 @@ public class GameController : MonoBehaviour
 
     public bool isSolvedRec2Square()
     {
+        bool methoddebugger = false;
+
         for (int z = 0; z < polygonList.Count; z++)
         {
 
             Vector3[] reference = polygonList[z].GetComponent<Polygon>().vertices3D;
             if (reference == null)
             {
-                //Debug.Log("Rec2Square reference not read properly. returns null");
+                if (ec.GetdebugMode() && methoddebugger) Debug.Log("Rec2Square reference not read properly. returns null");
                 return false;
             }
 
             if (reference.Length != 4)
             {
-                // Debug.Log("Rec2Square not four, instead : " + reference.Length);
+                if (ec.GetdebugMode() && methoddebugger) Debug.Log("Rec2Square not four, instead : " + reference.Length);
                 for (int i = 0; i < reference.Length; i++)
                 {
-                    //Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
+                    if (ec.GetdebugMode() && methoddebugger) Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
                 }
                 return false;
             }
@@ -556,48 +627,50 @@ public class GameController : MonoBehaviour
                 {
                     if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
                     {
-                        // Debug.Log("Rec2Square found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                        if (ec.GetdebugMode() && methoddebugger) Debug.Log("Rec2Square found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                         return false;
                     }
                     else
                     {
                         if ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude > 0.01)
                         {
-                            // Debug.Log("Rec2Square rectangle is not square, length diff : " + ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude));
+                            if (ec.GetdebugMode() && methoddebugger) Debug.Log("Rec2Square rectangle is not square, length diff : " + ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude));
                             return false;
                         }
                     }
                 }
             }
 
-            // Debug.Log(z + " quadrangle is square");
+            if (ec.GetdebugMode() && methoddebugger) Debug.Log(z + " quadrangle is square");
         }
 
-        // Debug.Log("All remainders are square");
+        if (ec.GetdebugMode() && methoddebugger) Debug.Log("All remainders are square");
         return true;
     }
 
     public bool isSolvedRect()
     {
+        bool methoddebugger = false;
+
         if (polygonList.Count != 1)
         {
-            // Debug.Log("Biscuit answer check : polygon more than 1 : " + polygonList.Count);
+            if (ec.GetdebugMode() && methoddebugger) Debug.Log("Biscuit answer check : polygon more than 1 : " + polygonList.Count);
             return false;
         }
 
         Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
         if (reference == null)
         {
-            //Debug.Log("Biscuit reference not read properly. returns null");
+            if (ec.GetdebugMode() && methoddebugger) Debug.Log("Biscuit reference not read properly. returns null");
             return false;
         }
 
         if (reference.Length != 4)
         {
-            // Debug.Log("Biscuit edge not four, instead : " + reference.Length);
+            if (ec.GetdebugMode() && methoddebugger) Debug.Log("Biscuit edge not four, instead : " + reference.Length);
             for (int i = 0; i < reference.Length; i++)
             {
-                // Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
+                if (ec.GetdebugMode() && methoddebugger) Debug.Log(i + " " + "x : " + reference[i].x + " " + "y : " + reference[i].y);
             }
             return false;
         }
@@ -616,13 +689,13 @@ public class GameController : MonoBehaviour
             {
                 if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
                 {
-                    // Debug.Log("Biscuit found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
+                    if (ec.GetdebugMode() && methoddebugger) Debug.Log("Biscuit found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                     return false;
                 }
             }
         }
 
-        // Debug.Log("Biscuit this is rectangle");
+        if (ec.GetdebugMode() && methoddebugger) Debug.Log("Biscuit this is rectangle");
         return true;
     }
 
@@ -649,5 +722,50 @@ public class GameController : MonoBehaviour
     public int getFormulaAnswer()
     {
         return formulaAnswer;
+    }
+
+    private List<string> ShuffleArray(List<string> given)
+    {
+        bool methoddebugger = false;
+
+        for (int i = 0; i < given.Count - 1; i++)
+        {
+            int r = UnityEngine.Random.Range(i, given.Count);
+            bool NoNotAFlagAgain = false;
+            string tmp = given[i];
+            given[i] = given[r];
+            given[r] = tmp;
+            if (formulaAnswer == i)
+            {
+                formulaAnswer = r;
+                if (ec.GetdebugMode() && methoddebugger) Debug.Log(counter+"formulaAnswer swapped to : " + formulaAnswer + " i : " + i + " r : " + r);
+                NoNotAFlagAgain = true;
+            }
+
+            if (formulaAnswer == r && !NoNotAFlagAgain)
+            {
+                formulaAnswer = i;
+                if (ec.GetdebugMode() && methoddebugger) Debug.Log(counter + "formulaAnswer swapped to : " + formulaAnswer + " i : " + r + " r : " + r);
+            }
+
+            for (int j = 0; j < given.Count; j++)
+            {
+                if (ec.GetdebugMode() && methoddebugger) Debug.Log(counter + "curr" + i + " : " + given[j]);
+            }
+
+            if (i == 1)
+            {
+                for (int j = 0; j < given.Count; j++)
+                {
+                    if (ec.GetdebugMode() && methoddebugger) Debug.Log(counter + "last0 : " + given[j]);
+                }
+            }
+        }
+
+        for (int j = 0; j < given.Count; j++)
+        {
+            if (ec.GetdebugMode() && methoddebugger) Debug.Log(counter + "last : " + given[j]);
+        }
+        return given;
     }
 }

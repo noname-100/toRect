@@ -19,8 +19,9 @@ public class EventController : MonoBehaviour {
      *  
      */
     
-    private int testGameMode = -1;
+    private int testGameMode = 13;
     private float testGameTime = -1;
+    private bool debugMode = false;
 
     // 난이도요소
     private int combo;
@@ -133,7 +134,7 @@ private void Awake()
             isPlay = 0;
         }
 
-
+        //Debug.Log("EventController Awake");
     }
 
     // Update function for every timeframe
@@ -141,12 +142,14 @@ private void Awake()
     {
         //Debug.Log("Storyprogress " + ss.storyprogress);
         // check for game end ( different for different levels/modes ) comes here.
+        if (debugMode) Debug.Log("isPlay : " + isPlay);
         if(isPlay != 0) GameManager();
 
     }
 
     public void GameManager()
     {
+        if(debugMode) Debug.Log("GameManager");
         int winflag = 0;
 
         // 목숨이 없는 경우
@@ -162,8 +165,7 @@ private void Awake()
             {
                 GameOver(false);
                 return;
-            }
-            plate.transform.localScale = new Vector3(1f, 1f, 0);
+            }            
             gamePause = 0;
             isHelp = 0;
             combo = 0;
@@ -185,7 +187,7 @@ private void Awake()
 
         if (killAnswerCheck) goto SkipAnswerCheck;
 
-        // 필요한 모든 검증장치를 여기에 추가한다.
+        // 비스킷 문제 정답체크 및 처리
         if ((gc.isSolvedRect() || isHelp==2 )&& currentGame<=gc.getBiscuitProblems())
         {
             if (gamePause == 0)
@@ -215,7 +217,8 @@ private void Awake()
             }
         }        
 
-        if ((gc.isSolvedRec2Square() || isHelp==2) && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
+        // 직투정 문제 정답처리 및 체크
+        if ((gc.isSolvedRec2Square() || isHelp==2) && currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems()-1)
         {
             if (bp.getisFormulaBoardSelected()==0)
             {
@@ -238,11 +241,6 @@ private void Awake()
                     if (gamePause == 1) return;
                     if (currentMode != 0)
                     {
-                        if (ss.GetstoryProgress() == 4)
-                        {
-                            //Debug.Log("here2");
-                            GameOver(true);
-                        }
                         isPlay = 0;
                         ss.SetstoryProgress(ss.GetstoryProgress() + 1);
                         ss.StoryManager();
@@ -269,6 +267,56 @@ private void Awake()
             }
         }
 
+        // 정투직 문제 정답체크 및 처리
+        if ((gc.isSolvedRect() || isHelp == 2) && currentGame == gc.getRec2SquareProblems())
+        {
+            if (bp.getisFormulaBoardSelected() == 0)
+            {
+                bp.FormulaBoardOn();
+                return;
+            }
+            else if (bp.getisFormulaBoardSelected() == 1)
+            { // waiting for choice
+                return;
+            }
+            else if (bp.getisFormulaBoardSelected() == 3)
+            { // win
+                if (gamePause == 0)
+                {
+                    NextGameButton();
+                    StartCoroutine(ScorePopup());
+                    StopCoroutine(ScorePopup());
+                }
+                else
+                {
+                    if (gamePause == 1) return;
+                    if (currentMode != 0)
+                    {
+                        GameOver(true);
+                        return;
+                    }
+                    else
+                    {
+                        winflag = 1;
+                    }
+                }
+            }
+            else
+            {
+                // lose
+                if (currentMode != 0)
+                {
+                    GameOver(false);
+                    return;
+                }
+                LostLife();
+                combo = 0;
+                MakeNewGame();
+                ResetTimeManager();
+            }
+        }
+
+        // 합동삼각형 문제 정답체크 및 처리
         if ((gc.isSolvedSimilarity() || isHelp==2) && currentGame >= gc.getRec2SquareProblems()+1 && currentGame <= gc.getSimilarityProblems())
         {
             if (gamePause == 0)
@@ -380,10 +428,13 @@ private void Awake()
             case 11: // 직투정2
                 score += 1;
                 break;
-            case 12: // 합동삼각형1
+            case 12: // 정투직
+                score += 0;
+                break;
+            case 13: // 합동삼각형1
                 score += 12;
                 break;
-            case 13: // 함동삼각형2
+            case 14: // 함동삼각형2
                 score += 12;
                 break;
         }
@@ -462,16 +513,19 @@ private void Awake()
                     maxtime = 130;
                     mintime = 30;
                     break;
-                case 12: // 합동삼각형1
+                case 12: // 정투직
+                    maxtime = 100;
+                    mintime = 25;
+                    break;
+                case 13: // 합동삼각형1
                     maxtime = 90;
                     mintime = 25;
                     break;
-                case 13: // 함동삼각형2
+                case 14: // 함동삼각형2
                     maxtime = 90;
                     mintime = 25;
                     break;
             }
-
             float halftime = 1000f;
             float norm = 0.006f;
             solveTime = ((maxtime-mintime) / (1 + Mathf.Exp(norm * ((10 * combo + score) - halftime)))) + mintime;
@@ -495,10 +549,10 @@ private void Awake()
             else solveTime = 5; // 에러
         }else if(currentMode == 2)
         {   // Rec2Square Story Mode
-            solveTime = 300;
+            solveTime = 150;
         }else if(currentMode == 3)
         {   // Similarity Story Mode
-            solveTime = 90;
+            solveTime = 110;
         }
         current_Time = solveTime;
         return;
@@ -513,6 +567,7 @@ private void Awake()
     
     private void MakeNewGame()
     {
+        plate.transform.localScale = new Vector3(1f, 1f, 0);
         gamePause = 0;
         isHelp = 0;
         bp.setisFormulaButtonSelectable(0);
@@ -600,7 +655,7 @@ private void Awake()
         return;
     }
 
-    // 주의 : 이거는 문제해결시 팝업, 공식선택시 보너스팝업은 ButtonColler_Play에 있음
+    // 주의 : 이거는 문제해결시 팝업, 공식선택시 보너스팝업은 ButtonController_Play에 있음
     IEnumerator ScorePopup()
     {
         Debug.Log("ScorePopup Called");
@@ -790,6 +845,17 @@ private void Awake()
     {
         score = given;
         return;
+    }
+
+    public void SetdebugMode(bool given)
+    {
+        debugMode = given;
+        return;
+    }
+
+    public bool GetdebugMode()
+    {
+        return debugMode;
     }
 
     public int GetCombo()

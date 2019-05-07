@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 public class ButtonController_Title : MonoBehaviour {
 
@@ -196,7 +197,7 @@ public class ButtonController_Title : MonoBehaviour {
 
     public void QuitGame()
     {
-
+        Application.OpenURL("https://quebon.tv");
     }
 
     public void SoundOn()

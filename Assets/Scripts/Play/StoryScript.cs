@@ -15,6 +15,8 @@ public class StoryScript : MonoBehaviour {
     // EventController
     public GameObject EC;
     private EventController ec;
+    public GameObject GC;
+    private GameController gc;
     public GameObject HintButton;
     public GameObject BackGroundFilter;
 
@@ -29,15 +31,17 @@ public class StoryScript : MonoBehaviour {
     private void Awake()
     {
         // adding scripts
+        
 
         tutorials = new List<GameObject[]>();
         tutorials.Add(BiscuitTutorials);
         tutorials.Add(CookieTutorials);
         tutorials.Add(PieTutorials);
-
+        Debug.Log("StoryScript tutorials init");
         // Sync with Event controller
 
         ec = EC.GetComponent<EventController>();
+        gc = GC.GetComponent<GameController>();
 
         // using "storyprogress" state variable
 
@@ -45,7 +49,7 @@ public class StoryScript : MonoBehaviour {
         storyProgress = 0;
         StoryManager();
         isHintAvailable = true;
-
+        //Debug.Log("StoryScript Awake");
     }
 
     // Update is called once per frame
@@ -62,6 +66,7 @@ public class StoryScript : MonoBehaviour {
 
     public void StoryManager()
     {
+        if(ec.GetdebugMode()) Debug.Log("StoryManager");
         if(currentMode == 0)
         { // Biscuit Story
 
@@ -147,6 +152,10 @@ public class StoryScript : MonoBehaviour {
                     PlayerPrefs.SetInt("Game", 10);
                     ec.SetisPlay(1);
                     break;
+                case 5:
+                    PlayerPrefs.SetInt("Game", 12);
+                    ec.SetisPlay(1);
+                    break;
             }
 
         }
@@ -168,7 +177,7 @@ public class StoryScript : MonoBehaviour {
                     break;
                 case 3:
                     Stop_TextBox_S(2);
-                    PlayerPrefs.SetInt("Game", 12);
+                    PlayerPrefs.SetInt("Game", 13);
                     ec.SetisPlay(1);
                     break;
             }
