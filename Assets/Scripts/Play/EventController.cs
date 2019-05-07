@@ -614,7 +614,7 @@ private void Awake()
         yield return new WaitForSeconds(0.01f);
         current_Time -= 0.017f;
         TimeText.text = current_Time.ToString("##0.00") + " sec";
-        ProgressBar.transform.localScale = new Vector3(1f*current_Time/solveTime,1,1);
+        // ProgressBar.transform.localScale = new Vector3(1.75f*current_Time/solveTime,1,1);
         StartCoroutine("Timer");
     }
 
