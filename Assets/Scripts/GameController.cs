@@ -493,15 +493,16 @@ public class GameController : MonoBehaviour
         // Debug.Log("angle : " + polygonList[0].transform.rotation.eulerAngles.z);
         if ((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.1)
         {
-            Debug.Log("pie not on plate");
+            //Debug.Log("pie not on plate");
             return false;
         }
-
+        /*
         if(!(polygonList[0].transform.eulerAngles.z >= 8 && polygonList[0].transform.rotation.eulerAngles.z <= 53) && !(polygonList[0].transform.rotation.eulerAngles.z <= -120 && polygonList[0].transform.rotation.eulerAngles.z >= -165))
         {
-            Debug.Log("pie not in right angle");
+            //Debug.Log("pie not in right angle");
             return false;
         }
+        */
 
         // Debug.Log("Similarity : final answer met");
         return true;
