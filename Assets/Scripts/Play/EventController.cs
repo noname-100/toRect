@@ -19,7 +19,7 @@ public class EventController : MonoBehaviour {
      *  
      */
     
-    private int testGameMode = -1;
+    private int testGameMode = 13;
     private float testGameTime = -1;
     private bool debugMode = false;
 
@@ -142,14 +142,14 @@ private void Awake()
     {
         //Debug.Log("Storyprogress " + ss.storyprogress);
         // check for game end ( different for different levels/modes ) comes here.
-        Debug.Log("isPlay : " + isPlay);
+        if (debugMode) Debug.Log("isPlay : " + isPlay);
         if(isPlay != 0) GameManager();
 
     }
 
     public void GameManager()
     {
-        Debug.Log("GameManager");
+        if(debugMode) Debug.Log("GameManager");
         int winflag = 0;
 
         // 목숨이 없는 경우
@@ -165,8 +165,7 @@ private void Awake()
             {
                 GameOver(false);
                 return;
-            }
-            plate.transform.localScale = new Vector3(1f, 1f, 0);
+            }            
             gamePause = 0;
             isHelp = 0;
             combo = 0;
@@ -568,6 +567,7 @@ private void Awake()
     
     private void MakeNewGame()
     {
+        plate.transform.localScale = new Vector3(1f, 1f, 0);
         gamePause = 0;
         isHelp = 0;
         bp.setisFormulaButtonSelectable(0);

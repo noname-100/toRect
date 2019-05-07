@@ -66,7 +66,7 @@ public class StoryScript : MonoBehaviour {
 
     public void StoryManager()
     {
-        Debug.Log("StoryManager");
+        if(ec.GetdebugMode()) Debug.Log("StoryManager");
         if(currentMode == 0)
         { // Biscuit Story
 
