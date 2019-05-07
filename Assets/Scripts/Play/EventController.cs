@@ -44,6 +44,7 @@ public class EventController : MonoBehaviour {
     private bool killAnswerCheck = false;
     private int gamePause = 0;
     public int isHelp = 0;
+    private bool similarityOnceSolved = false;
     private RankManager RM;
     public GameObject ComboSign;
     public Text ComboText;
@@ -318,7 +319,7 @@ private void Awake()
         }
 
         // 합동삼각형 문제 정답체크 및 처리
-        if ((gc.isSolvedSimilarity() || isHelp==2) && currentGame >= gc.getRec2SquareProblems()+1 && currentGame <= gc.getSimilarityProblems())
+        if ((gc.isSolvedSimilarity() || isHelp==2 || similarityOnceSolved) && currentGame >= gc.getRec2SquareProblems()+1 && currentGame <= gc.getSimilarityProblems())
         {
             if (gamePause == 0)
             {
@@ -571,6 +572,7 @@ private void Awake()
         plate.transform.localScale = new Vector3(1f, 1f, 0);
         gamePause = 0;
         isHelp = 0;
+        similarityOnceSolved = false;
         bp.setisFormulaButtonSelectable(0);
         if (currentMode == 0)
         {
@@ -662,7 +664,7 @@ private void Awake()
     // 주의 : 이거는 문제해결시 팝업, 공식선택시 보너스팝업은 ButtonController_Play에 있음
     IEnumerator ScorePopup()
     {
-        Debug.Log("ScorePopup Called");
+        // Debug.Log("ScorePopup Called");
         ScoreSign.SetActive(true);
         if(currentMode==0 && combo>0)
         ComboSign.SetActive(true);
@@ -866,6 +868,17 @@ private void Awake()
     public int GetCombo()
     {
         return combo;
+    }
+
+    public bool getSimilarityOnceSolved()
+    {
+        return similarityOnceSolved;
+    }
+
+    public void setSimilarityOnceSolved(bool given)
+    {
+        similarityOnceSolved = given;
+        return;
     }
 
     public void Debug_KillAnswerCheck()

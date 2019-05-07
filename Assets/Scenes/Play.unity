@@ -2089,7 +2089,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: (x+1)(x+2) = (x+1)^2-2
+  m_Text: a x (a + 2 x b) = (a + b) x (a + b) - b x b
 --- !u!222 &485128554
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5715,7 +5715,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: (x+3)^2 = (x+2)(x+3) + 3
+  m_Text: (a - b) x (a - b) + 2 x b x a = a x a - b x b
 --- !u!222 &1178009957
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5789,7 +5789,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: (x+1)(x+1) = x^2 + 2x + 1
+  m_Text: (a - b) x (a + b) = (a - b) x (a - b) + 2 x b x a
 --- !u!222 &1194720764
 CanvasRenderer:
   m_ObjectHideFlags: 0
