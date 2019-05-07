@@ -49,7 +49,7 @@ public class StoryScript : MonoBehaviour {
         storyProgress = 0;
         StoryManager();
         isHintAvailable = true;
-        Debug.Log("StoryScript Awake");
+        //Debug.Log("StoryScript Awake");
     }
 
     // Update is called once per frame

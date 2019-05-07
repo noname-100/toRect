@@ -21,6 +21,7 @@ public class EventController : MonoBehaviour {
     
     private int testGameMode = -1;
     private float testGameTime = -1;
+    private bool debugMode = false;
 
     // 난이도요소
     private int combo;
@@ -133,7 +134,7 @@ private void Awake()
             isPlay = 0;
         }
 
-        Debug.Log("EventController Awake");
+        //Debug.Log("EventController Awake");
     }
 
     // Update function for every timeframe
@@ -844,6 +845,17 @@ private void Awake()
     {
         score = given;
         return;
+    }
+
+    public void SetdebugMode(bool given)
+    {
+        debugMode = given;
+        return;
+    }
+
+    public bool GetdebugMode()
+    {
+        return debugMode;
     }
 
     public int GetCombo()

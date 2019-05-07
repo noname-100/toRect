@@ -38,6 +38,7 @@ public class MakePolygon : MonoBehaviour
         vertices = new Vector2[4];
         float radius = (length / Mathf.Pow(2, 0.5f));
         Polygon.jiktojung = true;
+        Polygon.jungtojik = false;
         vertices[0].x = 0 + x;
         vertices[0].y = 0 + y;
         vertices[1].x = 0 + x;
@@ -56,7 +57,8 @@ public class MakePolygon : MonoBehaviour
         // TODO : normalize
         vertices = new Vector2[3];
         Polygon.jiktojung = false;
-        if(mode==0){//직각
+        Polygon.jungtojik = false;
+        if (mode==0){//직각
             vertices[0].x = 0;
             vertices[0].y = 0;
             vertices[1].x = 0;
@@ -88,6 +90,7 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[4];
         Polygon.jiktojung = false;
+        Polygon.jungtojik = false;
         float t = Random.Range(3f,5f);
         vertices[0].x = -t/2;
         vertices[0].y = 0;
@@ -105,6 +108,7 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[8];
         Polygon.jiktojung = true;
+        Polygon.jungtojik = false;
         float t = Random.Range(3f,5f);
         vertices[0].x = -t/2;
         vertices[0].y = 0;
@@ -155,6 +159,7 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[4];
         Polygon.jiktojung = false;
+        Polygon.jungtojik = false;
         float t = Random.Range(3f,5f);
         vertices[0].x = -t/2;
         vertices[0].y = 0;
@@ -171,6 +176,7 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[4];
         Polygon.jiktojung = false;
+        Polygon.jungtojik = false;
         vertices[0].x = 0;
         vertices[0].y = 0;
         vertices[1].x = 2;
@@ -186,6 +192,7 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[4];
         Polygon.jiktojung = false;
+        Polygon.jungtojik = false;
         vertices[0].x = 0;
         vertices[0].y = 0;
         vertices[1].x = Random.Range(-0.3f , 0.3f );
@@ -202,6 +209,7 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[5];
         Polygon.jiktojung = false;
+        Polygon.jungtojik = false;
         vertices[0].x = 0f;
         vertices[0].y = -2.00000f;
         vertices[1].x = -1.90211f;
@@ -220,6 +228,7 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[6];
         Polygon.jiktojung = false;
+        Polygon.jungtojik = false;
         vertices[0].x = 5f;
         vertices[0].y = -8.660f;
         vertices[1].x = -5f;
@@ -240,6 +249,7 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[7];
         Polygon.jiktojung = false;
+        Polygon.jungtojik = false;
         vertices[0].x = 0f;
         vertices[0].y = -10f;
         vertices[1].x = -7.818f;
@@ -262,6 +272,7 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[8];
         Polygon.jiktojung = false;
+        Polygon.jungtojik = false;
         vertices[0].x = 3.827f;
         vertices[0].y = -9.239f;
         vertices[1].x = -3.827f;
@@ -286,6 +297,7 @@ public class MakePolygon : MonoBehaviour
     {
         List<Vector2[]> triangles = new List<Vector2[]>();
         Polygon.jiktojung = false;
+        Polygon.jungtojik = false;
         float a = 2.5f;
         float b = a * Random.Range(1f, 2.1f);
         float rightedge = 1.5f;
