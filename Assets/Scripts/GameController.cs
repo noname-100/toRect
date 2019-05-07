@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour
     private int formulaAnswer = 0;
 
     private void Awake()
-    {
+    {        
         // dish.transform.position = new Vector3(5.46f, 1.62f, 0);
         counter++;
         ss = EC.GetComponent<StoryScript>();
@@ -72,7 +72,7 @@ public class GameController : MonoBehaviour
             }
             backgroundMidpoints.Add(new Vector2(midpointsTmpx / 4, midpointsTmpy / 4));
         }
-
+        Debug.Log("GameController Awake");
         return;
     }
 

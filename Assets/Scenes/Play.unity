@@ -4649,6 +4649,7 @@ MonoBehaviour:
   - {fileID: 1880657491}
   - {fileID: 839297810}
   EC: {fileID: 1008905277}
+  GC: {fileID: 271237295}
   HintButton: {fileID: 214101907}
   BackGroundFilter: {fileID: 1912769890}
   storyProgress: 0

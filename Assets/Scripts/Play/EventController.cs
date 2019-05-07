@@ -133,7 +133,7 @@ private void Awake()
             isPlay = 0;
         }
 
-
+        Debug.Log("EventController Awake");
     }
 
     // Update function for every timeframe
@@ -141,12 +141,14 @@ private void Awake()
     {
         //Debug.Log("Storyprogress " + ss.storyprogress);
         // check for game end ( different for different levels/modes ) comes here.
+        Debug.Log("isPlay : " + isPlay);
         if(isPlay != 0) GameManager();
 
     }
 
     public void GameManager()
     {
+        Debug.Log("GameManager");
         int winflag = 0;
 
         // 목숨이 없는 경우
@@ -239,11 +241,6 @@ private void Awake()
                     if (gamePause == 1) return;
                     if (currentMode != 0)
                     {
-                        if (ss.GetstoryProgress() == 4)
-                        {
-                            //Debug.Log("here2");
-                            GameOver(true);
-                        }
                         isPlay = 0;
                         ss.SetstoryProgress(ss.GetstoryProgress() + 1);
                         ss.StoryManager();
@@ -295,14 +292,7 @@ private void Awake()
                     if (gamePause == 1) return;
                     if (currentMode != 0)
                     {
-                        if (ss.GetstoryProgress() == 4)
-                        {
-                            //Debug.Log("here2");
-                            GameOver(true);
-                        }
-                        isPlay = 0;
-                        ss.SetstoryProgress(ss.GetstoryProgress() + 1);
-                        ss.StoryManager();
+                        GameOver(true);
                         return;
                     }
                     else
