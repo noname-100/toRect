@@ -44,6 +44,8 @@ public class EventController : MonoBehaviour {
     private int gamePause = 0;
     public int isHelp = 0;
     private RankManager RM;
+    public GameObject ComboSign;
+    public Text ComboText;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
@@ -337,7 +339,7 @@ private void Awake()
     {
         // 콤보, 제한시간(점수)로 추가점수
         score = (int)(score + score * 0.1 * combo);
-
+        ComboText.text = combo.ToString();
         // 문제종류별 추가점수
         switch (currentGame)
         {
@@ -591,8 +593,12 @@ private void Awake()
     {
         Debug.Log("ScorePopup Called");
         ScoreSign.SetActive(true);
+        if(currentMode==0 && combo>0)
+        ComboSign.SetActive(true);
         yield return new WaitForSeconds(1f);
         ScoreSign.SetActive(false);
+        if(currentMode==0)
+        ComboSign.SetActive(false);
     }
 
     IEnumerator Timer() // 0.01초 단위로 시간을 측정
