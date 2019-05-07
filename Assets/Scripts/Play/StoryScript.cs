@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class StoryScript : MonoBehaviour {
 
+
     // Tutorials
     private List<GameObject[]> tutorials;
     public GameObject[] BiscuitTutorials = new GameObject[3];
@@ -30,26 +31,20 @@ public class StoryScript : MonoBehaviour {
     // Use this for initialization
     private void Awake()
     {
-        // adding scripts
-        
+        ec = EC.GetComponent<EventController>();
+        gc = GC.GetComponent<GameController>();
 
         tutorials = new List<GameObject[]>();
         tutorials.Add(BiscuitTutorials);
         tutorials.Add(CookieTutorials);
         tutorials.Add(PieTutorials);
-        Debug.Log("StoryScript tutorials init");
-        // Sync with Event controller
-
-        ec = EC.GetComponent<EventController>();
-        gc = GC.GetComponent<GameController>();
-
-        // using "storyprogress" state variable
+        if(ec.GetdebugMode()) Debug.Log("StoryScript tutorials init");
 
         currentMode = PlayerPrefs.GetInt("Mode") - 1; // for Script indexing and standardization
-        storyProgress = 0;
+        storyProgress = 0; // using "storyprogress" state variable
         StoryManager();
         isHintAvailable = true;
-        //Debug.Log("StoryScript Awake");
+        if (ec.GetdebugMode()) Debug.Log("StoryScript Awake");
     }
 
     // Update is called once per frame

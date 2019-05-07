@@ -267,6 +267,7 @@ public class GameController : MonoBehaviour
         }
         return;
     }
+
     public void ReDo(int gameType){
         foreach (GameObject p in polygonList)
         {
@@ -565,6 +566,7 @@ public class GameController : MonoBehaviour
             if (ec.GetdebugMode() && methoddebugger) Debug.Log("pie not on plate");
             return false;
         }
+
         /*
         if(!(polygonList[0].transform.eulerAngles.z >= 8 && polygonList[0].transform.rotation.eulerAngles.z <= 53) && !(polygonList[0].transform.rotation.eulerAngles.z <= -120 && polygonList[0].transform.rotation.eulerAngles.z >= -165))
         {

@@ -19,7 +19,7 @@ public class EventController : MonoBehaviour {
      *  
      */
     
-    private int testGameMode = 13;
+    private int testGameMode = -1;
     private float testGameTime = -1;
     private bool debugMode = false;
 
@@ -54,7 +54,8 @@ public class EventController : MonoBehaviour {
     public GameObject RectangleBiscuitBackground, Rec2SquareBackground, SimilarityBackground, ScoreBackground;
     public GameObject ScoreSign, GameOverBackStory;
     public GameObject ProgressBar;
-    public GameObject NextProblemButton;
+    public GameObject NextProblemButton, ReassembleButton;
+    public GameObject BackgroundFilter;
     // Clear 화면 게임요소
     public GameObject RankingMain, RankingSub1, RankingSub2, GameOverBackground, Chapter1ClearBackground, Chapter2ClearBackground, Chapter3ClearBackground;
 
@@ -616,16 +617,19 @@ private void Awake()
         {
             // 투렉트
             RectangleBiscuitBackground.SetActive(true);
+            ReassembleButton.SetActive(true);
         }
         else if(currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
             // 직투정
             Rec2SquareBackground.SetActive(true);
+            ReassembleButton.SetActive(true);
         }
         else
         {
             // 합동삼각형
             SimilarityBackground.SetActive(true);
+            ReassembleButton.SetActive(false);
         }
         gc.makeNew(currentGame);
         return;
@@ -748,6 +752,7 @@ private void Awake()
         Chapter1ClearBackground.SetActive(false);
         Chapter2ClearBackground.SetActive(false);
         Chapter3ClearBackground.SetActive(false);
+        BackgroundFilter.SetActive(true);
 
         if (isCleared)
         {
