@@ -175,6 +175,7 @@ public class Polygon : MonoBehaviour
         //this.GetComponent<Renderer>().material.color = Color.green;
         return;
     }
+
     public void createDots()
     {
         

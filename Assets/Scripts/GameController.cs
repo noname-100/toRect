@@ -220,6 +220,7 @@ public class GameController : MonoBehaviour
             if (Polygon.jiktojung)
             {
                 GenerateSquares(); // 초코칩 생성함수
+                // Debug.Log("am i not called?");
                 MakeFormulas(); // 수식 생성함수
             }
 
@@ -256,7 +257,7 @@ public class GameController : MonoBehaviour
         // TODO : r 산정할때 정사각형 조각의 최대반경 고려해줘야함
         if (angle <= 32 && angle >= 360 - 32)
         {
-            r = UnityEngine.Random.Range(0f, (1.6f / (float) Mathf.Cos(angle)) - Mathf.Pow(2, 0.5f) * Polygon.jiktojunglength / 2f);
+            r = UnityEngine.Random.Range(0f, (1.6f / (float) Mathf.Cos(angle)) - Mathf.Pow(2, 0.5f) * (Polygon.jiktojunglength / 2f));
         }
         else
         {
@@ -340,73 +341,43 @@ public class GameController : MonoBehaviour
         return;
     }
 
-    public void MakeFormulas()
-    {
-
-        List<string> candidates = new List<string>();
-        candidates.Add(FormulaPool(0));
-        candidates.Add(FormulaPool((int)Mathf.Ceil(UnityEngine.Random.Range(0f, 5f))));
-        candidates.Add(FormulaPool((int)Mathf.Ceil(UnityEngine.Random.Range(0f, 5f))));
-        bool answerInserted = false;
-
-        int curr = (int) UnityEngine.Random.Range(0f, 3f);
-        if (curr == 0)
+    public void MakeFormulas() {
+        // Debug.Log("MakeFormulas");
+        List<string> candidates = FormulaPool();
+        for(int i = 0; i < candidates.Count; i++)
         {
-            formulaAnswer = 0;
-            answerInserted = true;
+            // Debug.Log(candidates[i]);
         }
-        formula1.text = candidates[curr];
-        candidates.RemoveAt(curr);
-
-        curr = (int)UnityEngine.Random.Range(0f, 2f);
-        if (curr == 0)
-        {
-            formulaAnswer = 1;
-            answerInserted = true;
-        }
-        formula2.text = candidates[curr];
-        candidates.RemoveAt(curr);
-
-        if (!answerInserted) formulaAnswer = 2;
-        formula3.text = candidates[0];
-
+        formula1.text = candidates[0];
+        formula2.text = candidates[1];
+        formula3.text = candidates[2];
+        return;
     }
 
     // TODO : X 대신 a, b, c 사용해서 공식 섞어줘야 한다.
-    public string FormulaPool(int kind)
+    public List<string> FormulaPool()
     {
-        string ret;
-
-        // TODO : need shuffle here
-        char x = 'a';
-        char y = 'b';
-        char z = 'c';
-
-        if(kind == 0) // TODO : ANSWER FOMULA, might differ. Logic comes here
+        String[] syms = { "★", "■", "♥", "●" };
+        List<String> symbols = new List<String>(syms);
+        List<String> pool = new List<String>();
+        string first = symbols[UnityEngine.Random.Range(0, 4)];
+        symbols.Remove(first);
+        string second = symbols[UnityEngine.Random.Range(0, 4)];
+        string ans = String.Format("{0} x ({0} + 2 x {1}) = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
+        String[] wrong = new String[3];
+        wrong[0] = String.Format("({0}-{1}) x ({0}-{1}) + 2 x {1} x {0} = {0} x {0} - {1} x {1}", first, second);
+        wrong[1] = String.Format("({0}-{1}) x ({0}+{1}) = ({0}-{1}) x ({0}-{1}) +2 x {1} x {0}", first, second);
+        wrong[2] = String.Format("{0} x {0} = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
+        pool.Add(ans);
+        int exclude = UnityEngine.Random.Range(0, 3);
+        for (int i = 0; i < 3; i++)
         {
-            ret = "ANSWER FORMULA COMES HERE";
-        }else if(kind == 1) // (x+A)(x+B) = (x+C)^2 - D
-        {
-            ret = "("+x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + )" + "+y+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
+            if (i != exclude)
+            {
+                pool.Add(wrong[i]);
+            }
         }
-        else if(kind == 2) // x^2 + A = (x+B)(x+C)
-        {
-            ret = "("+x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + )" + "+z+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
-        }
-        else if(kind ==3) // TBD
-        {
-            ret = "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
-        }
-        else if (kind == 4) // TBD
-        {
-            ret = "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
-        }
-        else // TBD
-        {
-            ret = "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + " = " + "(x+" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f)) + ")" + "^2-" + Mathf.Ceil(UnityEngine.Random.Range(1f, 3f));
-        }
-
-        return ret;
+        return pool;
     }
 
     public bool isSolvedSimilarity()
@@ -419,6 +390,19 @@ public class GameController : MonoBehaviour
         }
 
         Vector3[] reference = polygonList[0].GetComponent<Polygon>().vertices3D;
+
+        float midx = 0f;
+        float midy = 0f;
+        for(int i = 0; i < polygonList[0].GetComponent<Polygon>().vertices3D.Length; i++)
+        {
+            Vector3 tmp = polygonList[0].GetComponent<Polygon>().vertices3D[i]; // transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i]);
+            midx += tmp.x;
+            midy += tmp.y;
+        }
+        midx /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
+        midy /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
+        // Debug.Log("centrum : " + midx + " " + midy);
+
         if (reference == null)
         {
             // Debug.Log("similarity reference not read properly. returns null");
@@ -467,8 +451,8 @@ public class GameController : MonoBehaviour
         Debug.Log("position : " + worldPosition.x + " " + worldPosition.y + " " + worldPosition.z);
         */
 
-        Debug.Log("dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
-        Debug.Log("angle : " + polygonList[0].transform.rotation.eulerAngles.z);
+        // Debug.Log("dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
+        // Debug.Log("angle : " + polygonList[0].transform.rotation.eulerAngles.z);
         if ((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.1)
         {
             Debug.Log("pie not on plate");

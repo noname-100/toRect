@@ -166,19 +166,20 @@ private void Awake()
             plate.transform.localScale = new Vector3(1f, 1f, 0);
             gamePause = 0;
             isHelp = 0;
+            combo = 0;
             bp.setisFormulaButtonSelectable(0);
             bp.FormulaSelect(4);
             LostLife();
-            ResetTimeManager();
             MakeNewGame();
+            ResetTimeManager();
         }
 
         // 게임시작
         if (isPlay == 1)
         {
             isPlay = 2;
-            ResetTimeManager();
             MakeNewGame();
+            ResetTimeManager();
             StartCoroutine("Timer");
         }
 
@@ -211,7 +212,6 @@ private void Awake()
                 }else{
                     winflag = 1;
                 }
-
             }
         }        
 
@@ -263,8 +263,9 @@ private void Awake()
                     return;
                 }
                 LostLife();
-                ResetTimeManager();
+                combo = 0;
                 MakeNewGame();
+                ResetTimeManager();
             }
         }
 
@@ -306,23 +307,22 @@ private void Awake()
         {
             combo++;
             if (current_Time >= bonusTimeLimit) BonusGift();
-            AddPointManager();
-            ResetTimeManager();
+            AddPointManager();            
             MakeNewGame();
+            ResetTimeManager();
         }
         return;
     }
 
     // ButtonController_Play에서 조작한다. 점수 부여 일관성을 위해 함수는 여기에 둔다.
-    public void FormulaBonusGift()
+    public void FormulaBonusGift() // legacy code
     {
-        score += 5;
+        score += 0;
         return;
     }
 
     private void BonusGift()
     {
-        combo += 2;
         score += 2;
         return;
     }
@@ -338,7 +338,8 @@ private void Awake()
     private void AddPointManager()
     {
         // 콤보, 제한시간(점수)로 추가점수
-        score = (int)(score + score * 0.1 * combo);
+        score += 3 + (int) Mathf.Floor(0.6f * (float)combo) + (int) Mathf.Floor(0.005f * (float) score);
+        // Debug.Log((int)Mathf.Floor(0.4f * (float)combo));
         ComboText.text = combo.ToString();
         // 문제종류별 추가점수
         switch (currentGame)
@@ -353,13 +354,13 @@ private void Awake()
                 score += 4;
                 break;
             case 3: // 둔각
-                score += 5;
+                score += 0;
                 break;
             case 4: // 사다리꼴
-                score += 8;
+                score += 1;
                 break;
             case 5: // 임의사각형
-                score += 9;
+                score += 4;
                 break;
             case 6: // 오각형
                 score += 12;
@@ -368,16 +369,16 @@ private void Awake()
                 score += 5;
                 break;
             case 8: // 칠각형
-                score += 7;
+                score += 6;
                 break;
             case 9: // 팔각형
                 score += 5;
                 break;
             case 10: // 직투정1
-                score += 3;
+                score += 1;
                 break;
             case 11: // 직투정2
-                score += 15;
+                score += 1;
                 break;
             case 12: // 합동삼각형1
                 score += 12;
@@ -386,7 +387,6 @@ private void Awake()
                 score += 12;
                 break;
         }
-
         ScoreText.text = score.ToString() + " 점";
         return;
     }
@@ -408,62 +408,77 @@ private void Awake()
 
         if(currentMode == 0)
         {
-            float halftime = 250f;
-            float norm = 0.2f;
+            float maxtime = 20f;
             float mintime = 20f;
-
-            solveTime = 1 / (1 + Mathf.Exp(norm * ((10 * combo + score) - halftime))) + mintime;
 
             // 최소시간 문제별 세부조정
             switch (currentGame)
             {
                 case 0: // 예각
-                    solveTime += 0;
+                    maxtime = 80;
+                    mintime = 20;
                     break;
                 case 1: // 예각2
-                    solveTime += 0;
+                    maxtime = 80;
+                    mintime = 20;
                     break;
                 case 2: // 직각
-                    solveTime += 0;
+                    maxtime = 80;
+                    mintime = 20;
                     break;
                 case 3: // 둔각
-                    solveTime += 10;
+                    maxtime = 80;
+                    mintime = 20;
                     break;
                 case 4: // 사다리꼴
-                    solveTime += 15;
+                    maxtime = 90;
+                    mintime = 20;
                     break;
                 case 5: // 임의사각형
-                    solveTime += 25;
+                    maxtime = 240;
+                    mintime = 30;
                     break;
                 case 6: // 오각형
-                    solveTime += 45;
+                    maxtime = 300;
+                    mintime = 30;
                     break;
                 case 7: // 육각형
-                    solveTime += 40;
+                    maxtime = 300;
+                    mintime = 30;
                     break;
                 case 8: // 칠각형
-                    solveTime += 60;
+                    maxtime = 360;
+                    mintime = 30;
                     break;
                 case 9: // 팔각형
-                    solveTime += 50;
+                    maxtime = 300;
+                    mintime = 30;
                     break;
                 case 10: // 직투정
-                    solveTime += 10;
+                    maxtime = 130;
+                    mintime = 30;
                     break;
                 case 11: // 직투정2
-                    solveTime += 10;
+                    maxtime = 130;
+                    mintime = 30;
                     break;
                 case 12: // 합동삼각형1
-                    solveTime += 5;
+                    maxtime = 90;
+                    mintime = 25;
                     break;
                 case 13: // 함동삼각형2
-                    solveTime += 5;
+                    maxtime = 90;
+                    mintime = 25;
                     break;
             }
 
+            float halftime = 1000f;
+            float norm = 0.006f;
+            solveTime = ((maxtime-mintime) / (1 + Mathf.Exp(norm * ((10 * combo + score) - halftime)))) + mintime;
+            // Debug.Log(solveTime);
             // 보너스 타임에만 랜덤요소를 넣는다.
             float timeBonus = UnityEngine.Random.Range(0f, 2f);
-            bonusTimeLimit = (float) Math.Floor(solveTime * 0.85 - timeBonus);
+            bonusTimeLimit = (float) Math.Floor(solveTime * 0.7 - timeBonus);
         }
         else if(currentMode == 1)
         {   // Biscuit Story Mode
@@ -483,9 +498,8 @@ private void Awake()
             solveTime = 300;
         }else if(currentMode == 3)
         {   // Similarity Story Mode
-            solveTime = 100;
+            solveTime = 90;
         }
-
         current_Time = solveTime;
         return;
     }
@@ -531,7 +545,6 @@ private void Awake()
                     pool.Add(i);
                 }
             }
-
             pool = ShuffleArray(pool);            
             currentGame = pool[(int)UnityEngine.Random.Range(0, pool.Count)];
             PlayerPrefs.SetInt("Game", currentGame);
@@ -558,8 +571,7 @@ private void Awake()
         {
             // 합동삼각형
             SimilarityBackground.SetActive(true);
-        }        
-
+        }
         gc.makeNew(currentGame);
         return;
     }
@@ -607,7 +619,7 @@ private void Awake()
         yield return new WaitForSeconds(0.01f);
         current_Time -= 0.017f;
         TimeText.text = current_Time.ToString("##0.00") + " sec";
-        ProgressBar.transform.localScale = new Vector3(1.75f*current_Time/solveTime,1,1);
+        ProgressBar.transform.localScale = new Vector3(1f*current_Time/solveTime,1,1);
         StartCoroutine("Timer");
     }
 
