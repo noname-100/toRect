@@ -232,15 +232,15 @@ public class GameController : MonoBehaviour
             if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 5");
             if (Polygon.jiktojung)
             {
-                Debug.Log(counter + " jiktojung true");
+                if (ec.GetdebugMode()) Debug.Log(counter + " jiktojung true");
                 GenerateSquares();
-                Debug.Log(counter + " GenerateSquares Done");
+                if (ec.GetdebugMode()) Debug.Log(counter + " GenerateSquares Done");
                 MakeFormulas();                
             }
             if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 6");
             if (Polygon.jungtojik)
             {
-                Debug.Log(counter + " jungtojik true");
+                if (ec.GetdebugMode()) Debug.Log(counter + " jungtojik true");
                 MakeFormulasJung();
             }
 
@@ -558,10 +558,27 @@ public class GameController : MonoBehaviour
         worldPosition = transform.TransformPoint(polygonList[0].transform.position); /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
         Debug.Log("position : " + worldPosition.x + " " + worldPosition.y + " " + worldPosition.z);
         */
+        Vector3 currmidpoint = Vector3.zero;
+        for (int i = 0; i < polygonList[0].GetComponent<Polygon>().vertices3D.Length; i++)
+        {
+            currmidpoint += polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i]);
+        }
+        currmidpoint /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
+
+        float angle = 0f;
+
+        /*for (int i = 0; i < polygonList[0].GetComponent<Polygon>().vertices3D.Length-1; i++)
+        {
+            if ((polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i] - polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i + 1]))).magnitude - 2.5f < 0.1f)
+            {
+                angle = (180f/Mathf.PI) * Mathf.Asin(polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i] - polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i + 1])).y / (polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i] - polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i + 1]))).magnitude);
+                Debug.Log(angle);
+            }
+        }*/
 
         if (ec.GetdebugMode() && methoddebugger) Debug.Log("dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
         if (ec.GetdebugMode() && methoddebugger) Debug.Log("angle : " + polygonList[0].transform.rotation.eulerAngles.z);
-        if ((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.1)
+        if ((Plate.transform.position-currmidpoint).magnitude > 0.3)
         {
             if (ec.GetdebugMode() && methoddebugger) Debug.Log("pie not on plate");
             return false;
