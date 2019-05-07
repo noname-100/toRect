@@ -197,7 +197,7 @@ public class ButtonController_Title : MonoBehaviour {
 
     public void QuitGame()
     {
-        Application.OpenURL("https://quebon.tv");
+        Application.OpenURL("https://github.com/snuproject2019/torect");
     }
 
     public void SoundOn()

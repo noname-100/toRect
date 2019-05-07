@@ -76,7 +76,8 @@ public class ButtonController_Play : MonoBehaviour
     }
 
     public void RestartChallenge()
-    {        
+    {
+        PlayerPrefs.SetInt("Mode", 0);
         SceneManager.LoadScene("Play");
         return;
     }

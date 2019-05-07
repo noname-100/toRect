@@ -2089,7 +2089,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: (x+1)(x+2) = (x+1)^2-2
+  m_Text: a x (a + 2 x b) = (a + b) x (a + b) - b x b
 --- !u!222 &485128554
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4889,7 +4889,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1045279335}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.21}
   m_LocalScale: {x: 0.9997714, y: 0.9997714, z: 0.9997714}
   m_Children: []
   m_Father: {fileID: 1753825163}
@@ -5715,7 +5715,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: (x+3)^2 = (x+2)(x+3) + 3
+  m_Text: (a - b) x (a - b) + 2 x b x a = a x a - b x b
 --- !u!222 &1178009957
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5789,7 +5789,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: (x+1)(x+1) = x^2 + 2x + 1
+  m_Text: (a - b) x (a + b) = (a - b) x (a - b) + 2 x b x a
 --- !u!222 &1194720764
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8798,7 +8798,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -8822,7 +8822,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
 --- !u!4 &1805217240
 Transform:
   m_ObjectHideFlags: 0
@@ -8868,7 +8868,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -29, y: 2.2}
+  m_AnchoredPosition: {x: -29, y: 1.5}
   m_SizeDelta: {x: 35, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1811618031
@@ -10300,7 +10300,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2082545946
 RectTransform:
   m_ObjectHideFlags: 0

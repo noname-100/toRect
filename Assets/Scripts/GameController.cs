@@ -232,15 +232,15 @@ public class GameController : MonoBehaviour
             if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 5");
             if (Polygon.jiktojung)
             {
-                Debug.Log(counter + " jiktojung true");
+                if (ec.GetdebugMode()) Debug.Log(counter + " jiktojung true");
                 GenerateSquares();
-                Debug.Log(counter + " GenerateSquares Done");
+                if (ec.GetdebugMode()) Debug.Log(counter + " GenerateSquares Done");
                 MakeFormulas();                
             }
             if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 6");
             if (Polygon.jungtojik)
             {
-                Debug.Log(counter + " jungtojik true");
+                if (ec.GetdebugMode()) Debug.Log(counter + " jungtojik true");
                 MakeFormulasJung();
             }
 
@@ -419,12 +419,12 @@ public class GameController : MonoBehaviour
     public List<string> FormulaPoolJung()
     {
         if (ec.GetdebugMode()) Debug.Log("FormulaPoolJung");
-        String[] syms = { "★", "■", "♥", "●" };
+        String[] syms = { "a", "b", "c", "d" };//{ "★", "■", "♥", "●" };
         List<String> symbols = new List<String>(syms);
         List<String> pool = new List<String>();
         string first = symbols[UnityEngine.Random.Range(0, 4)];
         symbols.Remove(first);
-        string second = symbols[UnityEngine.Random.Range(0, 4)];
+        string second = symbols[UnityEngine.Random.Range(0, 3)];
         string ans = String.Format("{0} x {0} - {1} x {1} = ({0} - {1}) x ({0} + {1})", first, second);
         String[] wrong = new String[3];
         wrong[0] = String.Format("({0} - {1}) x ({0} - {1}) + 2 x {1} x {0} = {0} x {0} - {1} x {1}", first, second);
@@ -462,12 +462,12 @@ public class GameController : MonoBehaviour
     public List<string> FormulaPool()
     {
         if (ec.GetdebugMode()) Debug.Log("FormulaPool");
-        String[] syms = { "★", "■", "♥", "●" };
+        String[] syms = { "a", "b", "c", "d" };//{ "★", "■", "♥", "●" };
         List<String> symbols = new List<String>(syms);
         List<String> pool = new List<String>();
         string first = symbols[UnityEngine.Random.Range(0, 4)];
         symbols.Remove(first);
-        string second = symbols[UnityEngine.Random.Range(0, 4)];
+        string second = symbols[UnityEngine.Random.Range(0, 3)];
         string ans = String.Format("{0} x ({0} + 2 x {1}) = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
         String[] wrong = new String[3];
         wrong[0] = String.Format("({0}-{1}) x ({0}-{1}) + 2 x {1} x {0} = {0} x {0} - {1} x {1}", first, second);
@@ -539,7 +539,7 @@ public class GameController : MonoBehaviour
             nextpoint = reference[curr];
             if(!isNull(prevpoint) && !isNull(currpoint) && !isNull(nextpoint))
             {
-                if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
+                if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.1)
                 {
                     if (ec.GetdebugMode() && methoddebugger) Debug.Log("found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                     return false;
@@ -549,33 +549,40 @@ public class GameController : MonoBehaviour
         if (ec.GetdebugMode() && methoddebugger) Debug.Log("this is rectangle");
 
         // 여기에서 판 위에 직사각형이 있는지 체크한다.
-        /*
-        Vector3 worldPosition = new Vector3(0, 0, 0);
+        Vector3 currmidpoint = Vector3.zero;
         for (int i = 0; i < polygonList[0].GetComponent<Polygon>().vertices3D.Length; i++)
         {
-            worldPosition += transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i]);
+            currmidpoint += polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i]);
         }
-        worldPosition = transform.TransformPoint(polygonList[0].transform.position); /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
-        Debug.Log("position : " + worldPosition.x + " " + worldPosition.y + " " + worldPosition.z);
-        */
+        currmidpoint /= polygonList[0].GetComponent<Polygon>().vertices3D.Length;
 
         if (ec.GetdebugMode() && methoddebugger) Debug.Log("dist : " + (Plate.transform.position - polygonList[0].transform.position).magnitude);
         if (ec.GetdebugMode() && methoddebugger) Debug.Log("angle : " + polygonList[0].transform.rotation.eulerAngles.z);
-        if ((Plate.transform.position-polygonList[0].transform.position).magnitude > 1.1)
+        if ((Plate.transform.position-currmidpoint).magnitude > 0.3)
         {
             if (ec.GetdebugMode() && methoddebugger) Debug.Log("pie not on plate");
             return false;
         }
 
-        /*
-        if(!(polygonList[0].transform.eulerAngles.z >= 8 && polygonList[0].transform.rotation.eulerAngles.z <= 53) && !(polygonList[0].transform.rotation.eulerAngles.z <= -120 && polygonList[0].transform.rotation.eulerAngles.z >= -165))
+        float liney = 0f;
+        Debug.Log("before liney");
+        for (int i = 0; i < polygonList[0].GetComponent<Polygon>().vertices3D.Length - 1; i++)
+        {
+            if ((polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i]) - polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i + 1])).magnitude - 2.5f < 0.1f)
+            {
+                liney = (polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i]) - polygonList[0].transform.TransformPoint(polygonList[0].GetComponent<Polygon>().vertices3D[i + 1])).y;
+                if (ec.GetdebugMode() && methoddebugger) Debug.Log(liney);
+            }
+        }
+        if (!((liney>=-0.4&&liney<=0.4)||(liney>=2.2&&liney<=2.8)))
         {
             if (ec.GetdebugMode() && methoddebugger) Debug.Log("pie not in right angle");
             return false;
         }
-        */
+
 
         if (ec.GetdebugMode() && methoddebugger) Debug.Log("Similarity : final answer met");
+        ec.setSimilarityOnceSolved(true);
         return true;
     }
 
@@ -627,14 +634,14 @@ public class GameController : MonoBehaviour
                 nextpoint = reference[curr];
                 if (!isNull(prevpoint) && !isNull(currpoint) && !isNull(nextpoint))
                 {
-                    if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
+                    if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.1)
                     {
                         if (ec.GetdebugMode() && methoddebugger) Debug.Log("Rec2Square found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                         return false;
                     }
                     else
                     {
-                        if ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude > 0.01)
+                        if ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude > 0.1)
                         {
                             if (ec.GetdebugMode() && methoddebugger) Debug.Log("Rec2Square rectangle is not square, length diff : " + ((currpoint - prevpoint).magnitude - (nextpoint - currpoint).magnitude));
                             return false;
@@ -689,7 +696,7 @@ public class GameController : MonoBehaviour
             nextpoint = reference[curr];
             if (!isNull(prevpoint) && !isNull(currpoint) && !isNull(nextpoint))
             {
-                if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.01)
+                if (Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint) > 0.1)
                 {
                     if (ec.GetdebugMode() && methoddebugger) Debug.Log("Biscuit found an angle not 90 : " + Vector3.Dot(currpoint - prevpoint, nextpoint - currpoint));
                     return false;
