@@ -222,16 +222,13 @@ public class GameController : MonoBehaviour
 
             if (Polygon.jiktojung)
             {
-                GenerateSquares(); // 초코칩 생성함수
-                // Debug.Log("am i not called?");
-                if (gameType == 12)
-                {
-                    MakeFormulasJung();
-                }
-                else
-                {
-                    MakeFormulas(); // 수식 생성함수
-                }                    
+                GenerateSquares();
+                MakeFormulas();                
+            }
+
+            if (Polygon.jungtojik)
+            {
+                MakeFormulasJung();
             }
 
         }
@@ -353,7 +350,7 @@ public class GameController : MonoBehaviour
 
     public void MakeFormulasJung()
     {
-        // Debug.Log("MakeFormulas");
+        Debug.Log("MakeFormulasJung");
         List<string> candidates = FormulaPoolJung();
         for (int i = 0; i < candidates.Count; i++)
         {

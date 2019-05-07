@@ -132,6 +132,7 @@ public class MakePolygon : MonoBehaviour
     {
         vertices = new Vector2[6];
         Polygon.jiktojung = false;
+        Polygon.jungtojik = true;
         float t = Random.Range(3f,5f);
         float k = Random.Range(0.3f, 0.6f);
         vertices[0].x = -t/2;

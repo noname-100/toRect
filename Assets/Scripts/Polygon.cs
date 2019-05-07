@@ -19,6 +19,7 @@ public class Polygon : MonoBehaviour
     public bool dotSelected = false;
     public bool mergeable = false;
     public static bool jiktojung = false;
+    public static bool jungtojik = false;
     public static float jiktojunglength = -1f;
     private bool rendered;
     public int merger;
