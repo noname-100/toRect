@@ -50,6 +50,7 @@ public class EventController : MonoBehaviour {
     public GameObject ScoreSign, GameOverBackStory;
     public GameObject ProgressBar;
     public GameObject NextProblemButton;
+    public GameObject ReassembleButton;
     // Clear 화면 게임요소
     public GameObject RankingMain, RankingSub1, RankingSub2, GameOverBackground, Chapter1ClearBackground, Chapter2ClearBackground, Chapter3ClearBackground;
 
@@ -556,16 +557,19 @@ private void Awake()
         {
             // 투렉트
             RectangleBiscuitBackground.SetActive(true);
+            ReassembleButton.SetActive(true);
         }
         else if(currentGame >= gc.getBiscuitProblems()+1 && currentGame <= gc.getRec2SquareProblems())
         {
             // 직투정
             Rec2SquareBackground.SetActive(true);
+            ReassembleButton.SetActive(false);
         }
         else
         {
             // 합동삼각형
             SimilarityBackground.SetActive(true);
+            ReassembleButton.SetActive(false);
         }
         gc.makeNew(currentGame);
         return;
