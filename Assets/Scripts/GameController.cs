@@ -23,6 +23,9 @@ public class GameController : MonoBehaviour
     private List<float> maxLength;
     private Vector2[] vertexes;
     private int counter;
+    private Vector2[] prob;
+    private List<Vector2[]> similarTriangles;
+    public float rotateangle;
 
     // 게임 관련
     public GameObject EC;
@@ -198,13 +201,14 @@ public class GameController : MonoBehaviour
             Debug.Log("proportion : " + proportion);
             Debug.Log("before : " + tmpx + " after : " + tmpy);
             */
+            prob = result;
             firstTriangle.GetComponent<Polygon>().render(result);
             polygonList.Add(firstTriangle);
 
             // rotate here
             // 중심을 기준으로 점수와 콤보수에 따라 영향을 받는 회전각도를 적용한다(점수, 콤보가 높을수록 120 ~ 240도 문제가 많이 나오도록).
 
-            float rotateangle = UnityEngine.Random.Range(0f, 360f);
+            rotateangle = UnityEngine.Random.Range(0f, 360f);
             firstTriangle.transform.RotateAround(new Vector3(backgroundMidPointx, backgroundMidPointy, 0), Vector3.forward, rotateangle);
             if (ec.GetdebugMode()) Debug.Log(counter + "MakeNew 3");
             // 넓이를 검사해서 너무 작은 삼각형은 다시 한다.
@@ -247,7 +251,6 @@ public class GameController : MonoBehaviour
         else
         {
             // 합동삼각형은 여기 생성부에서 자체처리 + 렌더 + 리스트추가
-            List<Vector2[]> similarTriangles = new List<Vector2[]>();
             similarTriangles = mp.MakeSimilars();
             var similarTriangle1 = new GameObject("Polygon");
             var similarTriangle2 = new GameObject("Polygon");
@@ -263,6 +266,41 @@ public class GameController : MonoBehaviour
             polygonList.Add(similarTriangle3);
         }
         return;
+    }
+    public void ReDo(int gameType){
+        foreach (GameObject p in polygonList)
+        {
+            Destroy(p);
+        }
+        polygonList.Clear();
+        if (gameType<=11){
+            var firstTriangle = new GameObject("Polygon");
+            firstTriangle.AddComponent(System.Type.GetType("Polygon"));
+            firstTriangle.GetComponent<Polygon>().render(prob);
+            polygonList.Add(firstTriangle);
+            float backgroundMidPointx = backgroundMidpoints[gameType <= biscuitProblems ? 0 : 1].x;
+            float backgroundMidPointy = backgroundMidpoints[gameType <= biscuitProblems ? 0 : 1].y;
+            firstTriangle.transform.RotateAround(new Vector3(backgroundMidPointx, backgroundMidPointy, 0), Vector3.forward, rotateangle);
+            if (Polygon.jiktojung)
+            {
+                GenerateSquares(); // 초코칩 생성함수
+                // Debug.Log("am i not called?");
+                MakeFormulas(); // 수식 생성함수
+            }
+        }else{
+            var similarTriangle1 = new GameObject("Polygon");
+            var similarTriangle2 = new GameObject("Polygon");
+            var similarTriangle3 = new GameObject("Polygon");
+            similarTriangle1.AddComponent(System.Type.GetType("Polygon"));
+            similarTriangle2.AddComponent(System.Type.GetType("Polygon"));
+            similarTriangle3.AddComponent(System.Type.GetType("Polygon"));
+            similarTriangle1.GetComponent<Polygon>().render(similarTriangles[0]);
+            similarTriangle2.GetComponent<Polygon>().render(similarTriangles[1]);
+            similarTriangle3.GetComponent<Polygon>().render(similarTriangles[2]);
+            polygonList.Add(similarTriangle1);
+            polygonList.Add(similarTriangle2);
+            polygonList.Add(similarTriangle3);
+        }
     }
 
     private Vector2 APointOnFryPan()
@@ -527,12 +565,13 @@ public class GameController : MonoBehaviour
             if (ec.GetdebugMode() && methoddebugger) Debug.Log("pie not on plate");
             return false;
         }
-
+        /*
         if(!(polygonList[0].transform.eulerAngles.z >= 8 && polygonList[0].transform.rotation.eulerAngles.z <= 53) && !(polygonList[0].transform.rotation.eulerAngles.z <= -120 && polygonList[0].transform.rotation.eulerAngles.z >= -165))
         {
             if (ec.GetdebugMode() && methoddebugger) Debug.Log("pie not in right angle");
             return false;
         }
+        */
 
         if (ec.GetdebugMode() && methoddebugger) Debug.Log("Similarity : final answer met");
         return true;
