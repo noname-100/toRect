@@ -549,10 +549,10 @@ private void Awake()
             else solveTime = 5; // 에러
         }else if(currentMode == 2)
         {   // Rec2Square Story Mode
-            solveTime = 300;
+            solveTime = 150;
         }else if(currentMode == 3)
         {   // Similarity Story Mode
-            solveTime = 90;
+            solveTime = 110;
         }
         current_Time = solveTime;
         return;

@@ -354,7 +354,7 @@ public class GameController : MonoBehaviour
         List<string> candidates = FormulaPoolJung();
         for (int i = 0; i < candidates.Count; i++)
         {
-            // Debug.Log(candidates[i]);
+            Debug.Log(candidates[i]);
         }
         formula1.text = candidates[0];
         formula2.text = candidates[1];
@@ -364,17 +364,18 @@ public class GameController : MonoBehaviour
 
     public List<string> FormulaPoolJung()
     {
+        Debug.Log("FormulaPoolJung");
         String[] syms = { "★", "■", "♥", "●" };
         List<String> symbols = new List<String>(syms);
         List<String> pool = new List<String>();
         string first = symbols[UnityEngine.Random.Range(0, 4)];
         symbols.Remove(first);
         string second = symbols[UnityEngine.Random.Range(0, 4)];
-        string ans = String.Format("999{0} x ({0} + 2 x {1}) = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
+        string ans = String.Format("{0} x {0} - {1} x {1} = ({0}-{1}) x ({0}+{1})", first, second);
         String[] wrong = new String[3];
-        wrong[0] = String.Format("999({0}-{1}) x ({0}-{1}) + 2 x {1} x {0} = {0} x {0} - {1} x {1}", first, second);
-        wrong[1] = String.Format("999({0}-{1}) x ({0}+{1}) = ({0}-{1}) x ({0}-{1}) +2 x {1} x {0}", first, second);
-        wrong[2] = String.Format("999{0} x {0} = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
+        wrong[0] = String.Format("({0}-{1}) x ({0}-{1}) + 2 x {1} x {0} = {0} x {0} - {1} x {1}", first, second);
+        wrong[1] = String.Format("{0} x ({0} + 2 x {1}) = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
+        wrong[2] = String.Format("{0} x {0} = ({0} + {1}) x ({0} + {1}) - {1} x {1}", first, second);
         pool.Add(ans);
         int exclude = UnityEngine.Random.Range(0, 3);
         for (int i = 0; i < 3; i++)
@@ -388,7 +389,7 @@ public class GameController : MonoBehaviour
     }
 
     public void MakeFormulas() {
-        // Debug.Log("MakeFormulas");
+        Debug.Log("MakeFormulas");
         List<string> candidates = FormulaPool();
         for(int i = 0; i < candidates.Count; i++)
         {
@@ -403,6 +404,7 @@ public class GameController : MonoBehaviour
     // TODO : X 대신 a, b, c 사용해서 공식 섞어줘야 한다.
     public List<string> FormulaPool()
     {
+        Debug.Log("FormulaPool");
         String[] syms = { "★", "■", "♥", "●" };
         List<String> symbols = new List<String>(syms);
         List<String> pool = new List<String>();
