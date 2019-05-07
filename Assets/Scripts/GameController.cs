@@ -16,10 +16,6 @@ public class GameController : MonoBehaviour
 
     // 문제생성 관련
     public List<GameObject> polygonList;
-    private GameObject BiscuitCache;
-    private Vector2[] result; // recalculated vertexes on makenewgame
-    private float rotateangle;
-    float backgroundMidPointx, backgroundMidPointy;
     public bool polygonSelected;
     private Vector2[] problemTriangle;
     private List<Vector2[]> backgroundBorders;
@@ -49,9 +45,6 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         // dish.transform.position = new Vector3(5.46f, 1.62f, 0);
-        result = new Vector2[1];
-        rotateangle = 0;
-
         counter++;
         ss = EC.GetComponent<StoryScript>();
         ec = EC.GetComponent<EventController>();
@@ -82,12 +75,6 @@ public class GameController : MonoBehaviour
 
         return;
     }
-
-    /*
-     * 
-     *  PROBLEM GENERATION METHODS
-     * 
-     */
 
     public void makeNew(int gameType)
     {
@@ -174,8 +161,8 @@ public class GameController : MonoBehaviour
                 currmidy += vertexes[i].y;
             }
             currmidx /= vertexes.Length; currmidy /= vertexes.Length;
-            backgroundMidPointx = backgroundMidpoints[gameType <= biscuitProblems ? 0 : 1].x;
-            backgroundMidPointy = backgroundMidpoints[gameType <= biscuitProblems ? 0 : 1].y;
+            float backgroundMidPointx = backgroundMidpoints[gameType <= biscuitProblems ? 0 : 1].x;
+            float backgroundMidPointy = backgroundMidpoints[gameType <= biscuitProblems ? 0 : 1].y;
             Vector2 diff = new Vector2(currmidx - backgroundMidPointx, currmidy - backgroundMidPointy);
             Vector2[] vectors = new Vector2[vertexes.Length];
             float maxlength = -99999999f;
@@ -191,7 +178,7 @@ public class GameController : MonoBehaviour
             float proportion = 1.5f * tomatch / Mathf.Pow(maxlength,0.5f);
             Polygon.jiktojunglength *= proportion;
 
-            result = new Vector2[vertexes.Length];
+            Vector2[] result = new Vector2[vertexes.Length];
             for (int i = 0; i < result.Length; i++)
             {
                 result[i].x = backgroundMidPointx + proportion * vectors[i].x;
@@ -209,7 +196,7 @@ public class GameController : MonoBehaviour
             // rotate here
             // 중심을 기준으로 점수와 콤보수에 따라 영향을 받는 회전각도를 적용한다(점수, 콤보가 높을수록 120 ~ 240도 문제가 많이 나오도록).
 
-            rotateangle = UnityEngine.Random.Range(0f, 360f);
+            float rotateangle = UnityEngine.Random.Range(0f, 360f);
             firstTriangle.transform.RotateAround(new Vector3(backgroundMidPointx, backgroundMidPointy, 0), Vector3.forward, rotateangle);
 
             // 넓이를 검사해서 너무 작은 삼각형은 다시 한다.
@@ -392,12 +379,6 @@ public class GameController : MonoBehaviour
         }
         return pool;
     }
-
-    /*
-     * 
-     *  ANSWER CHECK METHODS
-     * 
-     */
 
     public bool isSolvedSimilarity()
     {
@@ -604,27 +585,6 @@ public class GameController : MonoBehaviour
 
         // Debug.Log("Biscuit this is rectangle");
         return true;
-    }
-
-    /*
-     * 
-     * UTIL FUNCTIONS
-     * 
-     */
-
-    public void ReassembleButton()
-    {
-        foreach (GameObject p in polygonList)
-        {
-            Destroy(p);
-        }
-        polygonList.Clear();
-
-        GameObject polygon = new GameObject("Polygon");
-        polygon.AddComponent(System.Type.GetType("Polygon"));
-        polygon.GetComponent<Polygon>().render(result);
-        polygonList.Add(polygon);
-        polygon.transform.RotateAround(new Vector3(backgroundMidPointx, backgroundMidPointy, 0), Vector3.forward, rotateangle);
     }
 
     public int getBiscuitProblems()
