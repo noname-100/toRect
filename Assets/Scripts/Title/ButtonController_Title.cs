@@ -158,14 +158,27 @@ public class ButtonController_Title : MonoBehaviour {
 
     public void MoveLeftPage()
     {
-        clearAll();
-        RightButton.SetActive(true);
-        if (page == 1) LeftButton.SetActive(false);
-        else LeftButton.SetActive(true);
-        HelpContents[helpGameModeIndex][page].SetActive(false);
-        page--;
-        HelpContents[helpGameModeIndex][page].SetActive(true);
-        return;
+        if(!isCommonHelpStatus){
+            clearAll();
+            RightButton.SetActive(true);
+            if (page == 1) LeftButton.SetActive(false);
+            else LeftButton.SetActive(true);
+            HelpContents[helpGameModeIndex][page].SetActive(false);
+            page--;
+            HelpContents[helpGameModeIndex][page].SetActive(true);
+            return;
+        }
+        else
+        {
+            if (page == 1)
+            {
+                LeftButton.SetActive(false);
+                RightButton.SetActive(true);
+                HelpContentsCommon[page].SetActive(false);
+                page--;
+                HelpContentsCommon[page].SetActive(true);
+            }
+        }
     }
 
     private void clearAll()
