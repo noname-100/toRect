@@ -419,7 +419,7 @@ public class GameController : MonoBehaviour
     public List<string> FormulaPoolJung()
     {
         if (ec.GetdebugMode()) Debug.Log("FormulaPoolJung");
-        String[] syms = { "a", "b", "c", "d" };//{ "★", "■", "♥", "●" };
+        String[] syms = { "가", "나", "다", "라" };//{ "★", "■", "♥", "●" };
         List<String> symbols = new List<String>(syms);
         List<String> pool = new List<String>();
         string first = symbols[UnityEngine.Random.Range(0, 4)];
@@ -462,7 +462,7 @@ public class GameController : MonoBehaviour
     public List<string> FormulaPool()
     {
         if (ec.GetdebugMode()) Debug.Log("FormulaPool");
-        String[] syms = { "a", "b", "c", "d" };//{ "★", "■", "♥", "●" };
+        String[] syms = { "가", "나", "다", "라" };//{ "★", "■", "♥", "●" };
         List<String> symbols = new List<String>(syms);
         List<String> pool = new List<String>();
         string first = symbols[UnityEngine.Random.Range(0, 4)];
