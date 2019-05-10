@@ -82,7 +82,7 @@ public class EventController : MonoBehaviour {
 
 private void Awake()
     {
-        
+        Application.runInBackground = true;
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
         Debug.Log("current Game Mode is : " + currentMode);
@@ -778,6 +778,7 @@ private void Awake()
                     GameOverBackground.SetActive(true);
                     GameOverBack.SetActive(true);
                     RM.PutRankInfo(score);
+                    RM.GetRankInfo();
                     break;
                 case 1: // 스토리모드 성공시
                     Chapter1ClearBackground.SetActive(true);
@@ -804,9 +805,9 @@ private void Awake()
             // 순위전 버튼구성
             if (currentMode == 0)
             {
-                RankingMain.SetActive(true); // temp, 나중에 스토리모드 게임오버창 별도 이미지 받으면 변경
-                RankingSub1.SetActive(true);
-                RankingSub2.SetActive(true);
+                //RankingMain.SetActive(true); // temp, 나중에 스토리모드 게임오버창 별도 이미지 받으면 변경
+                //RankingSub1.SetActive(true);
+                //RankingSub2.SetActive(true);
                 RestartButton.SetActive(true);
             }
             else
@@ -815,7 +816,7 @@ private void Awake()
                 else RestartButton.SetActive(true);
             }
             
-            RankingButton.SetActive(true);            
+            //RankingButton.SetActive(true);            
         }
         else
         {

@@ -33,6 +33,37 @@ public class RankManager : MonoBehaviour
         } 
     }
 
+    public void SetUserData(string data)
+    {
+        UserJsonData = data;
+        // Debug.Log("Set: " + UserJsonData);
+
+        user = JsonUtility.FromJson<UserData>(UserJsonData);
+    }
+
+    // UserData 받아올 JSON과 구조체
+    public string UserJsonData;
+    UserData user = new UserData();
+
+    // 시작하면서 UserData 받아오고 저장
+    void Start() {
+        LoadData();
+    }
+
+    void LoadData()
+    {
+        Application.ExternalCall("SetUserData");
+        // Debug.Log("Get: " + UserJsonData);
+
+        // JSON Parsing
+        user = JsonUtility.FromJson<UserData>(UserJsonData);
+    }
+
+    public void GameClose()
+    {
+        Application.OpenURL(user.closeUrl);
+    }
+
     [System.Serializable]
     struct Badges
     {
