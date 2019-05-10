@@ -48,6 +48,7 @@ public class EventController : MonoBehaviour {
     private RankManager RM;
     public GameObject ComboSign;
     public Text ComboText;
+    private bool putRequestWaiting = false;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
@@ -749,6 +750,19 @@ private void Awake()
         GameOverWindow.SetActive(true);
         current_Time = 0;
         TimeText.text = "0 sec";
+        putRequestWaiting = true;
+        gameObject.GetComponent<RankManager>().PutRankInfo(score);
+        int count = 0;
+        try
+        {
+            while (putRequestWaiting) { Debug.Log("Waiting for response..."); count++; }
+            if (count >= 10000000) throw new Exception("Failed to put data on server, connection-timeout");
+
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e.Message);
+        }
 
         GameOverBackground.SetActive(false);
         Chapter1ClearBackground.SetActive(false);
@@ -863,6 +877,17 @@ private void Awake()
     public bool GetdebugMode()
     {
         return debugMode;
+    }
+
+    public bool GetputRequestWaiting()
+    {
+        return putRequestWaiting;
+    }
+
+    public void SetputRequestWaiting(bool given)
+    {
+        putRequestWaiting = given;
+        return;
     }
 
     public int GetCombo()

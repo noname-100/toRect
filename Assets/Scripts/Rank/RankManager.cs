@@ -13,6 +13,8 @@ public class RankManager : MonoBehaviour
     private Vector3 RankDataDownPos, RankDataPos;
     public GameObject RankDataWindow;
     public GameObject[] RankBoxTop5 = new GameObject[5];
+    public GameObject[] GameOverRankBox = new GameObject[2];
+    public GameObject GameOverMyRank;
     public GameObject WaitPlz;
 
     // UserData 저장용 구조체
@@ -29,37 +31,6 @@ public class RankManager : MonoBehaviour
             this.token = token;
             this.closeUrl = closeUrl;
         } 
-    }
-
-    public void SetUserData(string data)
-    {
-        UserJsonData = data;
-        // Debug.Log("Set: " + UserJsonData);
-
-        user = JsonUtility.FromJson<UserData>(UserJsonData);
-    }
-
-    // UserData 받아올 JSON과 구조체
-    public string UserJsonData;
-    UserData user = new UserData();
-
-    // 시작하면서 UserData 받아오고 저장
-    void Start() {
-        // LoadData();
-    }
-
-    void LoadData()
-    {
-        Application.ExternalCall("SetUserData");
-        // Debug.Log("Get: " + UserJsonData);
-
-        // JSON Parsing
-        user = JsonUtility.FromJson<UserData>(UserJsonData);
-    }
-
-    public void GameClose()
-    {
-        Application.OpenURL(user.closeUrl);
     }
 
     [System.Serializable]
@@ -104,6 +75,37 @@ public class RankManager : MonoBehaviour
     RankData[] Top5 = new RankData[5];
     RankData MyRank;
 
+    // UserData 받아올 JSON과 구조체
+    public string UserJsonData = null;
+    UserData user = new UserData();
+
+    // 시작하면서 UserData 받아오고 저장
+    void Start() {
+        LoadData();
+    }
+
+    public void SetUserData(string data)
+    {
+        UserJsonData = data;
+        // Debug.Log("Set: " + UserJsonData);
+
+        if (UserJsonData != null) user = JsonUtility.FromJson<UserData>(UserJsonData);
+    }
+
+    void LoadData()
+    {
+        Application.ExternalCall("SetUserData");
+        // Debug.Log("Get: " + UserJsonData);
+
+        // JSON Parsing
+        if(UserJsonData!=null) user = JsonUtility.FromJson<UserData>(UserJsonData);
+    }
+
+    public void GameClose()
+    {
+        Application.OpenURL(user.closeUrl);
+    }
+
     // DB에 정보 전송, 점수-시간-userid 를 보낸다
     public void PutRankInfo(int score) {
         if (string.IsNullOrEmpty(user.token)) {
@@ -138,13 +140,14 @@ public class RankManager : MonoBehaviour
                 //success
                 RankData r = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
                 
+                
             }
         }
     }
+
     public void GetRankInfo() {
         RankDataWindow.SetActive(false);
         WaitPlz.SetActive(true);
-
         
         if (string.IsNullOrEmpty(user.token)) {
             LoadData();
@@ -154,7 +157,6 @@ public class RankManager : MonoBehaviour
 
         StartCoroutine(GetRanking(user.token));
     }
-
 
     private IEnumerator GetRanking(string token) {
         string url = user.host + "/user/v1/games/" + gameName;
@@ -195,6 +197,11 @@ public class RankManager : MonoBehaviour
 
                 for (i = 0; i < 5; i++)
                     RankBoxTop5[i].GetComponent<RankBox>().SetRankBox(Top5[i].score, Top5[i].nickname);
+
+                for (i = 0; i < 2; i++)
+                    GameOverRankBox[i].GetComponent<RankBox>().SetRankBox(Top5[i].score, Top5[i].nickname);
+
+                GameOverMyRank.GetComponent<RankBox>().SetRankBox(MyRank.score, MyRank.nickname);
             }
         }
     }
