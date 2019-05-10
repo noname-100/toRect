@@ -81,7 +81,7 @@ public class EventController : MonoBehaviour {
 
 private void Awake()
     {
-        
+        Application.runInBackground = true;
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
         Debug.Log("current Game Mode is : " + currentMode);
