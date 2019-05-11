@@ -48,7 +48,7 @@ public class EventController : MonoBehaviour {
     private RankManager RM;
     public GameObject ComboSign;
     public Text ComboText;
-    private bool putRequestWaiting = false;
+    private bool requestWaiting = false;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
@@ -750,13 +750,13 @@ private void Awake()
         GameOverWindow.SetActive(true);
         current_Time = 0;
         TimeText.text = "0 sec";
-        putRequestWaiting = true;
+        requestWaiting = true;
         gameObject.GetComponent<RankManager>().PutRankInfo(score);
         int count = 0;
         try
         {
-            while (putRequestWaiting) { Debug.Log("Waiting for response..."); count++; }
-            if (count >= 10000000) throw new Exception("Failed to put data on server, connection-timeout");
+            while (requestWaiting) { Debug.Log("Waiting for response..."); count++; }
+            if (count >= 10000000) throw new Exception("Failed to put data on server, callback timeout");
 
         }
         catch(Exception e)
@@ -777,8 +777,19 @@ private void Awake()
                 case 0: // 순위모드 실패시
                     GameOverBackground.SetActive(true);
                     GameOverBack.SetActive(true);
-                    RM.PutRankInfo(score);
-                    RM.GetRankInfo();
+                    requestWaiting = true;
+                    gameObject.GetComponent<RankManager>().GetRankInfo(1);
+                    count = 0;
+                    try
+                    {
+                        while (requestWaiting) { Debug.Log("Waiting for response..."); count++; }
+                        if (count >= 10000000) throw new Exception("Failed to put data on server, callback timeout");
+
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log(e.Message);
+                    }
                     break;
                 case 1: // 스토리모드 성공시
                     Chapter1ClearBackground.SetActive(true);
@@ -799,15 +810,14 @@ private void Awake()
             else GameOverBack.SetActive(true);
         }
         
-
         if (currentMode == 0 || currentMode == 3)
         {
             // 순위전 버튼구성
             if (currentMode == 0)
             {
-                //RankingMain.SetActive(true); // temp, 나중에 스토리모드 게임오버창 별도 이미지 받으면 변경
-                //RankingSub1.SetActive(true);
-                //RankingSub2.SetActive(true);
+                RankingMain.SetActive(true);
+                RankingSub1.SetActive(true);
+                RankingSub2.SetActive(true);
                 RestartButton.SetActive(true);
             }
             else
@@ -880,14 +890,14 @@ private void Awake()
         return debugMode;
     }
 
-    public bool GetputRequestWaiting()
+    public bool GetrequestWaiting()
     {
-        return putRequestWaiting;
+        return requestWaiting;
     }
 
-    public void SetputRequestWaiting(bool given)
+    public void SetrequestWaiting(bool given)
     {
-        putRequestWaiting = given;
+        requestWaiting = given;
         return;
     }
 

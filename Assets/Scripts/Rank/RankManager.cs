@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.UI;
 
@@ -9,6 +10,15 @@ public class RankManager : MonoBehaviour
 {
 
     public const string gameName = "ToRect";
+
+    /*
+     *  TEST CODE : 내부 기능 구현 위해 JSON 요청/반환 부분 비활성화
+     * 
+     */    
+
+    private bool disableAll = false;
+    private bool userTest = true;
+    private string hardCodedToken = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTc0OTg2NzMsInR5cGUiOiJJTkRWIiwiaWQiOiIxNjYyNTkzMjk5MTIwMTUxIiwic2Vzc2lvbklkIjoiNjNmZjk1ZmEtZGQxNy00MzhiLWI1M2QtYjQ3Y2ZiZDA0MDUzIiwiYXV0aExldmVsIjoxLCJyb2xlcyI6W10sInN1YnNjcmlwdGlvbiI6eyJzdWJzY3JpcHRpb25JZCI6IjIyMjczMjkyNDYwNTk1MjIiLCJlbmREYXRlIjoiMjAxOS0wNy0wMiIsImFjdGl2ZSI6dHJ1ZX0sInJlYWRPbmx5IjpmYWxzZSwiaWF0IjoxNTU3NDc3MDczfQ.Xp-D3xJ3xIEGso8KKwip0jPzI2zfsgCju8hV2NmQIdA";
 
     private Vector3 RankDataDownPos, RankDataPos;
     public GameObject RankDataWindow;
@@ -31,37 +41,6 @@ public class RankManager : MonoBehaviour
             this.token = token;
             this.closeUrl = closeUrl;
         } 
-    }
-
-    public void SetUserData(string data)
-    {
-        UserJsonData = data;
-        // Debug.Log("Set: " + UserJsonData);
-
-        user = JsonUtility.FromJson<UserData>(UserJsonData);
-    }
-
-    // UserData 받아올 JSON과 구조체
-    public string UserJsonData;
-    UserData user = new UserData();
-
-    // 시작하면서 UserData 받아오고 저장
-    void Start() {
-        LoadData();
-    }
-
-    void LoadData()
-    {
-        Application.ExternalCall("SetUserData");
-        // Debug.Log("Get: " + UserJsonData);
-
-        // JSON Parsing
-        user = JsonUtility.FromJson<UserData>(UserJsonData);
-    }
-
-    public void GameClose()
-    {
-        Application.OpenURL(user.closeUrl);
     }
 
     [System.Serializable]
@@ -112,11 +91,13 @@ public class RankManager : MonoBehaviour
 
     // 시작하면서 UserData 받아오고 저장
     void Start() {
-        LoadData();
+        if(!disableAll) LoadData();
     }
 
     public void SetUserData(string data)
     {
+        if (!disableAll) return;
+
         UserJsonData = data;
         // Debug.Log("Set: " + UserJsonData);
 
@@ -125,20 +106,31 @@ public class RankManager : MonoBehaviour
 
     void LoadData()
     {
+        if (!disableAll) return;
+
         Application.ExternalCall("SetUserData");
         // Debug.Log("Get: " + UserJsonData);
 
         // JSON Parsing
+        if (userTest)
+        {
+           UserJsonData = "{ \"host\":\"https:\\/\\/dev-api.quebon.tv\",\"userid\":\"1662593299120151\",\"nickname\":\"\",\"token\":\"" + hardCodedToken +"\",\"closeUrl\":\"https:\\/\\/dev.quebon.tv\\/game\\/toRect\\/exit\"}";           
+        }
+
         if(UserJsonData!=null) user = JsonUtility.FromJson<UserData>(UserJsonData);
     }
 
     public void GameClose()
     {
+        if (!disableAll) return;
+
         Application.OpenURL(user.closeUrl);
     }
 
     // DB에 정보 전송, 점수-시간-userid 를 보낸다
     public void PutRankInfo(int score) {
+        if (!disableAll) return;
+
         if (string.IsNullOrEmpty(user.token)) {
             LoadData();
             //not authorized
@@ -167,29 +159,31 @@ public class RankManager : MonoBehaviour
             {
                 //sucess
                 MyRank = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
-                
-                //success
                 RankData r = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
-                
-                
+                gameObject.GetComponent<EventController>().SetrequestWaiting(false);                
             }
         }
     }
 
-    public void GetRankInfo() {
-        RankDataWindow.SetActive(false);
-        WaitPlz.SetActive(true);
+    public void GetRankInfo(int which) {
+        if (!disableAll) return;
+
+        if (which == 0)
+        {
+            RankDataWindow.SetActive(false);
+            WaitPlz.SetActive(true);
+        }
         
         if (string.IsNullOrEmpty(user.token)) {
             LoadData();
-            //not authorized
+            // not authorized : TODO?? request again?
             return;
         }
 
-        StartCoroutine(GetRanking(user.token));
+        StartCoroutine(GetRanking(user.token, which));
     }
 
-    private IEnumerator GetRanking(string token) {
+    private IEnumerator GetRanking(string token, int which) {
         string url = user.host + "/user/v1/games/" + gameName;
 
         using (UnityWebRequest w = UnityWebRequest.Get(url)) {
@@ -208,8 +202,11 @@ public class RankManager : MonoBehaviour
                 MyRank.nickname = r.my.user.nickname;
                 MyRank.level = r.my.user.badges.winner.level;
 
-                WaitPlz.SetActive(false);
-                RankDataWindow.SetActive(true);
+                if (which == 0)
+                {
+                    WaitPlz.SetActive(false);
+                    RankDataWindow.SetActive(true);
+                }
 
                 int size = Math.Min(r.ranking.Count, 5);
                 int i = 0;
@@ -232,7 +229,8 @@ public class RankManager : MonoBehaviour
                 for (i = 0; i < 2; i++)
                     GameOverRankBox[i].GetComponent<RankBox>().SetRankBox(Top5[i].score, Top5[i].nickname);
 
-                GameOverMyRank.GetComponent<RankBox>().SetRankBox(MyRank.score, MyRank.nickname);
+                if(SceneManager.GetActiveScene().name=="Play") GameOverMyRank.GetComponent<RankBox>().SetRankBox(MyRank.score, MyRank.nickname);
+                gameObject.GetComponent<EventController>().SetrequestWaiting(false);
             }
         }
     }
