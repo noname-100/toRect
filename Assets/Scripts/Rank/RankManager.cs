@@ -17,7 +17,7 @@ public class RankManager : MonoBehaviour
      */    
 
     private bool disableAll = false;
-    private bool userTest = true;
+    private bool userTest = false;
     private string hardCodedToken = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTc3NDU5MTQsInR5cGUiOiJJTkRWIiwiaWQiOiIxNjYyNjgzNzM2NzAzMDExIiwic2Vzc2lvbklkIjoiZTdlNTI5YjItMzMyMC00MDFlLTkwYzgtZDBlNDE5ZTAwZjJjIiwiYXV0aExldmVsIjoxLCJyb2xlcyI6W10sInN1YnNjcmlwdGlvbiI6eyJzdWJzY3JpcHRpb25JZCI6IjE2NjI3NDMzNTU1NzUzMzQiLCJlbmREYXRlIjoiMjAxOS0wMS0xNiIsImFjdGl2ZSI6ZmFsc2V9LCJyZWFkT25seSI6ZmFsc2UsImlhdCI6MTU1NzcyNDMxNH0.vaC5bwFq6LBKnKKNy6jcQvtBmxW_nk9q18PaAv3j5kg";
 
     private Vector3 RankDataDownPos, RankDataPos;
@@ -229,6 +229,8 @@ public class RankManager : MonoBehaviour
                     for (int j = i; j < 5; j++) {
                         //TODO don't show empty data
                         Top5[j] = new RankData();
+                        Top5[j].score = 0;
+                        Top5[j].nickname = "-";
                     }
                 }
 
