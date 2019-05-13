@@ -18,7 +18,7 @@ public class RankManager : MonoBehaviour
 
     private bool disableAll = false;
     private bool userTest = true;
-    private string hardCodedToken = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTc0OTg2NzMsInR5cGUiOiJJTkRWIiwiaWQiOiIxNjYyNTkzMjk5MTIwMTUxIiwic2Vzc2lvbklkIjoiNjNmZjk1ZmEtZGQxNy00MzhiLWI1M2QtYjQ3Y2ZiZDA0MDUzIiwiYXV0aExldmVsIjoxLCJyb2xlcyI6W10sInN1YnNjcmlwdGlvbiI6eyJzdWJzY3JpcHRpb25JZCI6IjIyMjczMjkyNDYwNTk1MjIiLCJlbmREYXRlIjoiMjAxOS0wNy0wMiIsImFjdGl2ZSI6dHJ1ZX0sInJlYWRPbmx5IjpmYWxzZSwiaWF0IjoxNTU3NDc3MDczfQ.Xp-D3xJ3xIEGso8KKwip0jPzI2zfsgCju8hV2NmQIdA";
+    private string hardCodedToken = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTc3NDU5MTQsInR5cGUiOiJJTkRWIiwiaWQiOiIxNjYyNjgzNzM2NzAzMDExIiwic2Vzc2lvbklkIjoiZTdlNTI5YjItMzMyMC00MDFlLTkwYzgtZDBlNDE5ZTAwZjJjIiwiYXV0aExldmVsIjoxLCJyb2xlcyI6W10sInN1YnNjcmlwdGlvbiI6eyJzdWJzY3JpcHRpb25JZCI6IjE2NjI3NDMzNTU1NzUzMzQiLCJlbmREYXRlIjoiMjAxOS0wMS0xNiIsImFjdGl2ZSI6ZmFsc2V9LCJyZWFkT25seSI6ZmFsc2UsImlhdCI6MTU1NzcyNDMxNH0.vaC5bwFq6LBKnKKNy6jcQvtBmxW_nk9q18PaAv3j5kg";
 
     private Vector3 RankDataDownPos, RankDataPos;
     public GameObject RankDataWindow;
@@ -91,12 +91,14 @@ public class RankManager : MonoBehaviour
 
     // 시작하면서 UserData 받아오고 저장
     void Start() {
+        Debug.Log("start from rankmanager");
         if(!disableAll) LoadData();
+        GetRankInfo(0);
     }
 
     public void SetUserData(string data)
     {
-        if (!disableAll) return;
+        if (disableAll) return;
 
         UserJsonData = data;
         // Debug.Log("Set: " + UserJsonData);
@@ -106,9 +108,10 @@ public class RankManager : MonoBehaviour
 
     void LoadData()
     {
-        if (!disableAll) return;
+        Debug.Log("LoadData");
+        if (disableAll) return;
 
-        Application.ExternalCall("SetUserData");
+        if(!userTest) Application.ExternalCall("SetUserData");
         // Debug.Log("Get: " + UserJsonData);
 
         // JSON Parsing
@@ -122,21 +125,21 @@ public class RankManager : MonoBehaviour
 
     public void GameClose()
     {
-        if (!disableAll) return;
+        if (disableAll) return;
 
         Application.OpenURL(user.closeUrl);
     }
 
     // DB에 정보 전송, 점수-시간-userid 를 보낸다
     public void PutRankInfo(int score) {
-        if (!disableAll) return;
+        if (disableAll) return;
 
         if (string.IsNullOrEmpty(user.token)) {
             LoadData();
             //not authorized
+            Debug.Log("PutRankInfo : user.token empty");
             return;
         }
-
         StartCoroutine(PutRanking(user.token, score));
     }
 
@@ -148,12 +151,12 @@ public class RankManager : MonoBehaviour
         {
             w.SetRequestHeader("Authorization", "Bearer " + token);
             w.SetRequestHeader("Content-Type", "application/json");
-            // Debug.Log(url + "\n\n" + data);
             yield return w.SendWebRequest();
 
             if (w.isHttpError || w.isNetworkError)
             {
                 //TODO handle error
+                Debug.Log("error");
             }
             else
             {
@@ -165,8 +168,10 @@ public class RankManager : MonoBehaviour
         }
     }
 
+    // which==0 : 랭크화면 which==1 : 게임오버화면
     public void GetRankInfo(int which) {
-        if (!disableAll) return;
+        Debug.Log("GetRankInfo");
+        if (disableAll) return;
 
         if (which == 0)
         {
@@ -184,7 +189,9 @@ public class RankManager : MonoBehaviour
     }
 
     private IEnumerator GetRanking(string token, int which) {
+        Debug.Log("GetRanking");
         string url = user.host + "/user/v1/games/" + gameName;
+        Debug.Log("url : " + url);
 
         using (UnityWebRequest w = UnityWebRequest.Get(url)) {
             w.SetRequestHeader("Authorization", "Bearer " + token);
@@ -192,6 +199,7 @@ public class RankManager : MonoBehaviour
 
             if (w.isHttpError || w.isNetworkError) {
                 //TODO handle error
+                Debug.Log("error");
             }
             else {
                 // Debug.Log(w.downloadHandler.text);
@@ -201,6 +209,7 @@ public class RankManager : MonoBehaviour
                 MyRank = r.my;
                 MyRank.nickname = r.my.user.nickname;
                 MyRank.level = r.my.user.badges.winner.level;
+                Debug.Log(MyRank.score);
 
                 if (which == 0)
                 {

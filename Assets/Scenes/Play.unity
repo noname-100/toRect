@@ -2793,7 +2793,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.68600005, y: 0.5}
-  m_AnchoredPosition: {x: 90.92, y: 189.5}
+  m_AnchoredPosition: {x: 90.920006, y: 189.5}
   m_SizeDelta: {x: -114, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &660184559
@@ -4425,7 +4425,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &959893303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4914,9 +4914,9 @@ MonoBehaviour:
   - {fileID: 1011037226}
   - {fileID: 1938635130}
   GameOverRankBox:
-  - {fileID: 0}
-  - {fileID: 0}
-  GameOverMyRank: {fileID: 0}
+  - {fileID: 798795888}
+  - {fileID: 1697707830}
+  GameOverMyRank: {fileID: 1913306961}
   WaitPlz: {fileID: 875592944}
   UserJsonData: 
 --- !u!114 &1008905284
@@ -4938,8 +4938,8 @@ MonoBehaviour:
   - {fileID: 1011037226}
   - {fileID: 1938635130}
   GameOverRankBox:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 798795888}
+  - {fileID: 1697707830}
   GameOverMyRank: {fileID: 1913306961}
   WaitPlz: {fileID: 875592944}
   UserJsonData: 
