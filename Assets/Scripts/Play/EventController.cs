@@ -757,7 +757,7 @@ private void Awake()
         if (!sentPutRequest && currentMode == 0)
         {
             Debug.Log("putrankinfo");
-            //gameObject.GetComponent<RankManager>().PutRankInfo(score);            
+            gameObject.GetComponent<RankManager>().PutRankInfo(1503);           
         }
         /*int count = 0;
         try
@@ -788,7 +788,7 @@ private void Awake()
                     if (!sentPutRequest)
                     {
                         Debug.Log("getrankinfo");
-                        //gameObject.GetComponent<RankManager>().GetRankInfo(1);
+                        // gameObject.GetComponent<RankManager>().GetRankInfo(1);
                         sentPutRequest = true;
                     }
                         /*count = 0;

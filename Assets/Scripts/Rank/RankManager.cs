@@ -95,7 +95,7 @@ public class RankManager : MonoBehaviour
         //Debug.Log("start from rankmanager");
         if(!disableAll) LoadData();
 
-        GetRankInfo(1);
+        // GetRankInfo(1);
     }
 
     public void SetUserData(string data)
@@ -162,16 +162,17 @@ public class RankManager : MonoBehaviour
             if (w.isHttpError || w.isNetworkError)
             {
                 //TODO handle error
-                Debug.Log("error");
-                Debug.Log("w.downloadHandler.text");
+                Debug.Log("put error");
+                Debug.Log("put : " + w.downloadHandler.text);
             }
             else
             {
-                Debug.Log("success");
-                Debug.Log(w.downloadHandler.text);
+                Debug.Log("put success");
+                Debug.Log("put : " + w.downloadHandler.text);
                 //sucess
                 MyRank = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
                 RankData r = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
+                GetRankInfo(1);
                 gameObject.GetComponent<EventController>().SetrequestWaiting(false);                
             }
         }
@@ -210,12 +211,12 @@ public class RankManager : MonoBehaviour
 
             if (w.isHttpError || w.isNetworkError) {
                 //TODO handle error
-                Debug.Log("error");
-                Debug.Log(w.downloadHandler.text);
+                Debug.Log("get error");
+                Debug.Log("get : " + w.downloadHandler.text);
             }
             else {
-                Debug.Log("success");
-                Debug.Log(w.downloadHandler.text);
+                Debug.Log("get success");
+                Debug.Log("get : " + w.downloadHandler.text);
                 // success
                 Ranking r = JsonUtility.FromJson<Ranking>(w.downloadHandler.text);
 
