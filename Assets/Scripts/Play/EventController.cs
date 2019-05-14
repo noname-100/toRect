@@ -20,7 +20,7 @@ public class EventController : MonoBehaviour {
      */
     
     private int testGameMode = -1;
-    private float testGameTime = -1;
+    private float testGameTime = 2;
     private bool debugMode = false;
 
     // 난이도요소
@@ -49,6 +49,7 @@ public class EventController : MonoBehaviour {
     public GameObject ComboSign;
     public Text ComboText;
     private bool requestWaiting = false;
+    private bool sentPutRequest = false;
 
     // UI요소
     public GameObject GameOverWindow, TotitleButton, RankingButton, RestartButton, ChallengeButton, ChallengeButtonforSimilarity, NextStageButton, GameOverBack, ClearBack;
@@ -81,7 +82,7 @@ public class EventController : MonoBehaviour {
 
 
 private void Awake()
-    {
+    {        
         Application.runInBackground = true;
         // 초기화
         currentMode = PlayerPrefs.GetInt("Mode");
@@ -158,7 +159,7 @@ private void Awake()
         // 목숨이 없는 경우
         if (lifes == 0) {
             Debug.Log("Ran out of lives");
-            GameOver(false);
+            GameOver(true);
         }
 
         // 시간종료
@@ -166,7 +167,7 @@ private void Awake()
         {
             if(currentMode != 0)
             {
-                GameOver(false);
+                GameOver(true);
                 return;
             }            
             gamePause = 0;
@@ -570,10 +571,12 @@ private void Awake()
     
     private void MakeNewGame()
     {
+        Debug.Log("makenewgame");
         plate.transform.localScale = new Vector3(1f, 1f, 0);
         gamePause = 0;
         isHelp = 0;
         similarityOnceSolved = false;
+        sentPutRequest = false;
         bp.setisFormulaButtonSelectable(0);
         if (currentMode == 0)
         {
@@ -745,14 +748,18 @@ private void Awake()
     
     public void GameOver(bool isCleared) // life==0일때 gamemanager에서 호출하는 모달 팝업 매니징 함수
     {                                    // isCleared면 Clear, 아니면 GameOver
-        
+        Debug.Log("gameover");
         StopCoroutine("Timer");
         GameOverWindow.SetActive(true);
         current_Time = 0;
         TimeText.text = "0 sec";
         requestWaiting = true;
-        gameObject.GetComponent<RankManager>().PutRankInfo(score);
-        int count = 0;
+        if (!sentPutRequest && currentMode == 0)
+        {
+            Debug.Log("putrankinfo");
+            gameObject.GetComponent<RankManager>().PutRankInfo(1503);           
+        }
+        /*int count = 0;
         try
         {
             while (requestWaiting) { Debug.Log("Waiting for response..."); count++; }
@@ -762,7 +769,7 @@ private void Awake()
         catch(Exception e)
         {
             Debug.Log(e.Message);
-        }
+        }*/
 
         GameOverBackground.SetActive(false);
         Chapter1ClearBackground.SetActive(false);
@@ -778,18 +785,23 @@ private void Awake()
                     GameOverBackground.SetActive(true);
                     GameOverBack.SetActive(true);
                     requestWaiting = true;
-                    gameObject.GetComponent<RankManager>().GetRankInfo(1);
-                    count = 0;
-                    try
+                    if (!sentPutRequest)
                     {
-                        while (requestWaiting) { Debug.Log("Waiting for response..."); count++; }
-                        if (count >= 10000000) throw new Exception("Failed to put data on server, callback timeout");
+                        Debug.Log("getrankinfo");
+                        // gameObject.GetComponent<RankManager>().GetRankInfo(1);
+                        sentPutRequest = true;
+                    }
+                        /*count = 0;
+                        try
+                        {
+                            while (requestWaiting) { Debug.Log("Waiting for response..."); count++; }
+                            if (count >= 10000000) throw new Exception("Failed to put data on server, callback timeout");
 
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.Log(e.Message);
-                    }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log(e.Message);
+                        }*/
                     break;
                 case 1: // 스토리모드 성공시
                     Chapter1ClearBackground.SetActive(true);
