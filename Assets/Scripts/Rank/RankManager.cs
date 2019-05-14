@@ -187,10 +187,11 @@ public class RankManager : MonoBehaviour
             RankDataWindow.SetActive(false);
             WaitPlz.SetActive(true);
         }
-        
+
+        // Debug.Log(user.token);
         if (string.IsNullOrEmpty(user.token)) {
             Debug.Log("this is called");
-            // LoadData();
+            LoadData();
             // not authorized : TODO?? request again?
             return;
         }
