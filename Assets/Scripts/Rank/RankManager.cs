@@ -95,9 +95,177 @@ public class RankManager : MonoBehaviour
         //Debug.Log("start from rankmanager");
         if(!disableAll) LoadData();
 
-        StartCoroutine(PutAPITest());
-        //GetRankInfo(0);
+        GetRankInfo(1);
     }
+
+    public void SetUserData(string data)
+    {
+        if (disableAll) return;
+
+        UserJsonData = data;
+        
+        // Debug.Log("Set: " + UserJsonData);
+
+        if (UserJsonData != null) user = JsonUtility.FromJson<UserData>(UserJsonData);
+        Debug.Log("At setuserdata : " + user.host);
+    }
+
+    void LoadData()
+    {
+        Debug.Log("LoadData");
+        if (disableAll) return;
+
+        if(!userTest) Application.ExternalCall("SetUserData");
+        // Debug.Log("Get: " + UserJsonData);
+
+        // JSON Parsing
+        if (userTest)
+        {
+           UserJsonData = "{ \"host\":\"https:\\/\\/dev-api.quebon.tv\",\"userid\":\"1068183666556929\",\"nickname\":\"\",\"token\":\"" + hardCodedToken +"\",\"closeUrl\":\"https:\\/\\/dev.quebon.tv\\/game\\/toRect\\/exit\"}";           
+        }
+
+        if(UserJsonData!=null) user = JsonUtility.FromJson<UserData>(UserJsonData);
+    }
+
+    public void GameClose()
+    {
+        if (disableAll) return;
+
+        Application.OpenURL(user.closeUrl);
+    }
+
+    // DB에 정보 전송, 점수-시간-userid 를 보낸다
+    public void PutRankInfo(int score) {
+        Debug.Log("putrankinfo");
+        if (disableAll) return;
+
+        if (string.IsNullOrEmpty(user.token)) {
+            LoadData();
+            //not authorized
+            Debug.Log("PutRankInfo : user.token empty");
+            return;
+        }
+        StartCoroutine(PutRanking(user.token, score));
+    }
+
+    private IEnumerator PutRanking(string token, int score) {
+        Debug.Log("putranking");
+        string url = user.host + "/user/v1/games/" + gameName + "/users/" + user.userid;
+        string data = "{\"score\":" + score + "}";
+
+        using (UnityWebRequest w = UnityWebRequest.Put(url, data))
+        {
+            w.SetRequestHeader("Authorization", "Bearer " + token);
+            w.SetRequestHeader("Content-Type", "application/json");
+            yield return w.SendWebRequest();
+
+            if (w.isHttpError || w.isNetworkError)
+            {
+                //TODO handle error
+                Debug.Log("error");
+                Debug.Log("w.downloadHandler.text");
+            }
+            else
+            {
+                Debug.Log("success");
+                Debug.Log(w.downloadHandler.text);
+                //sucess
+                MyRank = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
+                RankData r = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
+                gameObject.GetComponent<EventController>().SetrequestWaiting(false);                
+            }
+        }
+    }
+
+    // which==0 : 랭크화면 which==1 : 게임오버화면
+    public void GetRankInfo(int which) {
+        Debug.Log("GetRankInfo");
+        if (disableAll) return;
+
+        if (which == 0)
+        {
+            RankDataWindow.SetActive(false);
+            WaitPlz.SetActive(true);
+        }
+        
+        if (string.IsNullOrEmpty(user.token)) {
+            Debug.Log("this is called");
+            // LoadData();
+            // not authorized : TODO?? request again?
+            return;
+        }
+
+        StartCoroutine(GetRanking(user.token, which));
+    }
+
+    private IEnumerator GetRanking(string token, int which) {
+        Debug.Log("GetRanking");
+        string url = user.host + "/user/v1/games/" + gameName;
+        Debug.Log("url : " + url);
+
+        using (UnityWebRequest w = UnityWebRequest.Get(url)) {
+            w.SetRequestHeader("Authorization", "Bearer " + token);
+            yield return w.SendWebRequest();
+
+            if (w.isHttpError || w.isNetworkError) {
+                //TODO handle error
+                Debug.Log("error");
+                Debug.Log(w.downloadHandler.text);
+            }
+            else {
+                Debug.Log("success");
+                Debug.Log(w.downloadHandler.text);
+                // success
+                Ranking r = JsonUtility.FromJson<Ranking>(w.downloadHandler.text);
+
+                MyRank = r.my;
+                MyRank.nickname = r.my.user.nickname;
+                MyRank.level = r.my.user.badges.winner.level;
+                // Debug.Log(MyRank.score);
+
+                if (which == 0)
+                {
+                    WaitPlz.SetActive(false);
+                    RankDataWindow.SetActive(true);
+                }
+
+                int size = Math.Min(r.ranking.Count, 5);
+                int i = 0;
+                for (i = 0; i < size; i++) {
+                    Top5[i] = r.ranking[i];
+                    Top5[i].nickname = r.ranking[i].user.nickname;
+                    Top5[i].level = r.ranking[i].user.badges.winner.level;
+                    // Debug.Log(i + " " + Top5[i].nickname);
+                }
+
+                if (i < 5) {
+                    for (int j = i; j < 5; j++) {
+                        //TODO don't show empty data
+                        Top5[j] = new RankData();
+                        Top5[j].score = 0;
+                        Top5[j].nickname = "-";
+                    }
+                }
+
+                for (i = 0; i < 5; i++)
+                {
+                    Debug.Log(i + " " + Top5[i].score + " " + Top5[i].nickname);
+                    RankBoxTop5[i].GetComponent<RankBox>().SetRankBox(Top5[i].score, Top5[i].nickname);
+                }
+
+                for (i = 0; i < 2; i++)
+                    GameOverRankBox[i].GetComponent<RankBox>().SetRankBox(Top5[i].score, Top5[i].nickname);
+
+                if(SceneManager.GetActiveScene().name=="Play") GameOverMyRank.GetComponent<RankBox>().SetRankBox(MyRank.score, MyRank.nickname);
+                gameObject.GetComponent<EventController>().SetrequestWaiting(false);
+            }
+        }
+    }
+
+    /*
+     * UTILS AND TESTS
+     * 
+     */
 
     private IEnumerator GetAPItest()
     {
@@ -125,7 +293,7 @@ public class RankManager : MonoBehaviour
                 MyRank = r.my;
                 MyRank.nickname = r.my.user.nickname;
                 MyRank.level = r.my.user.badges.winner.level;
-                Debug.Log(MyRank.score);                
+                Debug.Log(MyRank.score);
             }
         }
     }
@@ -156,155 +324,4 @@ public class RankManager : MonoBehaviour
             }
         }
     }
-
-    public void SetUserData(string data)
-    {
-        if (disableAll) return;
-
-        UserJsonData = data;
-        // Debug.Log("Set: " + UserJsonData);
-
-        if (UserJsonData != null) user = JsonUtility.FromJson<UserData>(UserJsonData);
-    }
-
-    void LoadData()
-    {
-        Debug.Log("LoadData");
-        if (disableAll) return;
-
-        if(!userTest) Application.ExternalCall("SetUserData");
-        // Debug.Log("Get: " + UserJsonData);
-
-        // JSON Parsing
-        if (userTest)
-        {
-           UserJsonData = "{ \"host\":\"https:\\/\\/dev-api.quebon.tv\",\"userid\":\"1068183666556929\",\"nickname\":\"\",\"token\":\"" + hardCodedToken +"\",\"closeUrl\":\"https:\\/\\/dev.quebon.tv\\/game\\/toRect\\/exit\"}";           
-        }
-
-        if(UserJsonData!=null) user = JsonUtility.FromJson<UserData>(UserJsonData);
-    }
-
-    public void GameClose()
-    {
-        if (disableAll) return;
-
-        Application.OpenURL(user.closeUrl);
-    }
-
-    // DB에 정보 전송, 점수-시간-userid 를 보낸다
-    public void PutRankInfo(int score) {
-        if (disableAll) return;
-
-        if (string.IsNullOrEmpty(user.token)) {
-            LoadData();
-            //not authorized
-            Debug.Log("PutRankInfo : user.token empty");
-            return;
-        }
-        StartCoroutine(PutRanking(user.token, score));
-    }
-
-    private IEnumerator PutRanking(string token, int score) {
-        string url = user.host + "/user/v1/games/" + gameName + "/users/" + user.userid;
-        string data = "{\"score\":" + score + "}";
-
-        using (UnityWebRequest w = UnityWebRequest.Put(url, data))
-        {
-            w.SetRequestHeader("Authorization", "Bearer " + token);
-            w.SetRequestHeader("Content-Type", "application/json");
-            yield return w.SendWebRequest();
-
-            if (w.isHttpError || w.isNetworkError)
-            {
-                //TODO handle error
-                Debug.Log("error");
-            }
-            else
-            {
-                //sucess
-                MyRank = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
-                RankData r = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
-                gameObject.GetComponent<EventController>().SetrequestWaiting(false);                
-            }
-        }
-    }
-
-    // which==0 : 랭크화면 which==1 : 게임오버화면
-    public void GetRankInfo(int which) {
-        Debug.Log("GetRankInfo");
-        if (disableAll) return;
-
-        if (which == 0)
-        {
-            RankDataWindow.SetActive(false);
-            WaitPlz.SetActive(true);
-        }
-        
-        if (string.IsNullOrEmpty(user.token)) {
-            LoadData();
-            // not authorized : TODO?? request again?
-            return;
-        }
-
-        StartCoroutine(GetRanking(user.token, which));
-    }
-
-    private IEnumerator GetRanking(string token, int which) {
-        Debug.Log("GetRanking");
-        string url = user.host + "/user/v1/games/" + gameName;
-        Debug.Log("url : " + url);
-
-        using (UnityWebRequest w = UnityWebRequest.Get(url)) {
-            w.SetRequestHeader("Authorization", "Bearer " + token);
-            yield return w.SendWebRequest();
-
-            if (w.isHttpError || w.isNetworkError) {
-                //TODO handle error
-                Debug.Log("error");
-            }
-            else {
-                // Debug.Log(w.downloadHandler.text);
-                // success
-                Ranking r = JsonUtility.FromJson<Ranking>(w.downloadHandler.text);
-
-                MyRank = r.my;
-                MyRank.nickname = r.my.user.nickname;
-                MyRank.level = r.my.user.badges.winner.level;
-                Debug.Log(MyRank.score);
-
-                if (which == 0)
-                {
-                    WaitPlz.SetActive(false);
-                    RankDataWindow.SetActive(true);
-                }
-
-                int size = Math.Min(r.ranking.Count, 5);
-                int i = 0;
-                for (i = 0; i < size; i++) {
-                    Top5[i] = r.ranking[i];
-                    Top5[i].nickname = r.ranking[i].user.nickname;
-                    Top5[i].level = r.ranking[i].user.badges.winner.level;
-                }
-
-                if (i < 5) {
-                    for (int j = i; j < 5; j++) {
-                        //TODO don't show empty data
-                        Top5[j] = new RankData();
-                        Top5[j].score = 0;
-                        Top5[j].nickname = "-";
-                    }
-                }
-
-                for (i = 0; i < 5; i++)
-                    RankBoxTop5[i].GetComponent<RankBox>().SetRankBox(Top5[i].score, Top5[i].nickname);
-
-                for (i = 0; i < 2; i++)
-                    GameOverRankBox[i].GetComponent<RankBox>().SetRankBox(Top5[i].score, Top5[i].nickname);
-
-                if(SceneManager.GetActiveScene().name=="Play") GameOverMyRank.GetComponent<RankBox>().SetRankBox(MyRank.score, MyRank.nickname);
-                gameObject.GetComponent<EventController>().SetrequestWaiting(false);
-            }
-        }
-    }
-
 }

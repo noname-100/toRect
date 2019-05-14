@@ -11,8 +11,7 @@ public class RankBox : MonoBehaviour {
 
     public void SetRankBox( int score, string nickname)
     {
-        
-        SetText(S, score.ToString() + "점");
+        SetText(S, score.ToString() + "");
         if (nickname.Length <= 10)
             SetText(N, nickname);
         else

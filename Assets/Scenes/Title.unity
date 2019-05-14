@@ -1645,7 +1645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 187e5c5366bed2841ae574395e8c577a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RankDataWindow: {fileID: 1163717056}
+  RankDataWindow: {fileID: 744072231}
   RankBoxTop5:
   - {fileID: 2039502113}
   - {fileID: 592923456}
@@ -2744,7 +2744,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 744072231}
+      - m_Target: {fileID: 29785942}
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
@@ -2753,11 +2753,11 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 179910304}
+      - m_Target: {fileID: 179910308}
         m_MethodName: GetRankInfo
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3064,9 +3064,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &336622328
 MonoBehaviour:
   m_ObjectHideFlags: 0
