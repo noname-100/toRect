@@ -4,16 +4,6 @@ var data = { "host": "https:\/\/dev-api.quebon.tv", "userid": "1662593299120151"
 
 // this function requests with user id/pw, and recieves user info and security token.
 var SetUserData = function () {
-    var http = new XMLHttpRequest();
-    var url = 'https://dev-api.quebon.tv/user/v1/users/generateAuthToken';
-    var data = null;
-    http.open('POST', url, false);
-    http.onreadystatechange = function () {
-        if (http.readyState == 4 && http.status == 200) {
-            data = http.responseText; // keys : host, userid, nickname, token, closeUrl
-            if (data == null) console.log("error, data returns null");
-        }
-    }
     gameInstance.SendMessage("EC", "SetUserData", JSON.stringify(data));
 };
 */
