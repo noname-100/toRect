@@ -20,7 +20,7 @@ public class EventController : MonoBehaviour {
      */
     
     private int testGameMode = -1;
-    private float testGameTime = 2;
+    private float testGameTime = -1;
     private bool debugMode = false;
 
     // 난이도요소

@@ -17,7 +17,7 @@ public class RankManager : MonoBehaviour
      */    
 
     private bool disableAll = false;
-    private bool userTest = true;
+    private bool userTest = false;
     private string hardCodedToken = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTc4MjYyOTEsInR5cGUiOiJJTkRWIiwiaWQiOiIxMDY4MTgzNjY2NTU2OTI5Iiwic2Vzc2lvbklkIjoiMWZiZWY5ODUtYzE4YS00Y2EyLTk5NTctYjQ2YmQ4NTNkOTg4IiwiYXV0aExldmVsIjo5LCJyb2xlcyI6W3sibmFtZSI6InByZW1pdW1fdXNlciIsInBlcm1pc3Npb25zIjpbIlBSRU1JVU1fVVNFUiJdfV0sInN1YnNjcmlwdGlvbiI6eyJzdWJzY3JpcHRpb25JZCI6IjE0OTUyNTM4NDk2Mzc5MDkiLCJlbmREYXRlIjoiMjAxOS0wOS0wNSIsImFjdGl2ZSI6dHJ1ZX0sInJlYWRPbmx5IjpmYWxzZSwiaWF0IjoxNTU3ODA0NjkyfQ.S6B1HJ3eBzJSd5zerjpqEA3pFo6rNkFjD66adbx0tpc";
 
     private Vector3 RankDataDownPos, RankDataPos;
