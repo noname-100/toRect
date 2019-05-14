@@ -17,8 +17,8 @@ public class RankManager : MonoBehaviour
      */    
 
     private bool disableAll = false;
-    private bool userTest = false;
-    private string hardCodedToken = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTc3NDU5MTQsInR5cGUiOiJJTkRWIiwiaWQiOiIxNjYyNjgzNzM2NzAzMDExIiwic2Vzc2lvbklkIjoiZTdlNTI5YjItMzMyMC00MDFlLTkwYzgtZDBlNDE5ZTAwZjJjIiwiYXV0aExldmVsIjoxLCJyb2xlcyI6W10sInN1YnNjcmlwdGlvbiI6eyJzdWJzY3JpcHRpb25JZCI6IjE2NjI3NDMzNTU1NzUzMzQiLCJlbmREYXRlIjoiMjAxOS0wMS0xNiIsImFjdGl2ZSI6ZmFsc2V9LCJyZWFkT25seSI6ZmFsc2UsImlhdCI6MTU1NzcyNDMxNH0.vaC5bwFq6LBKnKKNy6jcQvtBmxW_nk9q18PaAv3j5kg";
+    private bool userTest = true;
+    private string hardCodedToken = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTc4MjYyOTEsInR5cGUiOiJJTkRWIiwiaWQiOiIxMDY4MTgzNjY2NTU2OTI5Iiwic2Vzc2lvbklkIjoiMWZiZWY5ODUtYzE4YS00Y2EyLTk5NTctYjQ2YmQ4NTNkOTg4IiwiYXV0aExldmVsIjo5LCJyb2xlcyI6W3sibmFtZSI6InByZW1pdW1fdXNlciIsInBlcm1pc3Npb25zIjpbIlBSRU1JVU1fVVNFUiJdfV0sInN1YnNjcmlwdGlvbiI6eyJzdWJzY3JpcHRpb25JZCI6IjE0OTUyNTM4NDk2Mzc5MDkiLCJlbmREYXRlIjoiMjAxOS0wOS0wNSIsImFjdGl2ZSI6dHJ1ZX0sInJlYWRPbmx5IjpmYWxzZSwiaWF0IjoxNTU3ODA0NjkyfQ.S6B1HJ3eBzJSd5zerjpqEA3pFo6rNkFjD66adbx0tpc";
 
     private Vector3 RankDataDownPos, RankDataPos;
     public GameObject RankDataWindow;
@@ -91,9 +91,70 @@ public class RankManager : MonoBehaviour
 
     // 시작하면서 UserData 받아오고 저장
     void Start() {
-        Debug.Log("start from rankmanager");
+                
+        //Debug.Log("start from rankmanager");
         if(!disableAll) LoadData();
-        GetRankInfo(0);
+
+        StartCoroutine(PutAPITest());
+        //GetRankInfo(0);
+    }
+
+    private IEnumerator GetAPItest()
+    {
+        Debug.Log("apitest");
+        // var url = "https://naver.com";
+        var url = "https://dev-api.quebon.tv/user/v1/games/ToRect";
+        using (UnityWebRequest w = UnityWebRequest.Get(url))
+        {
+            Debug.Log(user.token);
+            w.SetRequestHeader("Authorization", "Bearer " + user.token);
+            yield return w.SendWebRequest();
+
+            if (w.isHttpError || w.isNetworkError)
+            {
+                //TODO handle error
+                Debug.Log(w.downloadHandler.text);
+            }
+            else
+            {
+                Debug.Log(w.downloadHandler.text);
+                // success
+                Debug.Log("success");
+                Ranking r = JsonUtility.FromJson<Ranking>(w.downloadHandler.text);
+
+                MyRank = r.my;
+                MyRank.nickname = r.my.user.nickname;
+                MyRank.level = r.my.user.badges.winner.level;
+                Debug.Log(MyRank.score);                
+            }
+        }
+    }
+
+    private IEnumerator PutAPITest()
+    {
+        string url = user.host + "/user/v1/games/" + gameName + "/users/" + user.userid;
+        string data = "{\"score\":" + 1444 + "}";
+
+        using (UnityWebRequest w = UnityWebRequest.Put(url, data))
+        {
+            w.SetRequestHeader("Authorization", "Bearer " + user.token);
+            w.SetRequestHeader("Content-Type", "application/json");
+            yield return w.SendWebRequest();
+
+            if (w.isHttpError || w.isNetworkError)
+            {
+                //TODO handle error
+                Debug.Log("error");
+            }
+            else
+            {
+                //sucess
+                Debug.Log("success");
+                MyRank = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
+                RankData r = JsonUtility.FromJson<RankData>(w.downloadHandler.text);
+                // gameObject.GetComponent<EventController>().SetrequestWaiting(false);
+            }
+        }
     }
 
     public void SetUserData(string data)
@@ -117,7 +178,7 @@ public class RankManager : MonoBehaviour
         // JSON Parsing
         if (userTest)
         {
-           UserJsonData = "{ \"host\":\"https:\\/\\/dev-api.quebon.tv\",\"userid\":\"1662593299120151\",\"nickname\":\"\",\"token\":\"" + hardCodedToken +"\",\"closeUrl\":\"https:\\/\\/dev.quebon.tv\\/game\\/toRect\\/exit\"}";           
+           UserJsonData = "{ \"host\":\"https:\\/\\/dev-api.quebon.tv\",\"userid\":\"1068183666556929\",\"nickname\":\"\",\"token\":\"" + hardCodedToken +"\",\"closeUrl\":\"https:\\/\\/dev.quebon.tv\\/game\\/toRect\\/exit\"}";           
         }
 
         if(UserJsonData!=null) user = JsonUtility.FromJson<UserData>(UserJsonData);
