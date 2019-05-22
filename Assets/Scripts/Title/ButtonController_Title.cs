@@ -61,7 +61,7 @@ public class ButtonController_Title : MonoBehaviour {
     public void toRectStoryModeStart()
     {
         PlayerPrefs.SetInt("Mode", 1);
-        PlayerPrefs.SetInt("Game", 0);
+        PlayerPrefs.SetInt("Game", 12);
         SceneManager.LoadScene("Play");
         return;
     }
@@ -77,7 +77,7 @@ public class ButtonController_Title : MonoBehaviour {
     public void pieStoryModeStart()
     {
         PlayerPrefs.SetInt("Mode", 3);
-        PlayerPrefs.SetInt("Game", 12);
+        PlayerPrefs.SetInt("Game", 13);
         SceneManager.LoadScene("Play");
         return;
     }
@@ -227,6 +227,10 @@ public class ButtonController_Title : MonoBehaviour {
         return;
     }
 
+    /*
+     *  legacy code. Able to control via unity GUI gameObject.SetActive
+     * 
+     */
     public void CloseModeSelect()
     {
         ModeSelect.SetActive(false);

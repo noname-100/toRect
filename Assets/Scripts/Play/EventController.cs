@@ -206,7 +206,7 @@ private void Awake()
                 if(currentMode !=0)
                 {
                     // move to storyscript state machine
-                    if (ss.GetstoryProgress() == 12)
+                    if (ss.GetstoryProgress() == 13)
                     {
                         // Debug.Log("here");
                         GameOver(true);
@@ -245,9 +245,7 @@ private void Awake()
                     if (gamePause == 1) return;
                     if (currentMode != 0)
                     {
-                        isPlay = 0;
-                        ss.SetstoryProgress(ss.GetstoryProgress() + 1);
-                        ss.StoryManager();
+                        GameOver(true);
                         return;
                     }
                     else
@@ -296,7 +294,9 @@ private void Awake()
                     if (gamePause == 1) return;
                     if (currentMode != 0)
                     {
-                        GameOver(true);
+                        isPlay = 0;
+                        ss.SetstoryProgress(ss.GetstoryProgress() + 1);
+                        ss.StoryManager();
                         return;
                     }
                     else
@@ -541,22 +541,24 @@ private void Awake()
         else if(currentMode == 1)
         {   // Biscuit Story Mode
             bonusTimeLimit = 45; // not used
-            if (currentGame == 0) solveTime = 120; // 직각삼각형
-            else if (currentGame == 2) solveTime = 120; // 직각삼각형
-            else if (currentGame == 3) solveTime = 130; // 둔각삼각형
-            else if (currentGame == 4) solveTime = 180; // 사다리꼴
-            else if (currentGame == 5) solveTime = 240; // 사각형
-            else if (currentGame == 6) solveTime = 300; // 오각형
-            else if (currentGame == 7) solveTime = 300; // 육각형
-            else if (currentGame == 8) solveTime = 360; // 칠각형
-            else if (currentGame == 9) solveTime = 300; // 팔각형
+            if (currentGame == 0) solveTime = 300; // 예각삼각형
+            else if (currentGame == 2) solveTime = 300; // 직각삼각형
+            else if (currentGame == 3) solveTime = 300; // 둔각삼각형
+            else if (currentGame == 4) solveTime = 360; // 사다리꼴
+            else if (currentGame == 5) solveTime = 360; // 사각형
+            else if (currentGame == 6) solveTime = 360; // 오각형
+            else if (currentGame == 7) solveTime = 420; // 육각형
+            else if (currentGame == 8) solveTime = 480; // 칠각형
+            else if (currentGame == 9) solveTime = 420; // 팔각형
+            else if (currentGame == 12) solveTime = 240; // 정투직
+            else if (currentGame == 1) solveTime = 300; // 예각삼각형(스토리모드에서 사용되지않음)
             else solveTime = 5; // 에러
         }else if(currentMode == 2)
         {   // Rec2Square Story Mode
-            solveTime = 150;
+            solveTime = 240;
         }else if(currentMode == 3)
         {   // Similarity Story Mode
-            solveTime = 110;
+            solveTime = 180;
         }
         current_Time = solveTime;
         return;

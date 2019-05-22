@@ -82,6 +82,7 @@ public class ButtonController_Play : MonoBehaviour
         return;
     }
 
+    // legacy code
     public void GameClose()
     {
         Application.Quit();

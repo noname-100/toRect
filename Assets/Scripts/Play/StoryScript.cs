@@ -80,42 +80,46 @@ public class StoryScript : MonoBehaviour {
                     break;
                 case 4:
                     Stop_TextBox_B(2);
-                    PlayerPrefs.SetInt("Game",0);
+                    PlayerPrefs.SetInt("Game", 12);
                     ec.SetisPlay(1);
                     break;
                 case 5:
-                    PlayerPrefs.SetInt("Game", 2);
+                    PlayerPrefs.SetInt("Game",2);
                     ec.SetisPlay(1);
                     break;
                 case 6:
-                    PlayerPrefs.SetInt("Game", 3);
+                    PlayerPrefs.SetInt("Game", 0);
                     ec.SetisPlay(1);
                     break;
                 case 7:
-                    PlayerPrefs.SetInt("Game", 4);
+                    PlayerPrefs.SetInt("Game", 3);
                     ec.SetisPlay(1);
                     break;
                 case 8:
-                    PlayerPrefs.SetInt("Game", 5);
+                    PlayerPrefs.SetInt("Game", 4);
                     ec.SetisPlay(1);
                     break;
                 case 9:
+                    PlayerPrefs.SetInt("Game", 5);
+                    ec.SetisPlay(1);
+                    break;
+                case 10:
                     PlayerPrefs.SetInt("Game", 6);
                     HintButton.SetActive(true);
                     isHintAvailable = true;
                     ec.SetisPlay(1);
                     break;
-                case 10:
+                case 11:
                     PlayerPrefs.SetInt("Game", 7);
                     ec.SetisPlay(1);
                     isHintAvailable = true;
                     break;
-                case 11:
+                case 12:
                     PlayerPrefs.SetInt("Game", 8);
                     ec.SetisPlay(1);
                     isHintAvailable = true;
                     break;
-                case 12:
+                case 13:
                     PlayerPrefs.SetInt("Game", 9);
                     ec.SetisPlay(1);
                     isHintAvailable = true;
@@ -145,10 +149,6 @@ public class StoryScript : MonoBehaviour {
                 case 4:
                     Stop_TextBox_R(3);
                     PlayerPrefs.SetInt("Game", 10);
-                    ec.SetisPlay(1);
-                    break;
-                case 5:
-                    PlayerPrefs.SetInt("Game", 12);
                     ec.SetisPlay(1);
                     break;
             }
