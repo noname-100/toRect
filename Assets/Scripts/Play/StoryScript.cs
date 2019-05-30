@@ -144,10 +144,6 @@ public class StoryScript : MonoBehaviour {
                     break;
                 case 3:
                     Stop_TextBox_R(2);
-                    Start_TextBox_R(3);
-                    break;
-                case 4:
-                    Stop_TextBox_R(3);
                     PlayerPrefs.SetInt("Game", 10);
                     ec.SetisPlay(1);
                     break;
